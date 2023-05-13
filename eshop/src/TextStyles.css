@@ -1,0 +1,79 @@
+:root {
+  --body1: #2c3e50;
+  --secondary: #0082cf;
+  --secondaryDark: #006dad;
+  --white: #fff;
+  --primary: #202629;
+}
+
+h1,
+.h1 {
+  font-family: "Roboto";
+  color: var(--secondary);
+  font-size: 48px;
+  font-weight: 300;
+  line-height: 1.1;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  word-break: break-word;
+  letter-spacing: 3px;
+}
+
+h2,
+.h2 {
+  font-family: "Roboto";
+  color: var(--secondary);
+  font-size: 32px;
+  font-weight: 900;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+h3,
+.h3 {
+  font-family: "Roboto";
+  color: var(--body1);
+  font-size: 32px;
+  font-weight: 900;
+}
+
+p,
+.body1 {
+  font-family: "Roboto";
+  font-size: 21px;
+  line-height: 29px;
+  letter-spacing: normal;
+  color: var(--body1);
+}
+
+a,
+.link1 {
+  font-family: "Roboto";
+  font-size: 21px;
+  line-height: 29px;
+  letter-spacing: normal;
+  color: var(--secondaryDark);
+  text-decoration: none;
+}
+
+a:hover,
+.link1:hover {
+  color: var(--secondary);
+}
+
+li {
+  font-family: "Roboto";
+  font-size: 21px;
+  line-height: 29px;
+  letter-spacing: normal;
+  color: var(--body1);
+  margin-top: 20px;
+}
+
+.notFound {
+  font-family: "Roboto";
+  font-size: 180px;
+  font-weight: 500;
+  color: var(--secondary);
+  line-height: 200px;
+}
