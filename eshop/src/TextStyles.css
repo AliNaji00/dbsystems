@@ -1,40 +1,38 @@
 :root {
+  --primary: #42427D;
   --body1: #2c3e50;
-  --secondary: #0082cf;
-  --secondaryDark: #006dad;
   --white: #fff;
-  --primary: #202629;
 }
 
 h1,
 .h1 {
   font-family: "Roboto";
-  color: var(--secondary);
+  color: var(--primary);
   font-size: 48px;
-  font-weight: 300;
-  line-height: 1.1;
-  text-transform: uppercase;
-  margin-bottom: 10px;
+  font-weight: 700;
+  line-height: 1.5;
+  margin: 0 0 10px 0;
   word-break: break-word;
-  letter-spacing: 3px;
 }
 
 h2,
 .h2 {
   font-family: "Roboto";
-  color: var(--secondary);
+  color: var(--primary);
   font-size: 32px;
-  font-weight: 900;
+  font-weight: 700;
   line-height: 1.1;
-  text-transform: uppercase;
+  margin: 0 0 10px 0;
 }
 
 h3,
 .h3 {
   font-family: "Roboto";
-  color: var(--body1);
+  color: var(--primary);
   font-size: 32px;
-  font-weight: 900;
+  font-weight: 300;
+  line-height: 1.1;
+  margin: 0 0 10px 0;
 }
 
 p,
@@ -70,10 +68,3 @@ li {
   margin-top: 20px;
 }
 
-.notFound {
-  font-family: "Roboto";
-  font-size: 180px;
-  font-weight: 500;
-  color: var(--secondary);
-  line-height: 200px;
-}
