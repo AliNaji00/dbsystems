@@ -1,4 +1,4 @@
-import { createTheme } from '@mui/material/styles';
+import { createTheme } from "@mui/material/styles";
 
 export const customColors = {
   primaryColor: "#42427D",
@@ -6,7 +6,7 @@ export const customColors = {
   primaryColorLight: "#8a8ac1",
   secondaryColor: "#F7FAFF",
   white: "#FFFFFF",
-  black: "#000000",
+  body1: "#1D1E18",
 };
 
 export const theme = createTheme({

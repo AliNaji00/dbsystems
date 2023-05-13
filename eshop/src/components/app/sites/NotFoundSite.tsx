@@ -1,9 +1,8 @@
+import { Button } from "@mui/material";
 import * as React from "react";
-import { CenteredContent } from "../../ui/CenteredContent";
-import { RouteNames } from "../router/RouteNames";
 import { Link } from "react-router-dom";
 import { undraw_page_not_found_re_e9o6 } from "../../util/Images";
-import { Button } from "@mui/material";
+import { RouteNames } from "../router/RouteNames";
 
 export const NotFoundSite = () => (
   <div

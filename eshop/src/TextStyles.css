@@ -1,6 +1,6 @@
 :root {
   --primary: #42427D;
-  --body1: #2c3e50;
+  --body1: #1D1E18;
   --white: #fff;
 }
 
@@ -43,28 +43,3 @@ p,
   letter-spacing: normal;
   color: var(--body1);
 }
-
-a,
-.link1 {
-  font-family: "Roboto";
-  font-size: 21px;
-  line-height: 29px;
-  letter-spacing: normal;
-  color: var(--secondaryDark);
-  text-decoration: none;
-}
-
-a:hover,
-.link1:hover {
-  color: var(--secondary);
-}
-
-li {
-  font-family: "Roboto";
-  font-size: 21px;
-  line-height: 29px;
-  letter-spacing: normal;
-  color: var(--body1);
-  margin-top: 20px;
-}
-
