@@ -4,7 +4,9 @@ export const customColors = {
   primaryColor: "#42427D",
   primaryColorDark: "#2C2C53",
   primaryColorLight: "#8a8ac1",
-  secondaryColor: "#F7FAFF",
+  backgroundColor: "#F7FAFF",
+  green: "#6b8f71",
+  tomato: "#fe654f",
   white: "#FFFFFF",
   body1: "#1D1E18",
 };
@@ -12,7 +14,7 @@ export const customColors = {
 export const theme = createTheme({
   palette: {
     background: {
-      default: customColors.secondaryColor,
+      default: customColors.backgroundColor,
     },
     primary: {
       main: customColors.primaryColor,
