@@ -38,7 +38,7 @@ export const CustomerNavBar = observer(
             display: "flex",
             alignItems: "center",
             width: "calc(100vw - 64px)",
-            padding: "16px 32px 32px 32px",
+            padding: "16px 32px",
             borderRadius: `${BACKGROUND_BORDER_RADIUS}px ${BACKGROUND_BORDER_RADIUS}px 0 0`,
             justifyContent: "space-between",
             backgroundColor: customColors.white,
@@ -49,8 +49,8 @@ export const CustomerNavBar = observer(
             src={logo_transparent}
             alt="logo"
             style={{
-              width: 64,
-              height: 64,
+              width: 100,
+              height: 100,
               borderRadius: 5,
             }}
           />
