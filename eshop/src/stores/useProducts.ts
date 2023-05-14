@@ -2,14 +2,12 @@ import * as React from "react";
 import { API } from "../components/network/API";
 import { IProduct } from "../components/network/APITypes";
 import { useGeneralStore } from "./GeneralStore";
-import { autorun, IReactionDisposer } from "mobx";
 
 export const useProducts = (keyword: string) => {
   const [products, setProducts] = React.useState<IProduct[]>([]);
   const generalStore = useGeneralStore();
 
   React.useEffect(() => {
-    let disposer: IReactionDisposer;
     const loadProducts = async () => {
       try {
         generalStore.isLoading = true;
@@ -26,15 +24,9 @@ export const useProducts = (keyword: string) => {
       }
     };
 
-    disposer = autorun(() => {
-      console.log(generalStore.keyword);
-      loadProducts();
-    });
-
-    return () => {
-      disposer();
-    };
-  }, []);
+    loadProducts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [keyword]);
 
   return products;
 };

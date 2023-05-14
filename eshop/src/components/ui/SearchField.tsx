@@ -25,6 +25,7 @@ export const SearchField = ({
   const [value, setValue] = React.useState(searchValue ?? "");
 
   // Optional debounce
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const onSearchChanged = React.useCallback(
     debounceMs
       ? debounce((value: string) => {
