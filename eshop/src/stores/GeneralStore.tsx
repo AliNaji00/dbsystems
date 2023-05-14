@@ -5,12 +5,9 @@ import { SearchField } from "../components/ui/SearchField";
 export const SEARCH_DEBOUNCE_MS = 500;
 
 export class GeneralStore {
-  name: string | null = null;
   @observable keyword = "";
-
-  constructor(name: string) {
-    this.name = name;
-  }
+  @observable basketItems = 4;
+  @observable isLoading = false;
 
   handleSearchChange = (search: string) => {
     this.keyword = search;
@@ -22,7 +19,7 @@ export class GeneralStore {
         searchValue={this.keyword}
         onChange={(search: string) => this.handleSearchChange(search)}
         placeholder={props.placeholder}
-        style={{ flexGrow: 1, maxWidth: props.maxWidth ? 320 : "unset" }}
+        style={{ flexGrow: 1, maxWidth: props.maxWidth ? 440 : "unset" }}
         debounceMs={SEARCH_DEBOUNCE_MS}
       />
     );
@@ -31,9 +28,9 @@ export class GeneralStore {
 
 let generalStore: GeneralStore | null = null;
 
-export function useGeneralStore(name: string) {
-  if (!generalStore || generalStore.name !== name) {
-    generalStore = new GeneralStore(name);
+export function useGeneralStore() {
+  if (!generalStore) {
+    generalStore = new GeneralStore();
   }
 
   return generalStore;

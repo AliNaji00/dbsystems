@@ -28,9 +28,11 @@ export const AnimatedGradient = styled.div`
   align-items: center;
 `;
 
+export const BACKGROUND_BORDER_RADIUS = 60;
+
 export const CustomerBackground = styled.div`
   background-color: ${customColors.white};
   width: calc(100vw - 64px);
   margin: 32px;
-  border-radius: 60px;
+  border-radius: ${BACKGROUND_BORDER_RADIUS}px;
 `;

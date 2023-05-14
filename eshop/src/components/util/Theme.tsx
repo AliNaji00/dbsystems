@@ -4,7 +4,7 @@ export const customColors = {
   primaryColor: "#42427D",
   primaryColorDark: "#2C2C53",
   primaryColorLight: "#8a8ac1",
-  backgroundColor: "#F7FAFF",
+  backgroundColor: "#EBEEF2",
   green: "#6b8f71",
   tomato: "#fe654f",
   white: "#FFFFFF",
@@ -23,6 +23,12 @@ export const theme = createTheme({
     },
     text: {
       primary: customColors.primaryColor,
+    },
+    warning: {
+      main: customColors.tomato,
+    },
+    success: {
+      main: customColors.green,
     },
   },
 });

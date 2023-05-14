@@ -1,29 +1,91 @@
 import * as React from "react";
-import { useGeneralStore } from "../../stores/generalstore";
-import { logo } from "../util/Images";
+import { useGeneralStore } from "../../stores/GeneralStore";
+import {
+  christopher_campbell_rDEOVtE7vOs_unsplash,
+  logo_transparent,
+} from "../util/Images";
+import { Avatar, Badge } from "@mui/material";
+import HistoryIcon from "@mui/icons-material/History";
+import { customColors } from "../util/Theme";
+import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
+import { observer } from "mobx-react";
+import { Link } from "react-router-dom";
+import {
+  CustomerRouteNames,
+  customerPrefix,
+} from "./router/CustomerRouteNames";
+import { BACKGROUND_BORDER_RADIUS } from "../ui/Components";
 
-export const CustomerNavBar = (props: { style?: React.CSSProperties }) => {
-  const generalStore = useGeneralStore("CustomerNavBar");
+export const CustomerNavBar = observer(
+  (props: { style?: React.CSSProperties }) => {
+    const generalStore = useGeneralStore();
 
-  return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        width: "100%",
-        ...props.style,
-      }}
-    >
-      <img
-        src={logo}
-        alt="logo"
+    const badgeStyle = {
+      "& .MuiBadge-badge": {
+        color: customColors.white,
+      },
+    };
+
+    return (
+      <div
         style={{
-          width: 64,
-          height: 64,
-          borderRadius: 5,
+          position: "fixed",
+          backgroundColor: customColors.backgroundColor,
         }}
-      />
-      <generalStore.SearchField placeholder="Search" maxWidth />
-    </div>
-  );
-};
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            width: "calc(100vw - 64px)",
+            padding: "16px 32px 32px 32px",
+            borderRadius: `${BACKGROUND_BORDER_RADIUS}px ${BACKGROUND_BORDER_RADIUS}px 0 0`,
+            justifyContent: "space-between",
+            backgroundColor: customColors.white,
+            ...props.style,
+          }}
+        >
+          <img
+            src={logo_transparent}
+            alt="logo"
+            style={{
+              width: 64,
+              height: 64,
+              borderRadius: 5,
+            }}
+          />
+          <generalStore.SearchField
+            placeholder="Search for products..."
+            maxWidth
+          />
+
+          <div style={{ display: "flex", gap: 16 }}>
+            <Link to={customerPrefix(CustomerRouteNames.ORDER_HISTORY)}>
+              <Avatar sx={{ bgcolor: customColors.primaryColor }}>
+                <div
+                  style={{ width: 27, height: 27, padding: "1px 0 0 0.5px" }}
+                >
+                  <HistoryIcon />
+                </div>
+              </Avatar>
+            </Link>
+            <Link to={customerPrefix(CustomerRouteNames.SHOPPING_CART)}>
+              <Badge
+                overlap="circular"
+                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                badgeContent={generalStore.basketItems}
+                color="warning"
+                sx={badgeStyle}
+              >
+                <Avatar sx={{ bgcolor: customColors.primaryColor }}>
+                  <ShoppingCartOutlinedIcon />
+                </Avatar>
+              </Badge>
+            </Link>
+            <Avatar src={christopher_campbell_rDEOVtE7vOs_unsplash} />
+          </div>
+        </div>
+      </div>
+    );
+  }
+);
