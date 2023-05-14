@@ -17,7 +17,7 @@ export const AnimatedGradient = styled.div`
   background: linear-gradient(
     270deg,
     ${customColors.primaryColorDark},
-    ${customColors.primaryColorLight}}
+    ${customColors.primaryColorLight}
   );
   background-size: 200% 200%;
   animation: ${gradientAnimation} 8s ease-in-out infinite;
