@@ -1,6 +1,6 @@
 // tslint:disable-next-line:typedef
 export const RouteNames = {
-    ROOT: "/",
+    CUSTOMER: "/customer/*",
     LOG_IN: "/log-in",
     SHOPPING_CART: "/shopping-cart",
 };

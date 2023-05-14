@@ -1,5 +1,5 @@
 import * as React from "react";
-import * as ReactDOM from "react-dom";
+import * as ReactDOM from "react-dom/client";
 
 // tslint:disable-next-line:no-floating-promises
 (async () => {
@@ -8,5 +8,9 @@ import * as ReactDOM from "react-dom";
 
   require("./TextStyles.css");
 
-  ReactDOM.render(<App />, document.getElementById("root"));
+  const rootElement = document.getElementById("root");
+  if (!rootElement) throw new Error("Failed to find the root element");
+  const root = ReactDOM.createRoot(rootElement);
+
+  root.render(<App />);
 })();

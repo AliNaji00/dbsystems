@@ -9,11 +9,16 @@ import {
 import * as React from "react";
 import { Helmet } from "react-helmet";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import {
+  CustomerRouteNames,
+  customerPrefix,
+} from "../../customer/router/CustomerRouteNames";
+import { API } from "../../network/API";
+import { LoginFormInputs } from "../../network/APITypes";
 import { AnimatedGradient } from "../../ui/Components";
 import { logo } from "../../util/Images";
 import { title } from "../router/RouteNames";
-import { API } from "../../network/API";
-import { LoginFormInputs } from "../../network/APITypes";
 
 export const LoginSite = () => {
   const {
@@ -22,14 +27,22 @@ export const LoginSite = () => {
     formState: { errors },
   } = useForm<LoginFormInputs>();
   const [showPassword, setShowPassword] = React.useState(false);
+  const navigate = useNavigate();
 
   const onSubmit = async (data: LoginFormInputs) => {
     try {
       const response = await API.login(data);
+
+      if (response.status !== 200) {
+      } else {
+        if (response.data.msg !== "success") {
+          console.log("error");
+        } else {
+          navigate(customerPrefix(CustomerRouteNames.HOME));
+        }
+      }
     } catch (e) {
       console.log(e);
-    } finally {
-      console.log("finally");
     }
   };
 
@@ -61,9 +74,10 @@ export const LoginSite = () => {
             position: "absolute",
             top: 80,
             left: 100,
+            borderRadius: 5,
           }}
         />
-        <Paper elevation={12} square>
+        <Paper elevation={12}>
           <div
             style={{
               padding: 32,

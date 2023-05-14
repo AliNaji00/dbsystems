@@ -1,4 +1,5 @@
 import styled, { keyframes } from "styled-components";
+import { customColors } from "../util/Theme";
 
 const gradientAnimation = keyframes`
   0% {
@@ -13,7 +14,11 @@ const gradientAnimation = keyframes`
 `;
 
 export const AnimatedGradient = styled.div`
-  background: linear-gradient(270deg, #2c2c53, #8a8ac1);
+  background: linear-gradient(
+    270deg,
+    ${customColors.primaryColorDark},
+    ${customColors.primaryColorLight}}
+  );
   background-size: 200% 200%;
   animation: ${gradientAnimation} 8s ease-in-out infinite;
   width: 100%;
@@ -21,4 +26,12 @@ export const AnimatedGradient = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+`;
+
+export const CustomerBackground = styled.div`
+  backgroud-color: ${customColors.white};
+  width: 100%;
+  height: 100vh;
+  margin: 16px 32px;
+  corner-radius: 20px;
 `;
