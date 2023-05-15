@@ -3,6 +3,7 @@ import { SearchField } from "../components/ui/SearchField";
 import { makeAutoObservable } from "mobx";
 
 export const SEARCH_DEBOUNCE_MS = 500;
+export const imgageHost = "http://localhost/img";
 
 export class GeneralStore {
   keyword = "";

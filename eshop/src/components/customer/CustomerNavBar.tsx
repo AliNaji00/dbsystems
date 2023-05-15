@@ -15,6 +15,7 @@ import {
   customerPrefix,
 } from "./router/CustomerRouteNames";
 import { BACKGROUND_BORDER_RADIUS } from "../ui/Components";
+import { RouteNames } from "../app/router/RouteNames";
 
 export const CustomerNavBar = observer(
   (props: { style?: React.CSSProperties }) => {
@@ -27,65 +28,80 @@ export const CustomerNavBar = observer(
     };
 
     return (
-      <div
-        style={{
-          position: "fixed",
-          backgroundColor: customColors.backgroundColor,
-        }}
-      >
+      <>
         <div
           style={{
-            display: "flex",
-            alignItems: "center",
-            width: "calc(100vw - 64px)",
-            padding: "16px 32px",
-            borderRadius: `${BACKGROUND_BORDER_RADIUS}px ${BACKGROUND_BORDER_RADIUS}px 0 0`,
-            justifyContent: "space-between",
-            backgroundColor: customColors.white,
-            ...props.style,
+            height: 32,
+            width: "100%",
+            backgroundColor: customColors.backgroundColor,
+            position: "fixed",
+            top: 0,
+          }}
+        />
+        <div
+          style={{
+            position: "fixed",
+            backgroundColor: customColors.backgroundColor,
+            left: 32,
+            top: 32,
           }}
         >
-          <img
-            src={logo_transparent}
-            alt="logo"
+          <div
             style={{
-              width: 100,
-              height: 100,
-              borderRadius: 5,
+              display: "flex",
+              alignItems: "center",
+              width: "calc(100vw - 64px)",
+              padding: "16px 32px",
+              borderRadius: `${BACKGROUND_BORDER_RADIUS}px ${BACKGROUND_BORDER_RADIUS}px 0 0`,
+              justifyContent: "space-between",
+              backgroundColor: customColors.white,
+              ...props.style,
             }}
-          />
-          <generalStore.SearchField
-            placeholder="Search for products..."
-            maxWidth
-          />
+          >
+            <img
+              src={logo_transparent}
+              alt="logo"
+              style={{
+                width: 100,
+                height: 100,
+                borderRadius: 5,
+              }}
+            />
+            <generalStore.SearchField
+              placeholder="Search for products..."
+              maxWidth
+            />
 
-          <div style={{ display: "flex", gap: 16 }}>
-            <Link to={customerPrefix(CustomerRouteNames.ORDER_HISTORY)}>
-              <Avatar sx={{ bgcolor: customColors.primaryColor }}>
-                <div
-                  style={{ width: 27, height: 27, padding: "1px 0 0 0.5px" }}
-                >
-                  <HistoryIcon />
-                </div>
-              </Avatar>
-            </Link>
-            <Link to={customerPrefix(CustomerRouteNames.SHOPPING_CART)}>
-              <Badge
-                overlap="circular"
-                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-                badgeContent={generalStore.basketItems}
-                color="warning"
-                sx={badgeStyle}
-              >
+            <div style={{ display: "flex", gap: 16 }}>
+              <Link to={customerPrefix(CustomerRouteNames.ORDER_HISTORY)}>
                 <Avatar sx={{ bgcolor: customColors.primaryColor }}>
-                  <ShoppingCartOutlinedIcon />
+                  <div
+                    style={{ width: 27, height: 27, padding: "1px 0 0 0.5px" }}
+                  >
+                    <HistoryIcon />
+                  </div>
                 </Avatar>
-              </Badge>
-            </Link>
-            <Avatar src={christopher_campbell_rDEOVtE7vOs_unsplash} />
+              </Link>
+              <Link to={customerPrefix(CustomerRouteNames.SHOPPING_CART)}>
+                <Badge
+                  overlap="circular"
+                  anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                  badgeContent={generalStore.basketItems}
+                  color="warning"
+                  sx={badgeStyle}
+                >
+                  <Avatar sx={{ bgcolor: customColors.primaryColor }}>
+                    <ShoppingCartOutlinedIcon />
+                  </Avatar>
+                </Badge>
+              </Link>
+              <Link to={RouteNames.LOG_IN}>
+                <Avatar src={christopher_campbell_rDEOVtE7vOs_unsplash} />
+              </Link>
+            </div>
           </div>
         </div>
-      </div>
+      </>
     );
   }
 );

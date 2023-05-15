@@ -34,5 +34,6 @@ export const CustomerBackground = styled.div`
   background-color: ${customColors.white};
   width: calc(100vw - 64px);
   margin: 32px;
+  padding-top: 70px;
   border-radius: ${BACKGROUND_BORDER_RADIUS}px;
 `;

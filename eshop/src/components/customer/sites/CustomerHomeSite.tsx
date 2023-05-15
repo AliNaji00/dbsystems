@@ -4,37 +4,28 @@ import { useGeneralStore } from "../../../stores/GeneralStore";
 import { useProducts } from "../../../stores/useProducts";
 import { CenteredContent } from "../../ui/CenteredContent";
 import { CustomerBackground } from "../../ui/Components";
-import { customColors } from "../../util/Theme";
-import { CustomerNavBar } from "../CustomerNavBar";
+import { ProductCard } from "../ProductCard";
 
 export const CustomerHomeSite = observer(() => {
   const generalStore = useGeneralStore();
   const products = useProducts(generalStore.keyword);
 
   return (
-    <>
-      <div
-        style={{
-          height: 32,
-          width: "100%",
-          backgroundColor: customColors.backgroundColor,
-          position: "fixed",
-          top: 0,
-        }}
-      />
-      <CustomerBackground style={{ minHeight: 200 }}>
-        <CustomerNavBar />
-        <CenteredContent>
-          <div
-            style={{ height: 2000, backgroundColor: "black" }}
-            onClick={() => console.log(generalStore.keyword)}
-          >
-            {products.map((product) => (
-              <div>{product.Name}</div>
-            ))}
-          </div>
-        </CenteredContent>
-      </CustomerBackground>
-    </>
+    <CustomerBackground>
+      <CenteredContent>
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: 20,
+          }}
+          onClick={() => console.log(generalStore.keyword)}
+        >
+          {products.map((product) => (
+            <ProductCard product={product} key={product.ID} />
+          ))}
+        </div>
+      </CenteredContent>
+    </CustomerBackground>
   );
 });
