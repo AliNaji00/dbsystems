@@ -3,9 +3,12 @@ import * as React from "react";
 import { IProduct } from "../network/APITypes";
 import { getImagePath } from "../util/Helpers";
 import { customColors } from "../util/Theme";
-import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
+import { CustomNumberField } from "../ui/ProductCartNumberField";
+import { useGeneralStore } from "../../stores/GeneralStore";
 
 export const ProductCard = (props: { product: IProduct }) => {
+  const generalStore = useGeneralStore();
+
   return (
     <Card sx={{ width: 200, height: 355 }} elevation={6}>
       <CardMedia
@@ -49,7 +52,14 @@ export const ProductCard = (props: { product: IProduct }) => {
           </div>
         </div>
         <div style={{ flex: 1, display: "flex", justifyContent: "end" }}>
-          <ShoppingCartOutlinedIcon />
+          <CustomNumberField
+            initialAmount={0}
+            maxAmount={10}
+            changeValue={(newNumber: number) => {
+              generalStore.productsChangeFlag =
+                !generalStore.productsChangeFlag;
+            }}
+          />
         </div>
       </div>
     </Card>

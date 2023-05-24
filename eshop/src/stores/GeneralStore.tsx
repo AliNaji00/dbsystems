@@ -11,6 +11,7 @@ export class GeneralStore {
   basketItems = 4;
   isLoading = false;
   loggedIn = false;
+  productsChangeFlag = false;
   isHydrated = false;
 
   constructor() {

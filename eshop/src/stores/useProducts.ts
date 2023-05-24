@@ -26,7 +26,7 @@ export const useProducts = (keyword: string) => {
 
     loadProducts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [keyword]);
+  }, [keyword, generalStore.productsChangeFlag]);
 
   return products;
 };
