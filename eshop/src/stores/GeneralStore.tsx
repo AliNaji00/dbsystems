@@ -9,6 +9,7 @@ export class GeneralStore {
   keyword = "";
   basketItems = 4;
   isLoading = false;
+  loggedIn = false;
 
   constructor() {
     makeAutoObservable(this);

@@ -19,8 +19,10 @@ import { LoginFormInputs } from "../../network/APITypes";
 import { AnimatedGradient } from "../../ui/Components";
 import { logo } from "../../util/Images";
 import { title } from "../router/RouteNames";
+import { observer } from "mobx-react";
+import { useGeneralStore } from "../../../stores/GeneralStore";
 
-export const LoginSite = () => {
+export const LoginSite = observer(() => {
   const {
     register,
     handleSubmit,
@@ -28,6 +30,8 @@ export const LoginSite = () => {
   } = useForm<LoginFormInputs>();
   const [showPassword, setShowPassword] = React.useState(false);
   const navigate = useNavigate();
+
+  const generalStore = useGeneralStore();
 
   const onSubmit = async (data: LoginFormInputs) => {
     try {
@@ -38,6 +42,7 @@ export const LoginSite = () => {
         if (response.data.msg !== "success") {
           console.log("error");
         } else {
+          generalStore.loggedIn = true;
           navigate(customerPrefix(CustomerRouteNames.HOME));
         }
       }
@@ -58,6 +63,12 @@ export const LoginSite = () => {
 
   // Validate email
   const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
+
+  React.useEffect(() => {
+    if (generalStore.loggedIn) {
+      navigate(customerPrefix(CustomerRouteNames.HOME));
+    }
+  }, [generalStore.loggedIn, navigate]);
 
   return (
     <>
@@ -154,4 +165,4 @@ export const LoginSite = () => {
       </AnimatedGradient>
     </>
   );
-};
+});
