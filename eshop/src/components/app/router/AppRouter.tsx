@@ -5,12 +5,20 @@ import { NotFoundSite } from "../sites/NotFoundSite";
 import { RouteNames } from "./RouteNames";
 import { LoginSite } from "../sites/LoginSite";
 import { CustomerRouter } from "../../customer/router/CustomerRouter";
+import { ProtectedRoute } from "../../util/ProtectedRoute";
 
 export const AppRouter = observer(() => (
   <BrowserRouter>
     <Routes>
       <Route path={RouteNames.LOG_IN} element={<LoginSite />} />
-      <Route path={RouteNames.CUSTOMER} element={<CustomerRouter />} />
+      <Route
+        path={RouteNames.CUSTOMER}
+        element={
+          <ProtectedRoute>
+            <CustomerRouter />
+          </ProtectedRoute>
+        }
+      />
       <Route path="*" element={<NotFoundSite />} />
     </Routes>
   </BrowserRouter>

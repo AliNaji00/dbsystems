@@ -1,6 +1,7 @@
 import * as React from "react";
 import { SearchField } from "../components/ui/SearchField";
-import { makeAutoObservable } from "mobx";
+import { action, makeAutoObservable } from "mobx";
+import { makePersistable } from "mobx-persist-store";
 
 export const SEARCH_DEBOUNCE_MS = 500;
 export const imgageHost = "http://localhost/img";
@@ -10,9 +11,22 @@ export class GeneralStore {
   basketItems = 4;
   isLoading = false;
   loggedIn = false;
+  isHydrated = false;
 
   constructor() {
     makeAutoObservable(this);
+
+    makePersistable(this, {
+      name: "GeneralStore",
+      properties: ["loggedIn"],
+      storage: window.localStorage,
+    }).then(
+      action((persistStore) => {
+        if (persistStore) {
+          this.isHydrated = true;
+        }
+      })
+    );
   }
 
   handleSearchChange = (search: string) => {
