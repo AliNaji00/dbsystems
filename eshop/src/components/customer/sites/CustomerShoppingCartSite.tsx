@@ -7,6 +7,8 @@ import {
 import { CenteredContent } from "../../ui/CenteredContent";
 import { CustomerBackground } from "../../ui/Components";
 import { ShoppingCart } from "../ShoppingCart";
+import { Helmet } from "react-helmet";
+import { title } from "../../app/router/RouteNames";
 
 export const CustomerShoppingCartSite = observer(() => {
   let [items, setItems] = React.useState<IShoppingCartItem[]>([]);
@@ -16,10 +18,15 @@ export const CustomerShoppingCartSite = observer(() => {
   }, []);
 
   return (
-    <CustomerBackground style={{ minHeight: 200 }}>
-      <CenteredContent>
-        <ShoppingCart items={items} />
-      </CenteredContent>
-    </CustomerBackground>
+    <>
+      <Helmet>
+        <title>{title("Cart")}</title>
+      </Helmet>
+      <CustomerBackground style={{ minHeight: 200 }}>
+        <CenteredContent>
+          <ShoppingCart items={items} />
+        </CenteredContent>
+      </CustomerBackground>
+    </>
   );
 });

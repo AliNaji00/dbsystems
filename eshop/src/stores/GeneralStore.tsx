@@ -33,6 +33,10 @@ export class GeneralStore {
     this.keyword = search;
   };
 
+  logout = () => {
+    this.loggedIn = false;
+  };
+
   SearchField = (props: { placeholder: string; maxWidth?: boolean }) => {
     return (
       <SearchField

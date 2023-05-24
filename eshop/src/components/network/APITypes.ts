@@ -3,6 +3,13 @@ export interface LoginResponse {
   userrole: string;
 }
 
+export interface ILoginResponse {
+  msg: string;
+  ImageURL: string;
+  userroles: Array<string>;
+  name: string;
+}
+
 export interface LoginFormInputs {
   email: string;
   password: string;

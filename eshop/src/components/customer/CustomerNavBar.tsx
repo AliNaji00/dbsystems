@@ -1,24 +1,35 @@
+import HistoryIcon from "@mui/icons-material/History";
+import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
+import { Avatar, Badge, Menu, MenuItem } from "@mui/material";
+import { observer } from "mobx-react";
 import * as React from "react";
+import { Link } from "react-router-dom";
 import { useGeneralStore } from "../../stores/GeneralStore";
+import { BACKGROUND_BORDER_RADIUS } from "../ui/Components";
 import {
   christopher_campbell_rDEOVtE7vOs_unsplash,
   logo_transparent,
 } from "../util/Images";
-import { Avatar, Badge } from "@mui/material";
-import HistoryIcon from "@mui/icons-material/History";
 import { customColors } from "../util/Theme";
-import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
-import { observer } from "mobx-react";
-import { Link } from "react-router-dom";
 import {
   CustomerRouteNames,
   customerPrefix,
 } from "./router/CustomerRouteNames";
-import { BACKGROUND_BORDER_RADIUS } from "../ui/Components";
-import { RouteNames } from "../app/router/RouteNames";
+
+type SiteType = "Home" | "Shopping Cart";
 
 export const CustomerNavBar = observer(
-  (props: { style?: React.CSSProperties }) => {
+  (props: { style?: React.CSSProperties; siteType: SiteType }) => {
+    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const open = Boolean(anchorEl);
+
+    const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
+      setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+      setAnchorEl(null);
+    };
+
     const generalStore = useGeneralStore();
 
     const badgeStyle = {
@@ -95,9 +106,32 @@ export const CustomerNavBar = observer(
                   </Avatar>
                 </Badge>
               </Link>
-              <Link to={RouteNames.LOG_IN}>
-                <Avatar src={christopher_campbell_rDEOVtE7vOs_unsplash} />
-              </Link>
+              <Avatar
+                src={christopher_campbell_rDEOVtE7vOs_unsplash}
+                onClick={(e) => handleClick(e)}
+                sx={{ cursor: "pointer" }}
+              />
+              <Menu
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                MenuListProps={{
+                  "aria-labelledby": "basic-button",
+                }}
+              >
+                <MenuItem onClick={handleClose}>Profile</MenuItem>
+                <MenuItem onClick={handleClose}>Seller Dashboard</MenuItem>
+                <MenuItem onClick={handleClose}>Admin Dashbaord</MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    handleClose();
+                    generalStore.logout();
+                  }}
+                >
+                  Logout
+                </MenuItem>
+              </Menu>
             </div>
           </div>
         </div>
