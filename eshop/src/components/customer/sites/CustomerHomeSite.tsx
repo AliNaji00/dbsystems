@@ -18,7 +18,7 @@ export const CustomerHomeSite = observer(() => {
       <Helmet>
         <title>{title("Home")}</title>
       </Helmet>
-      <CustomerNavBar siteType="Home" />
+      <CustomerNavBar siteType="Search" />
       <CustomerBackground>
         <CenteredContent>
           <div

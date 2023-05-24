@@ -9,6 +9,7 @@ import { CustomerBackground } from "../../ui/Components";
 import { ShoppingCart } from "../ShoppingCart";
 import { Helmet } from "react-helmet";
 import { title } from "../../app/router/RouteNames";
+import { CustomerNavBar } from "../CustomerNavBar";
 
 export const CustomerShoppingCartSite = observer(() => {
   let [items, setItems] = React.useState<IShoppingCartItem[]>([]);
@@ -22,6 +23,7 @@ export const CustomerShoppingCartSite = observer(() => {
       <Helmet>
         <title>{title("Cart")}</title>
       </Helmet>
+      <CustomerNavBar siteType="Other" />
       <CustomerBackground style={{ minHeight: 200 }}>
         <CenteredContent>
           <ShoppingCart items={items} />

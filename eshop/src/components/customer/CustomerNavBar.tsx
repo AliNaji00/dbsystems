@@ -1,6 +1,6 @@
 import HistoryIcon from "@mui/icons-material/History";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
-import { Avatar, Badge, Menu, MenuItem } from "@mui/material";
+import { Avatar, Badge, Button, Menu, MenuItem } from "@mui/material";
 import { observer } from "mobx-react";
 import * as React from "react";
 import { Link } from "react-router-dom";
@@ -15,8 +15,9 @@ import {
   CustomerRouteNames,
   customerPrefix,
 } from "./router/CustomerRouteNames";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 
-type SiteType = "Home" | "Shopping Cart";
+type SiteType = "Search" | "Other";
 
 export const CustomerNavBar = observer(
   (props: { style?: React.CSSProperties; siteType: SiteType }) => {
@@ -78,10 +79,34 @@ export const CustomerNavBar = observer(
                 borderRadius: 5,
               }}
             />
-            <generalStore.SearchField
-              placeholder="Search for products..."
-              maxWidth
-            />
+
+            <div
+              style={{
+                flex: 1,
+                display: "flex",
+                justifyContent: "start",
+                maxWidth: 1000,
+              }}
+            >
+              {props.siteType === "Search" && (
+                <generalStore.SearchField
+                  placeholder="Search for products..."
+                  maxWidth
+                />
+              )}
+              {props.siteType === "Other" && (
+                <Link to={customerPrefix(CustomerRouteNames.HOME)}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    size="large"
+                    startIcon={<ArrowBackIosIcon />}
+                  >
+                    Back Home
+                  </Button>
+                </Link>
+              )}
+            </div>
 
             <div style={{ display: "flex", gap: 16 }}>
               <Link to={customerPrefix(CustomerRouteNames.ORDER_HISTORY)}>
