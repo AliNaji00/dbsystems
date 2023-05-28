@@ -3,22 +3,7 @@ import { Router } from "express";
 export default ({ pool }) => {
   const route = Router();
 
-  route.get("/:id", (req, res) => {
-    pool
-      .getConnection()
-      .then((conn) => {
-        conn
-          .query("SELECT * FROM Users WHERE ID = ?", req.params.id)
-          .then((rows) => {
-            res.json(rows[0]);
-          })
-          .catch(() => res.status(403).end())
-          .finally(() => conn.end());
-      })
-      .catch(() => res.status(500).end());
-  });
-
-  route.post("/login", (req, res) => {
+  route.post("/login", (req, res, next) => {
     const email = req.body.email;
     const password = req.body.password;
     pool
@@ -26,7 +11,7 @@ export default ({ pool }) => {
       .then((conn) => {
         conn
           .query(
-            "SELECT u.ID, u.Name, NOT ISNULL(s.ID) AS isSeller, NOT ISNULL(b.ID) AS isBuyer FROM Users u LEFT JOIN Seller s ON u.ID = s.ID LEFT JOIN Buyer b ON u.ID = b.ID WHERE Email = ? AND Password = ?",
+            "SELECT u.user_id, u.name, NOT ISNULL(s.user_id) AS isSeller, NOT ISNULL(a.user_id) AS isAdmin FROM users u LEFT JOIN seller s ON u.user_id = s.user_id LEFT JOIN admin a ON u.user_id = a.user_id WHERE email = ? AND password = ?",
             [email, password]
           )
           .then((rows) => {
@@ -35,14 +20,14 @@ export default ({ pool }) => {
             if (user.isSeller) {
               roles.push("seller");
             }
-            if (user.isBuyer) {
-              roles.push("buyer");
+            if (user.isAdmin) {
+              roles.push("admin");
             }
             const loginResponseData = {
-              user_id: user.ID,
-              ImageURL: "",
+              user_id: user.user_id,
+              ImageURL: "/img/placeholder.png",
               userroles: roles,
-              name: user.Name,
+              name: user.name,
             };
             const loginResponse = {
               msg: "success",
@@ -50,12 +35,10 @@ export default ({ pool }) => {
             };
             res.json(loginResponse);
           })
-          .catch(() =>
-            res.status(403).json({ msg: "Email or password wrong" }).end()
-          )
+          .catch(() => res.status(403).json({ msg: "Email or password wrong" }))
           .finally(conn.close());
       })
-      .catch(() => res.status(500).end());
+      .catch(next);
   });
 
   return route;

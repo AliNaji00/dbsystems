@@ -3,50 +3,26 @@ import { Router } from "express";
 export default ({ pool }) => {
   const route = Router();
 
-  route.get("/:id", (req, res) => {
+  route.get("/:id", (req, res, next) => {
     pool
       .getConnection()
       .then((conn) => {
         conn
-          .query("SELECT Name, Email FROM Users WHERE ID = ?", req.params.id)
+          .query(
+            "SELECT name, email FROM users WHERE user_id = ?",
+            req.params.id
+          )
           .then((rows) => {
-            res.json(rows[0]);
+            if (rows.length > 0) {
+              res.json(rows[0]);
+            } else {
+              throw Error();
+            }
           })
-          .catch(() => res.status(403).end())
+          .catch(() => res.status(404).end())
           .finally(() => conn.end());
       })
-      .catch(() => res.status(500).end());
-  });
-
-  route.post("/", (req, res) => {
-    const email = req.body.Email;
-    const password = req.body.Password;
-    const name = req.body.Name;
-    const birthday = req.body.Birthday;
-    const phone = req.body.Phone_No;
-    const gender = req.body.Gender;
-    pool
-      .getConnection()
-      .then((conn) => {
-        conn
-          .query("INSERT INTO Users VALUES (DEFAULT, ?, ?, ?, ?, ?, ?)", [
-            email,
-            password,
-            name,
-            birthday,
-            phone,
-            gender,
-          ])
-          .then((rows) => {
-            res.status(201).location("users" + rows[0].ID);
-          })
-          .catch((err) => {
-            res.status(403).end();
-            console.log(err);
-          })
-          .finally(() => conn.end());
-      })
-      .catch(() => res.status(500).end());
+      .catch(next);
   });
 
   return route;

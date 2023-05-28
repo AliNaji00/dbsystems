@@ -8,6 +8,6 @@ services:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_USER: admin
       MYSQL_PASSWORD: test
-      MYSQL_DATABASE: bssdb 
+      MYSQL_DATABASE: eshop
     ports:
       - "3306:3306"
