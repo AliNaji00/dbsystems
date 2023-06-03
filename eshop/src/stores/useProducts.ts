@@ -1,10 +1,10 @@
 import * as React from "react";
 import { API } from "../components/network/API";
-import { IProduct } from "../components/network/APITypes";
+import { Product } from "../components/network/APITypes";
 import { useGeneralStore } from "./GeneralStore";
 
 export const useProducts = (keyword: string) => {
-  const [products, setProducts] = React.useState<IProduct[]>([]);
+  const [products, setProducts] = React.useState<Product[]>([]);
   const generalStore = useGeneralStore();
 
   React.useEffect(() => {

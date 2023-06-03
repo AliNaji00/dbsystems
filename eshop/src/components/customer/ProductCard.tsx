@@ -1,12 +1,12 @@
 import { Card, CardMedia } from "@mui/material";
 import * as React from "react";
-import { IProduct } from "../network/APITypes";
+import { Product } from "../network/APITypes";
 import { getImagePath } from "../util/Helpers";
 import { customColors } from "../util/Theme";
 import { CustomNumberField } from "../ui/ProductCartNumberField";
 import { useGeneralStore } from "../../stores/GeneralStore";
 
-export const ProductCard = (props: { product: IProduct }) => {
+export const ProductCard = (props: { product: Product }) => {
   const generalStore = useGeneralStore();
 
   return (

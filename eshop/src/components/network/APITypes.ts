@@ -5,9 +5,15 @@ export interface LoginResponse {
 
 export interface ILoginResponse {
   msg: string;
-  ImageURL: string;
-  userroles: Array<string>;
-  name: string;
+  code: number;
+  data: LoginResponseData;
+}
+
+export interface LoginResponseData {
+  user_id: string; // user id
+  ImageURL: string; // link to image of profile picture
+  userroles: Array<string>; // array of user roles (e.g. "admin", "customer")
+  name: string; // name of user
 }
 
 export interface LoginFormInputs {
@@ -17,10 +23,22 @@ export interface LoginFormInputs {
 
 export interface GetProductsResponse {
   msg: string;
-  data: Array<IProduct>;
+  code: number;
+  data: Array<Product>;
 }
 
 export interface IProduct {
+  Stock_quantity: number;
+  Description: string;
+  ID: number;
+  ImageURL: string;
+  AmountInBasket: number;
+  Name: string;
+  Price: number; // actual price, possibly reduced price
+  Original_price: number;
+}
+
+export interface Product {
   Available: number;
   Category: string;
   Description: string;
