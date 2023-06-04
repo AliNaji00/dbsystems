@@ -54,7 +54,7 @@ export const ProductCard = (props: { product: IProduct }) => {
         </div>
         <div style={{ flex: 1, display: "flex", justifyContent: "end" }}>
           <CustomNumberField
-            initialAmount={0}
+            initialAmount={Number(props.product.AmountInBasket)}
             maxAmount={10}
             changeValue={(newNumber: number) => {
               generalStore.productsChangeFlag =

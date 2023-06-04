@@ -3,6 +3,8 @@ import {
   GetProductsResponse,
   LoginFormInputs,
   ILoginResponse,
+  PutShoppingCartResponse,
+  GetBasketResponse,
 } from "./APITypes";
 
 export const STATUS_CODE_UNAUTHORIZED = 401;
@@ -46,12 +48,29 @@ export const API = {
     }
   },
 
-  async getBasket(
-    user_id: string
-  ): Promise<AxiosResponse<GetProductsResponse>> {
+  async getBasket(user_id: string): Promise<AxiosResponse<GetBasketResponse>> {
     try {
-      const response = await axios.get<GetProductsResponse>(
+      const response = await axios.get<GetBasketResponse>(
         prefix(`/basket/${user_id}`)
+      );
+      return response;
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  async putBasket(
+    user_id: string,
+    product_id: number,
+    quantity: number
+  ): Promise<AxiosResponse<PutShoppingCartResponse>> {
+    try {
+      const response = await axios.put<PutShoppingCartResponse>(
+        prefix(`/basket/${user_id}`),
+        {
+          product_id: product_id,
+          quantity: quantity,
+        }
       );
       return response;
     } catch (err) {

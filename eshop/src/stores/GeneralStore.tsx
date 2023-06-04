@@ -19,6 +19,7 @@ export class GeneralStore {
   userRoles: Array<UserRole> = ["customer"];
 
   basketItems = null;
+  basketChangeFlag = false;
 
   constructor() {
     makeAutoObservable(this);
