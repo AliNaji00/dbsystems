@@ -18,7 +18,7 @@ export class GeneralStore {
   loggedIn = false;
   userRoles: Array<UserRole> = ["customer"];
 
-  basketItems = null;
+  basketItems: null | number = null;
   basketChangeFlag = false;
 
   constructor() {

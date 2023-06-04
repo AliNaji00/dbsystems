@@ -1,10 +1,15 @@
-import { Card, CardMedia, FormControl, MenuItem, Select } from "@mui/material";
+import { Card, CardMedia } from "@mui/material";
 import * as React from "react";
+import { useGeneralStore } from "../../stores/GeneralStore";
+import { API } from "../network/API";
 import { IShoppingCartItem } from "../network/APITypes";
+import { CustomNumberField } from "../ui/ProductCartNumberField";
 import { getImagePath } from "../util/Helpers";
 import { customColors } from "../util/Theme";
 
 export const ShoppingCartItem = (props: { item: IShoppingCartItem }) => {
+  const generalStore = useGeneralStore();
+
   return (
     <Card sx={{ display: "flex", height: 260 }}>
       <CardMedia
@@ -42,29 +47,26 @@ export const ShoppingCartItem = (props: { item: IShoppingCartItem }) => {
         <div style={{ flex: 1 }} />
         <h4 style={{ margin: "8px 16px" }}>Quantity:</h4>
         <div style={{ width: 100, marginBottom: 8 }}>
-          <FormControl sx={{ m: 1 }} fullWidth>
-            <Select
-              value={props.item.quantity}
-              onChange={() => {}}
-              displayEmpty
-              sx={{ height: 40 }}
-              inputProps={{ "aria-label": "Without label" }}
-            >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              <MenuItem value={1}>1</MenuItem>
-              <MenuItem value={2}>2</MenuItem>
-              <MenuItem value={3}>3</MenuItem>
-              <MenuItem value={4}>4</MenuItem>
-              <MenuItem value={5}>5</MenuItem>
-              <MenuItem value={6}>6</MenuItem>
-              <MenuItem value={7}>7</MenuItem>
-              <MenuItem value={8}>8</MenuItem>
-              <MenuItem value={9}>9</MenuItem>
-              <MenuItem value={10}>10</MenuItem>
-            </Select>
-          </FormControl>
+          <CustomNumberField
+            initialAmount={Number(props.item.quantity)}
+            maxAmount={props.item.stock_quantity}
+            changeValue={async (newNumber: number) => {
+              try {
+                generalStore.isLoading = true;
+
+                await API.putBasket(
+                  generalStore.userId,
+                  props.item.product_id,
+                  newNumber
+                );
+              } catch (err) {
+                console.log(err);
+              } finally {
+                generalStore.isLoading = false;
+                generalStore.basketChangeFlag = !generalStore.basketChangeFlag;
+              }
+            }}
+          />
         </div>
       </div>
       <div

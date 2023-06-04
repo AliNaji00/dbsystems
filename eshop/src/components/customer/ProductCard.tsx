@@ -15,7 +15,6 @@ export const ProductCard = (props: { product: IProduct }) => {
       <CardMedia
         component="img"
         height="300"
-        // TODO: Images
         image={getImagePath(props.product.picture)}
         alt={props.product.name}
       />
@@ -56,7 +55,7 @@ export const ProductCard = (props: { product: IProduct }) => {
         <div style={{ flex: 1, display: "flex", justifyContent: "end" }}>
           <CustomNumberField
             initialAmount={Number(props.product.AmountInBasket)}
-            maxAmount={10}
+            maxAmount={props.product.stock_quantity}
             changeValue={async (newNumber: number) => {
               try {
                 generalStore.isLoading = true;

@@ -1,17 +1,10 @@
+import { Button, Card, TextField } from "@mui/material";
 import * as React from "react";
 import { IShoppingCartItem } from "../network/APITypes";
-import { ShoppingCartItem } from "./ShoppingCartItem";
 import { customColors } from "../util/Theme";
-import { Button, Card, TextField } from "@mui/material";
-import { API } from "../network/API";
+import { ShoppingCartItem } from "./ShoppingCartItem";
 
 export const ShoppingCart = (props: { items: IShoppingCartItem[] }) => {
-  React.useEffect(() => {
-    API.getBasket("3").then((response) => {
-      console.log(response);
-    });
-  }, []);
-
   return (
     <div style={{ display: "flex", width: "100%" }}>
       <div
@@ -24,7 +17,7 @@ export const ShoppingCart = (props: { items: IShoppingCartItem[] }) => {
         }}
       >
         {props.items.map((item) => (
-          <ShoppingCartItem item={item} />
+          <ShoppingCartItem item={item} key={item.product_id} />
         ))}
       </div>
       <div
@@ -56,6 +49,7 @@ export const ShoppingCart = (props: { items: IShoppingCartItem[] }) => {
                   justifyContent: "space-between",
                   marginBottom: 8,
                 }}
+                key={item.product_id}
               >
                 <h4>
                   {item.quantity}x {item.name}
