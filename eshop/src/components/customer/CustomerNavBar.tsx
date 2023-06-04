@@ -18,7 +18,11 @@ import {
 type SiteType = "Search" | "Other";
 
 export const CustomerNavBar = observer(
-  (props: { style?: React.CSSProperties; siteType: SiteType }) => {
+  (props: {
+    style?: React.CSSProperties;
+    siteType: SiteType;
+    title?: string;
+  }) => {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
 
@@ -78,21 +82,30 @@ export const CustomerNavBar = observer(
               }}
             />
 
-            <div
-              style={{
-                flex: 1,
-                display: "flex",
-                justifyContent: "start",
-                maxWidth: 1000,
-              }}
-            >
-              {props.siteType === "Search" && (
+            {props.siteType === "Search" && (
+              <div
+                style={{
+                  flex: 1,
+                  display: "flex",
+                  justifyContent: "start",
+                  maxWidth: 1000,
+                }}
+              >
                 <generalStore.SearchField
                   placeholder="Search for products..."
                   maxWidth
                 />
-              )}
-              {props.siteType === "Other" && (
+              </div>
+            )}
+            {props.siteType === "Other" && (
+              <div
+                style={{
+                  flex: 1,
+                  display: "flex",
+                  justifyContent: "space-between",
+                  maxWidth: 1000,
+                }}
+              >
                 <Link to={customerPrefix(CustomerRouteNames.HOME)}>
                   <Button
                     variant="contained"
@@ -103,8 +116,9 @@ export const CustomerNavBar = observer(
                     Back Home
                   </Button>
                 </Link>
-              )}
-            </div>
+                <h1>{props.title}</h1>
+              </div>
+            )}
 
             <div style={{ display: "flex", gap: 16 }}>
               <Link to={customerPrefix(CustomerRouteNames.ORDER_HISTORY)}>

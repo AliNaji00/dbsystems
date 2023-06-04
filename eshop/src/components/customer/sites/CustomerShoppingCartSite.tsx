@@ -24,7 +24,7 @@ export const CustomerShoppingCartSite = observer(() => {
       <Helmet>
         <title>{title("Cart")}</title>
       </Helmet>
-      <CustomerNavBar siteType="Other" />
+      <CustomerNavBar siteType="Other" title="Shopping Cart" />
       <CustomerBackground style={{ minHeight: 200 }}>
         <CenteredContent>
           {generalStore.basketLoaded && <ShoppingCart items={basketItems} />}
