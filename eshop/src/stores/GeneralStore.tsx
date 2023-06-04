@@ -5,7 +5,7 @@ import { makePersistable } from "mobx-persist-store";
 import { UserRole } from "../components/network/APITypes";
 
 export const SEARCH_DEBOUNCE_MS = 500;
-export const imgageHost = "http://localhost:8080/api/img";
+export const imgageHost = "http://localhost:8080";
 
 export class GeneralStore {
   keyword = "";
