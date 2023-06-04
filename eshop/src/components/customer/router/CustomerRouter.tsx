@@ -11,10 +11,8 @@ import { CustomerProductSite } from "../sites/CustomerProductSite";
 
 export const CustomerRouter = observer(() => {
   const generalStore = useGeneralStore();
-  generalStore.products = useProducts(
-    generalStore.keyword,
-    generalStore.userId
-  );
+
+  useProducts(generalStore.keyword, generalStore.userId);
 
   return (
     <>

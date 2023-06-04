@@ -1,13 +1,12 @@
 import { observer } from "mobx-react";
 import * as React from "react";
+import { Helmet } from "react-helmet";
 import { useGeneralStore } from "../../../stores/GeneralStore";
-import { useProducts } from "../../../stores/useProducts";
+import { title } from "../../app/router/RouteNames";
 import { CenteredContent } from "../../ui/CenteredContent";
 import { CustomerBackground } from "../../ui/Components";
-import { ProductCard } from "../ProductCard";
 import { CustomerNavBar } from "../CustomerNavBar";
-import { Helmet } from "react-helmet";
-import { title } from "../../app/router/RouteNames";
+import { ProductCard } from "../ProductCard";
 
 export const CustomerHomeSite = observer(() => {
   const generalStore = useGeneralStore();

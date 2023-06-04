@@ -1,11 +1,9 @@
+import _ from "lodash";
 import * as React from "react";
 import { API } from "../components/network/API";
-import { IProduct } from "../components/network/APITypes";
 import { useGeneralStore } from "./GeneralStore";
-import _ from "lodash";
 
 export const useProducts = (keyword: string, user_id: string) => {
-  const [products, setProducts] = React.useState<IProduct[]>([]);
   const generalStore = useGeneralStore();
 
   React.useEffect(() => {
@@ -16,7 +14,7 @@ export const useProducts = (keyword: string, user_id: string) => {
         const response = await API.getProducts(keyword, user_id);
 
         if (response && response.data) {
-          setProducts(response.data.data);
+          generalStore.products = response.data.data;
           const sumOfProductsInBasket = _.sum(
             response.data.data.map((product) => {
               return Number(product.AmountInBasket);
@@ -35,6 +33,4 @@ export const useProducts = (keyword: string, user_id: string) => {
     loadProducts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [keyword, generalStore.productsChangeFlag]);
-
-  return products;
 };
