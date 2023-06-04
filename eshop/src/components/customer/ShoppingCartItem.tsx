@@ -64,6 +64,7 @@ export const ShoppingCartItem = (props: { item: IShoppingCartItem }) => {
               } finally {
                 generalStore.isLoading = false;
                 generalStore.toggleBasketChangeFlag();
+                generalStore.toggleProductsChangeFlag();
               }
             }}
           />
