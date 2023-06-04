@@ -17,6 +17,7 @@ export class GeneralStore {
   userId: string = "";
   loggedIn = false;
   userRoles: Array<UserRole> = ["customer"];
+  userImage: null | string = null;
 
   basketItems: null | number = null;
   basketChangeFlag = false;
@@ -26,7 +27,7 @@ export class GeneralStore {
 
     makePersistable(this, {
       name: "GeneralStore",
-      properties: ["loggedIn", "userId", "userRoles"],
+      properties: ["loggedIn", "userId", "userRoles", "userImage"],
       storage: window.localStorage,
     }).then(
       action((persistStore) => {

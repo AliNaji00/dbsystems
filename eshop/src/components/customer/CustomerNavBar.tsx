@@ -1,3 +1,4 @@
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import HistoryIcon from "@mui/icons-material/History";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import { Avatar, Badge, Button, Menu, MenuItem } from "@mui/material";
@@ -6,16 +7,13 @@ import * as React from "react";
 import { Link } from "react-router-dom";
 import { useGeneralStore } from "../../stores/GeneralStore";
 import { BACKGROUND_BORDER_RADIUS } from "../ui/Components";
-import {
-  christopher_campbell_rDEOVtE7vOs_unsplash,
-  logo_transparent,
-} from "../util/Images";
+import { getImagePath } from "../util/Helpers";
+import { logo_transparent } from "../util/Images";
 import { customColors } from "../util/Theme";
 import {
   CustomerRouteNames,
   customerPrefix,
 } from "./router/CustomerRouteNames";
-import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 
 type SiteType = "Search" | "Other";
 
@@ -132,9 +130,9 @@ export const CustomerNavBar = observer(
                 </Badge>
               </Link>
               <Avatar
-                src={christopher_campbell_rDEOVtE7vOs_unsplash}
+                src={getImagePath(generalStore.userImage)}
                 onClick={(e) => handleClick(e)}
-                sx={{ cursor: "pointer" }}
+                sx={{ cursor: "pointer", bgcolor: customColors.primaryColor }}
               />
               <Menu
                 id="basic-menu"

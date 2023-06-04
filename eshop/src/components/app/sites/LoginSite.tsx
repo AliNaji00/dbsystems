@@ -22,6 +22,8 @@ import { title } from "../router/RouteNames";
 import { observer } from "mobx-react";
 import { useGeneralStore } from "../../../stores/GeneralStore";
 
+// TODO Errors when wrong password
+
 export const LoginSite = observer(() => {
   const {
     register,
@@ -43,7 +45,9 @@ export const LoginSite = observer(() => {
         generalStore.userRoles = generalStore.userRoles.concat(
           response.data.data.userroles
         );
-
+        if (response.data.data.ImageURL) {
+          generalStore.userImage = response.data.data.ImageURL;
+        }
         navigate(customerPrefix(CustomerRouteNames.HOME));
       }
     } catch (e) {
