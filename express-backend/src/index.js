@@ -6,7 +6,7 @@ import users from "./api/users.js";
 import products from "./api/products.js";
 import basket from "./api/basket.js";
 
-const port = 3000;
+const port = 8080;
 const pool = createPool({
   host: "localhost",
   user: "admin",
@@ -36,11 +36,16 @@ app.use((err, req, res, next) => {
   res.status(400).json({ msg: "Invalid request" });
 });
 
-app.use("/img", express.static("img"));
-app.use("/user", user({ pool }));
-app.use("/users", users({ pool }));
-app.use("/products", products({ pool }));
-app.use("/basket", basket({ pool }));
+const router = express.Router();
+
+router.use("/img", express.static("img"));
+router.use("/user", user({ pool }));
+router.use("/users", users({ pool }));
+router.use("/products", products({ pool }));
+router.use("/basket", basket({ pool }));
+
+app.use("/api", router);
+
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ msg: "Internal Server Error" });
