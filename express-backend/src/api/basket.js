@@ -3,7 +3,6 @@ import { Router } from "express";
 export default ({ pool }) => {
   const router = Router();
 
-  // TODO: Maybe change to return empty basket if user exists
   router.get("/:user_id", (req, res, next) => {
     const user_id = req.params.user_id;
     pool
@@ -18,10 +17,9 @@ export default ({ pool }) => {
             if (rows.length > 0) {
               res.json({ msg: "success", data: rows });
             } else {
-              throw Error();
+              res.json({ msg: "success", data: [] });
             }
           })
-          .catch(() => res.status(404).json({ msg: "no basket for user" }))
           .finally(() => conn.close());
       })
       .catch(next);
