@@ -11,7 +11,7 @@ export const STATUS_CODE_NOT_ALLOWED = 403;
 
 const PORT = 8080;
 
-const prefix = (url: string) => `http://localhost:${PORT}` + url;
+const prefix = (url: string) => `http://localhost:${PORT}/api` + url;
 
 export const API = {
   async login(data: LoginFormInputs): Promise<AxiosResponse<LoginResponse>> {
