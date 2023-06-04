@@ -5,6 +5,7 @@ import { IProduct } from "../network/APITypes";
 import { CustomNumberField } from "../ui/ProductCartNumberField";
 import { customColors } from "../util/Theme";
 import { getImagePath } from "../util/Helpers";
+import { API } from "../network/API";
 
 export const ProductCard = (props: { product: IProduct }) => {
   const generalStore = useGeneralStore();
@@ -56,9 +57,22 @@ export const ProductCard = (props: { product: IProduct }) => {
           <CustomNumberField
             initialAmount={Number(props.product.AmountInBasket)}
             maxAmount={10}
-            changeValue={(newNumber: number) => {
-              generalStore.productsChangeFlag =
-                !generalStore.productsChangeFlag;
+            changeValue={async (newNumber: number) => {
+              try {
+                generalStore.isLoading = true;
+
+                await API.putBasket(
+                  generalStore.userId,
+                  props.product.product_id,
+                  newNumber
+                );
+              } catch (err) {
+                console.log(err);
+              } finally {
+                generalStore.isLoading = false;
+                generalStore.productsChangeFlag =
+                  !generalStore.productsChangeFlag;
+              }
             }}
           />
         </div>
