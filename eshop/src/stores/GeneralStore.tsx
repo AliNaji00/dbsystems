@@ -43,6 +43,30 @@ export class GeneralStore {
     );
   }
 
+  setProducts(products: Array<IProduct>) {
+    this.products = products;
+  }
+
+  setBasketItems(items: number) {
+    this.basketItems = items;
+  }
+
+  setBasketLoaded(loaded: boolean) {
+    this.basketLoaded = loaded;
+  }
+
+  toggleProductsChangeFlag = () => {
+    this.productsChangeFlag = !this.productsChangeFlag;
+  };
+
+  toggleProductChangeFlag = () => {
+    this.productChangeFlag = !this.productChangeFlag;
+  };
+
+  toggleBasketChangeFlag = () => {
+    this.basketChangeFlag = !this.basketChangeFlag;
+  };
+
   handleSearchChange = (search: string) => {
     this.keyword = search;
   };

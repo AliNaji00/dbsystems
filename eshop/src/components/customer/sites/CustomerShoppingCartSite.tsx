@@ -15,7 +15,7 @@ export const CustomerShoppingCartSite = observer(() => {
 
   React.useEffect(() => {
     return () => {
-      generalStore.basketLoaded = false;
+      generalStore.setBasketLoaded(false);
     };
   }, []);
 

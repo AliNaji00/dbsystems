@@ -25,8 +25,8 @@ export const useBasket = (user_id: string) => {
             })
           );
 
-          generalStore.basketItems = sumOfProductsInBasket;
-          generalStore.basketLoaded = true;
+          generalStore.setBasketItems(sumOfProductsInBasket);
+          generalStore.setBasketLoaded(true);
         }
       } catch (err) {
         console.log(err);

@@ -63,7 +63,7 @@ export const ShoppingCartItem = (props: { item: IShoppingCartItem }) => {
                 console.log(err);
               } finally {
                 generalStore.isLoading = false;
-                generalStore.basketChangeFlag = !generalStore.basketChangeFlag;
+                generalStore.toggleBasketChangeFlag();
               }
             }}
           />

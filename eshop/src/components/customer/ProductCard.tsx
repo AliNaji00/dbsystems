@@ -73,8 +73,7 @@ export const ProductCard = (props: { product: IProduct }) => {
                 console.log(err);
               } finally {
                 generalStore.isLoading = false;
-                generalStore.productsChangeFlag =
-                  !generalStore.productsChangeFlag;
+                generalStore.toggleProductsChangeFlag();
               }
             }}
           />

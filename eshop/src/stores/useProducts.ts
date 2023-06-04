@@ -14,14 +14,14 @@ export const useProducts = (keyword: string, user_id: string) => {
         const response = await API.getProducts(keyword, user_id);
 
         if (response && response.data) {
-          generalStore.products = response.data.data;
+          generalStore.setProducts(response.data.data);
           const sumOfProductsInBasket = _.sum(
             response.data.data.map((product) => {
               return Number(product.AmountInBasket);
             })
           );
 
-          generalStore.basketItems = sumOfProductsInBasket;
+          generalStore.setBasketItems(sumOfProductsInBasket);
         }
       } catch (err) {
         console.log(err);

@@ -110,11 +110,8 @@ export const CustomerProductSite = () => {
                       console.log(err);
                     } finally {
                       generalStore.isLoading = false;
-                      generalStore.productsChangeFlag =
-                        !generalStore.productsChangeFlag;
-
-                      generalStore.productChangeFlag =
-                        !generalStore.productChangeFlag;
+                      generalStore.toggleProductsChangeFlag();
+                      generalStore.toggleProductChangeFlag();
                     }
                   }}
                 />
