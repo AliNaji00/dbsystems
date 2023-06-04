@@ -6,10 +6,12 @@ import {
   Paper,
   TextField,
 } from "@mui/material";
+import { observer } from "mobx-react";
 import * as React from "react";
 import { Helmet } from "react-helmet";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { useGeneralStore } from "../../../stores/GeneralStore";
 import {
   CustomerRouteNames,
   customerPrefix,
@@ -18,9 +20,8 @@ import { API } from "../../network/API";
 import { LoginFormInputs } from "../../network/APITypes";
 import { AnimatedGradient } from "../../ui/Components";
 import { logo } from "../../util/Images";
+import { customColors } from "../../util/Theme";
 import { title } from "../router/RouteNames";
-import { observer } from "mobx-react";
-import { useGeneralStore } from "../../../stores/GeneralStore";
 
 // TODO Errors when wrong password
 
@@ -31,6 +32,7 @@ export const LoginSite = observer(() => {
     formState: { errors },
   } = useForm<LoginFormInputs>();
   const [showPassword, setShowPassword] = React.useState(false);
+  const [invalidCredentials, setInvalidCredentials] = React.useState(false);
   const navigate = useNavigate();
 
   const generalStore = useGeneralStore();
@@ -50,7 +52,11 @@ export const LoginSite = observer(() => {
         }
         navigate(customerPrefix(CustomerRouteNames.HOME));
       }
-    } catch (e) {
+    } catch (e: any) {
+      if (e.response && e.response.status === 403) {
+        setInvalidCredentials(true);
+      }
+
       console.log(e);
     }
   };
@@ -153,7 +159,14 @@ export const LoginSite = observer(() => {
                   ),
                 }}
               />
-              <div style={{ marginTop: 16, textAlign: "end" }}>
+              <div style={{ height: 8 }}>
+                {invalidCredentials && (
+                  <p style={{ color: customColors.tomato, marginTop: 0 }}>
+                    Wrong email or password!
+                  </p>
+                )}
+              </div>
+              <div style={{ marginTop: 8, textAlign: "end" }}>
                 <Button
                   type="submit"
                   variant="contained"
