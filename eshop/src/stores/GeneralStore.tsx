@@ -2,24 +2,30 @@ import * as React from "react";
 import { SearchField } from "../components/ui/SearchField";
 import { action, makeAutoObservable } from "mobx";
 import { makePersistable } from "mobx-persist-store";
+import { UserRole } from "../components/network/APITypes";
 
 export const SEARCH_DEBOUNCE_MS = 500;
 export const imgageHost = "http://localhost/img";
 
 export class GeneralStore {
   keyword = "";
-  basketItems = 4;
-  isLoading = false;
-  loggedIn = false;
   productsChangeFlag = false;
   isHydrated = false;
+
+  isLoading = false;
+
+  userId: string = "";
+  loggedIn = false;
+  userRoles: Array<UserRole> = ["customer"];
+
+  basketItems = null;
 
   constructor() {
     makeAutoObservable(this);
 
     makePersistable(this, {
       name: "GeneralStore",
-      properties: ["loggedIn"],
+      properties: ["loggedIn", "userId", "userRoles"],
       storage: window.localStorage,
     }).then(
       action((persistStore) => {
@@ -36,6 +42,8 @@ export class GeneralStore {
 
   logout = () => {
     this.loggedIn = false;
+    this.userId = "";
+    this.userRoles = ["customer"];
   };
 
   SearchField = (props: { placeholder: string; maxWidth?: boolean }) => {

@@ -37,14 +37,14 @@ export const LoginSite = observer(() => {
     try {
       const response = await API.login(data);
 
-      if (response.status !== 200) {
-      } else {
-        if (response.data.msg !== "success") {
-          console.log("error");
-        } else {
-          generalStore.loggedIn = true;
-          navigate(customerPrefix(CustomerRouteNames.HOME));
-        }
+      if (response.status === 200) {
+        generalStore.loggedIn = true;
+        generalStore.userId = response.data.data.user_id;
+        generalStore.userRoles = generalStore.userRoles.concat(
+          response.data.data.userroles
+        );
+
+        navigate(customerPrefix(CustomerRouteNames.HOME));
       }
     } catch (e) {
       console.log(e);

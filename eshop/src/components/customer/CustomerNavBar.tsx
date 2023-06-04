@@ -146,8 +146,12 @@ export const CustomerNavBar = observer(
                 }}
               >
                 <MenuItem onClick={handleClose}>Profile</MenuItem>
-                <MenuItem onClick={handleClose}>Seller Dashboard</MenuItem>
-                <MenuItem onClick={handleClose}>Admin Dashbaord</MenuItem>
+                {generalStore.userRoles.includes("seller") && (
+                  <MenuItem onClick={handleClose}>Seller Dashboard</MenuItem>
+                )}
+                {generalStore.userRoles.includes("admin") && (
+                  <MenuItem onClick={handleClose}>Admin Dashbaord</MenuItem>
+                )}
                 <MenuItem
                   onClick={() => {
                     handleClose();

@@ -1,10 +1,10 @@
 import * as React from "react";
 import { API } from "../components/network/API";
-import { Product } from "../components/network/APITypes";
+import { IProduct } from "../components/network/APITypes";
 import { useGeneralStore } from "./GeneralStore";
 
-export const useProducts = (keyword: string) => {
-  const [products, setProducts] = React.useState<Product[]>([]);
+export const useProducts = (keyword: string, user_id: string) => {
+  const [products, setProducts] = React.useState<IProduct[]>([]);
   const generalStore = useGeneralStore();
 
   React.useEffect(() => {
@@ -12,7 +12,7 @@ export const useProducts = (keyword: string) => {
       try {
         generalStore.isLoading = true;
 
-        const response = await API.getProducts(keyword);
+        const response = await API.getProducts(keyword, user_id);
 
         if (response && response.data) {
           setProducts(response.data.data);

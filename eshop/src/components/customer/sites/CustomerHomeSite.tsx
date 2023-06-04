@@ -11,7 +11,7 @@ import { title } from "../../app/router/RouteNames";
 
 export const CustomerHomeSite = observer(() => {
   const generalStore = useGeneralStore();
-  const products = useProducts(generalStore.keyword);
+  const products = useProducts(generalStore.keyword, generalStore.userId);
 
   return (
     <>
@@ -30,7 +30,7 @@ export const CustomerHomeSite = observer(() => {
             onClick={() => console.log(generalStore.keyword)}
           >
             {products.map((product) => (
-              <ProductCard product={product} key={product.ID} />
+              <ProductCard product={product} key={product.product_id} />
             ))}
           </div>
         </CenteredContent>

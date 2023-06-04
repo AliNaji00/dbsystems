@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from "axios";
 import {
   GetProductsResponse,
   LoginFormInputs,
-  LoginResponse,
+  ILoginResponse,
 } from "./APITypes";
 
 export const STATUS_CODE_UNAUTHORIZED = 401;
@@ -14,9 +14,9 @@ const PORT = 8080;
 const prefix = (url: string) => `http://localhost:${PORT}/api` + url;
 
 export const API = {
-  async login(data: LoginFormInputs): Promise<AxiosResponse<LoginResponse>> {
+  async login(data: LoginFormInputs): Promise<AxiosResponse<ILoginResponse>> {
     try {
-      const response = await axios.post<LoginResponse>(prefix("/user/login"), {
+      const response = await axios.post<ILoginResponse>(prefix("/user/login"), {
         email: data.email,
         password: data.password,
       });
@@ -27,7 +27,8 @@ export const API = {
   },
 
   async getProducts(
-    search_keyword: string
+    search_keyword: string,
+    user_id: string
   ): Promise<AxiosResponse<GetProductsResponse>> {
     try {
       const response = await axios.get<GetProductsResponse>(
@@ -35,6 +36,7 @@ export const API = {
         {
           params: {
             keyword: search_keyword,
+            user_id: user_id,
           },
         }
       );

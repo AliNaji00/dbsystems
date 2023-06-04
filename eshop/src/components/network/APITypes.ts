@@ -1,18 +1,14 @@
-export interface LoginResponse {
-  msg: string;
-  userrole: string;
-}
+export type UserRole = "admin" | "customer" | "seller";
 
 export interface ILoginResponse {
   msg: string;
-  code: number;
   data: LoginResponseData;
 }
 
 export interface LoginResponseData {
   user_id: string; // user id
   ImageURL: string; // link to image of profile picture
-  userroles: Array<string>; // array of user roles (e.g. "admin", "customer")
+  userroles: Array<UserRole>; // array of user roles (e.g. "admin", "customer")
   name: string; // name of user
 }
 
@@ -24,31 +20,18 @@ export interface LoginFormInputs {
 export interface GetProductsResponse {
   msg: string;
   code: number;
-  data: Array<Product>;
+  data: Array<IProduct>;
 }
 
 export interface IProduct {
-  Stock_quantity: number;
-  Description: string;
-  ID: number;
-  ImageURL: string;
+  stock_quantity: number;
+  description: string;
+  product_id: number;
+  picture: string | null;
   AmountInBasket: number;
-  Name: string;
-  Price: number; // actual price, possibly reduced price
-  Original_price: number;
-}
-
-export interface Product {
-  Available: number;
-  Category: string;
-  Description: string;
-  ID: number;
-  ImageURL: string;
-  Inventory: number;
-  Name: string;
-  Price: number;
-  // reduced price
-  Sales_volume: number;
+  name: string;
+  price: number; // actual price, possibly reduced price
+  original_price?: number;
 }
 
 export interface GetShoppingCartResponse {

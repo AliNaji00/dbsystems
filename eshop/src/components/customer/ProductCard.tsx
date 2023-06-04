@@ -1,11 +1,12 @@
 import { Card, CardMedia } from "@mui/material";
 import * as React from "react";
 import { useGeneralStore } from "../../stores/GeneralStore";
-import { Product } from "../network/APITypes";
+import { IProduct } from "../network/APITypes";
 import { CustomNumberField } from "../ui/ProductCartNumberField";
 import { customColors } from "../util/Theme";
+import { getImagePath } from "../util/Helpers";
 
-export const ProductCard = (props: { product: Product }) => {
+export const ProductCard = (props: { product: IProduct }) => {
   const generalStore = useGeneralStore();
 
   return (
@@ -14,8 +15,8 @@ export const ProductCard = (props: { product: Product }) => {
         component="img"
         height="300"
         // TODO: Images
-        // image={getImagePath(props.product.ImageURL)}
-        alt={props.product.Name}
+        image={getImagePath(props.product.picture)}
+        alt={props.product.name}
       />
       <div
         style={{
@@ -37,7 +38,7 @@ export const ProductCard = (props: { product: Product }) => {
             }}
             className="body1"
           >
-            ${props.product.Price}
+            ${props.product.price}
           </div>
           <div
             className="body1"
@@ -48,7 +49,7 @@ export const ProductCard = (props: { product: Product }) => {
               color: customColors.primaryColorLight,
             }}
           >
-            {props.product.Name}
+            {props.product.name}
           </div>
         </div>
         <div style={{ flex: 1, display: "flex", justifyContent: "end" }}>
