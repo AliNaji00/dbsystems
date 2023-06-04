@@ -46,7 +46,7 @@ store_email varchar(30) not null
 
 
 create table coupon(
-code int primary key,
+code int not null AUTO_INCREMENT primary key,
 s_uid int not null,
 description text,
 start_time timestamp not null,
@@ -63,7 +63,7 @@ percentage dec(4,2) not null
 
 
 create table product (
-product_id int primary key,
+product_id int not null AUTO_INCREMENT primary key,
 code int,
 s_uid int not null,
 stock_quantity int not null,
