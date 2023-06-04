@@ -23,6 +23,11 @@ export interface GetProductsResponse {
   data: Array<IProduct>;
 }
 
+export interface GetProductsRequest {
+  keyword?: string;
+  user_id: string;
+}
+
 export interface IProduct {
   stock_quantity: number;
   description: string;

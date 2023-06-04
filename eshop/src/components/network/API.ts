@@ -5,6 +5,7 @@ import {
   ILoginResponse,
   PutShoppingCartResponse,
   GetBasketResponse,
+  GetProductsRequest,
 } from "./APITypes";
 
 export const STATUS_CODE_UNAUTHORIZED = 401;
@@ -33,13 +34,18 @@ export const API = {
     user_id: string
   ): Promise<AxiosResponse<GetProductsResponse>> {
     try {
+      const params: GetProductsRequest = {
+        user_id: user_id,
+      };
+
+      if (search_keyword) {
+        params["keyword"] = search_keyword;
+      }
+
       const response = await axios.get<GetProductsResponse>(
         prefix("/products"),
         {
-          params: {
-            keyword: search_keyword,
-            user_id: user_id,
-          },
+          params: params,
         }
       );
       return response;
