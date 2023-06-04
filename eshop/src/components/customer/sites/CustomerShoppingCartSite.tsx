@@ -1,18 +1,23 @@
 import { observer } from "mobx-react";
 import * as React from "react";
-import { IShoppingCartItem } from "../../network/APITypes";
+import { Helmet } from "react-helmet";
+import { useGeneralStore } from "../../../stores/GeneralStore";
+import { useBasket } from "../../../stores/useBasket";
+import { title } from "../../app/router/RouteNames";
 import { CenteredContent } from "../../ui/CenteredContent";
 import { CustomerBackground } from "../../ui/Components";
-import { ShoppingCart } from "../ShoppingCart";
-import { Helmet } from "react-helmet";
-import { title } from "../../app/router/RouteNames";
 import { CustomerNavBar } from "../CustomerNavBar";
-import { useBasket } from "../../../stores/useBasket";
-import { useGeneralStore } from "../../../stores/GeneralStore";
+import { ShoppingCart } from "../ShoppingCart";
 
 export const CustomerShoppingCartSite = observer(() => {
   const generalStore = useGeneralStore();
   const basketItems = useBasket(generalStore.userId);
+
+  React.useEffect(() => {
+    return () => {
+      generalStore.basketLoaded = false;
+    };
+  }, []);
 
   return (
     <>
@@ -22,7 +27,7 @@ export const CustomerShoppingCartSite = observer(() => {
       <CustomerNavBar siteType="Other" />
       <CustomerBackground style={{ minHeight: 200 }}>
         <CenteredContent>
-          <ShoppingCart items={basketItems} />
+          {generalStore.basketLoaded && <ShoppingCart items={basketItems} />}
         </CenteredContent>
       </CustomerBackground>
     </>
