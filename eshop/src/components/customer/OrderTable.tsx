@@ -42,12 +42,14 @@ const Row = ({ order }: { order: IOrder }) => {
       <TableRow>
         <CustomTableCell
           tableCellProps={{
-            style: { paddingBottom: 0, paddingTop: 0 },
+            style: { padding: 0 },
             colSpan: 6,
           }}
         >
           <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box sx={{ margin: 3 }}>
+            <Box
+              sx={{ padding: 3, backgroundColor: customColors.backgroundColor }}
+            >
               <Typography variant="h6" gutterBottom component="div">
                 Order Items
               </Typography>
