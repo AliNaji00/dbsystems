@@ -81,7 +81,7 @@ export const CustomerProductSite = () => {
                   <h4 style={{ flex: 1 }}>
                     <del>Price: $ {product.original_price}</del>
                   </h4>
-                  <h4 style={{ color: customColors.tomato, flex: 4 }}>
+                  <h4 style={{ color: customColors.green, flex: 4 }}>
                     {product.coupon_code}: {product.coupon_description}
                   </h4>
                 </div>
