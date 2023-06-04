@@ -2,6 +2,7 @@ import * as React from "react";
 import { API } from "../components/network/API";
 import { useGeneralStore } from "./GeneralStore";
 import { IShoppingCartItem } from "../components/network/APITypes";
+import _ from "lodash";
 
 export const useBasket = (user_id: string) => {
   const [basket, setBasket] = React.useState<IShoppingCartItem[]>([]);
@@ -18,6 +19,13 @@ export const useBasket = (user_id: string) => {
 
         if (response && response.data && response.data.data) {
           setBasket(response.data.data);
+          const sumOfProductsInBasket = _.sum(
+            response.data.data.map((product) => {
+              return Number(product.quantity);
+            })
+          );
+
+          generalStore.basketItems = sumOfProductsInBasket;
           generalStore.basketLoaded = true;
         }
       } catch (err) {

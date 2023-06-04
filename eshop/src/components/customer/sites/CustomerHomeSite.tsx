@@ -11,7 +11,6 @@ import { title } from "../../app/router/RouteNames";
 
 export const CustomerHomeSite = observer(() => {
   const generalStore = useGeneralStore();
-  const products = useProducts(generalStore.keyword, generalStore.userId);
 
   return (
     <>
@@ -27,9 +26,8 @@ export const CustomerHomeSite = observer(() => {
               flexWrap: "wrap",
               gap: 20,
             }}
-            onClick={() => console.log(generalStore.keyword)}
           >
-            {products.map((product) => (
+            {generalStore.products.map((product) => (
               <ProductCard product={product} key={product.product_id} />
             ))}
           </div>

@@ -2,7 +2,7 @@ import * as React from "react";
 import { SearchField } from "../components/ui/SearchField";
 import { action, makeAutoObservable } from "mobx";
 import { makePersistable } from "mobx-persist-store";
-import { UserRole } from "../components/network/APITypes";
+import { IProduct, UserRole } from "../components/network/APITypes";
 
 export const SEARCH_DEBOUNCE_MS = 500;
 export const imgageHost = "http://localhost:8080";
@@ -19,7 +19,9 @@ export class GeneralStore {
   userRoles: Array<UserRole> = ["customer"];
   userImage: null | string = null;
 
+  products: Array<IProduct> = [];
   basketItems: null | number = null;
+
   basketChangeFlag = false;
   basketLoaded = false;
 
