@@ -60,7 +60,7 @@ export const ProfileNavBar = observer(
               navigate(customerPrefix(CustomerRouteNames.HOME));
             }}
           >
-            Customer Home
+            Shopping
           </MenuItem>
           {generalStore.userRoles.includes("seller") && (
             <MenuItem onClick={handleClose}>Seller Dashboard</MenuItem>
