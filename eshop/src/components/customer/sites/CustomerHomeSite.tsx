@@ -4,7 +4,7 @@ import { Helmet } from "react-helmet";
 import { useGeneralStore } from "../../../stores/GeneralStore";
 import { title } from "../../app/router/RouteNames";
 import { CenteredContent } from "../../ui/CenteredContent";
-import { CustomerBackground } from "../../ui/Components";
+import { BackgroundContainer } from "../../ui/Components";
 import { CustomerNavBar } from "../CustomerNavBar";
 import { ProductCard } from "../ProductCard";
 
@@ -17,7 +17,7 @@ export const CustomerHomeSite = observer(() => {
         <title>{title("Home")}</title>
       </Helmet>
       <CustomerNavBar siteType="Search" />
-      <CustomerBackground>
+      <BackgroundContainer>
         <CenteredContent>
           <div
             style={{
@@ -31,7 +31,7 @@ export const CustomerHomeSite = observer(() => {
             ))}
           </div>
         </CenteredContent>
-      </CustomerBackground>
+      </BackgroundContainer>
     </>
   );
 });

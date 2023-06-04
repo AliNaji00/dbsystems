@@ -142,6 +142,19 @@ export interface IUser {
   userroles: Array<UserRole>;
 }
 
+export const getUserResponseMockData: IGetUserResponse = {
+  msg: "Success",
+  data: {
+    user_id: "1",
+    name: "John Doe",
+    email: "john.doe@gmail.com",
+    phone: "+33 123 456 789",
+    address: "12 Street, City, Country",
+    ImageURL: "/api/img/placeholder.png",
+    userroles: ["customer"],
+  },
+};
+
 export const getOrdersResponseMockData: IGetOrdersResponse = {
   msg: "Success",
   data: [

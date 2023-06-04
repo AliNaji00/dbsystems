@@ -32,7 +32,7 @@ export const AnimatedGradient = styled.div`
 
 export const BACKGROUND_BORDER_RADIUS = 60;
 
-export const CustomerBackground = styled.div`
+export const BackgroundContainer = styled.div`
   background-color: ${customColors.white};
   width: calc(100vw - 64px);
   min-height: calc(100vh - 64px) !important;

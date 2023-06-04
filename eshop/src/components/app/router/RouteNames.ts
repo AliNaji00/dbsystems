@@ -1,8 +1,10 @@
 // tslint:disable-next-line:typedef
 export const RouteNames = {
-    CUSTOMER: "/customer/*",
-    LOG_IN: "/log-in",
-    SHOPPING_CART: "/shopping-cart",
+  CUSTOMER: "/customer/*",
+  ADMIN: "/admin/*",
+  SELLER: "/seller/*",
+  PROFILE: "/profile",
+  LOG_IN: "/log-in",
 };
 
 export const title = (title: string) => title + " - eShop";

@@ -2,7 +2,7 @@ import * as React from "react";
 import { Helmet } from "react-helmet";
 import { title } from "../../app/router/RouteNames";
 import { CenteredContent } from "../../ui/CenteredContent";
-import { CustomerBackground } from "../../ui/Components";
+import { BackgroundContainer } from "../../ui/Components";
 import { CustomerNavBar } from "../CustomerNavBar";
 import { useParams } from "react-router-dom";
 import { useGeneralStore } from "../../../stores/GeneralStore";
@@ -37,7 +37,7 @@ export const CustomerProductSite = () => {
         <title>{title(product.name)}</title>
       </Helmet>
       <CustomerNavBar siteType="Other" />
-      <CustomerBackground style={{ minHeight: 200 }}>
+      <BackgroundContainer style={{ minHeight: 200 }}>
         <CenteredContent>
           <div
             style={{
@@ -137,7 +137,7 @@ export const CustomerProductSite = () => {
             </div>
           </div>
         </CenteredContent>
-      </CustomerBackground>
+      </BackgroundContainer>
     </>
   );
 };
