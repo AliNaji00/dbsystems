@@ -25,7 +25,7 @@ export default ({ pool }) => {
             }
             const loginResponseData = {
               user_id: user.user_id,
-              ImageURL: "/img/placeholder.png",
+              ImageURL: "/api/img/placeholder.png",
               userroles: roles,
               name: user.name,
             };

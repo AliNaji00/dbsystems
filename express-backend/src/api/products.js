@@ -3,11 +3,6 @@ import { Router } from "express";
 export default ({ pool }) => {
   const route = Router();
 
-  const makeQuery = (conn, next) => {
-    return pool.getConnection().then(conn).catch(next);
-  };
-
-  // AmountInBasket is sum of amount an item is stored accross all baskets
   route.get("/", (req, res, next) => {
     const user_id = req.query.user_id;
     pool
@@ -16,9 +11,15 @@ export default ({ pool }) => {
         if (req.query.keyword === undefined) {
           conn
             .query(
-              "SELECT p.stock_quantity, p.description, p.product_id, p.picture, COALESCE(SUM(CASE WHEN sib.c_uid = ? THEN sib.quantity ELSE 0 END), 0) AS AmountInBasket, p.name, p.price  FROM product p LEFT JOIN store_in_basket sib ON p.product_id = sib.product_id GROUP BY p.product_id", [user_id]
+              "SELECT p.stock_quantity, p.description, p.product_id, p.picture, COALESCE(SUM(CASE WHEN sib.c_uid = ? THEN sib.quantity ELSE 0 END), 0) AS AmountInBasket, p.name, p.price  FROM product p LEFT JOIN store_in_basket sib ON p.product_id = sib.product_id GROUP BY p.product_id",
+              [user_id]
             )
-            .then((rows) => res.json({ msg: "success", data: rows }))
+            .then((rows) => {
+              const res_rows = rows.map((row) => {
+                return { ...row, AmountInBasket: Number(row.AmountInBasket) };
+              }, rows);
+              res.json({ msg: "success", data: res_rows });
+            })
             .catch(() =>
               res.status(400).json({ msg: "error getting products" })
             )

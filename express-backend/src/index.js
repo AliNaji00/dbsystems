@@ -36,7 +36,6 @@ app.use((err, req, res, next) => {
   res.status(400).json({ msg: "Invalid request" });
 });
 
-
 const router = express.Router();
 
 router.use("/img", express.static("img"));
