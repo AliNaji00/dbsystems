@@ -9,13 +9,14 @@ export default ({ pool }) => {
 
   // AmountInBasket is sum of amount an item is stored accross all baskets
   route.get("/", (req, res, next) => {
+    const user_id = req.query.user_id;
     pool
       .getConnection()
       .then((conn) => {
         if (req.query.keyword === undefined) {
           conn
             .query(
-              "SELECT p.stock_quantity, p.description, p.product_id, p.picture, COALESCE(SUM(sib.quantity), 0) AS AmountInBasket, p.name, p.price FROM product p LEFT JOIN store_in_basket sib ON p.product_id = sib.product_id GROUP BY p.product_id"
+              "SELECT p.stock_quantity, p.description, p.product_id, p.picture, COALESCE(SUM(CASE WHEN sib.c_uid = ? THEN sib.quantity ELSE 0 END), 0) AS AmountInBasket, p.name, p.price  FROM product p LEFT JOIN store_in_basket sib ON p.product_id = sib.product_id GROUP BY p.product_id", [user_id]
             )
             .then((rows) => res.json({ msg: "success", data: rows }))
             .catch(() =>
@@ -26,8 +27,8 @@ export default ({ pool }) => {
           const k = "%" + req.query.keyword + "%"; // yes, we can inject wildcards
           conn
             .query(
-              "SELECT p.stock_quantity, p.description, p.product_id, p.picture, COALESCE(SUM(sib.quantity), 0) AS AmountInBasket, p.name, p.price FROM product p LEFT JOIN store_in_basket sib ON p.product_id = sib.product_id WHERE p.name LIKE ? OR p.description LIKE ? GROUP BY p.product_id",
-              [k, k]
+              "SELECT p.stock_quantity, p.description, p.product_id, p.picture, COALESCE(SUM(CASE WHEN sib.c_uid = ? THEN sib.quantity ELSE 0 END), 0) AS AmountInBasket, p.name, p.price  FROM product p LEFT JOIN store_in_basket sib ON p.product_id = sib.product_id WHERE p.name LIKE ? OR p.description LIKE ? GROUP BY p.product_id",
+              [user_id, k, k]
             )
             .then((rows) => res.json({ msg: "success", data: rows }))
             .catch((err) => {
