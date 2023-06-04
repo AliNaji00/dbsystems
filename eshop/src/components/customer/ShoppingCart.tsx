@@ -3,8 +3,15 @@ import { IShoppingCartItem } from "../network/APITypes";
 import { ShoppingCartItem } from "./ShoppingCartItem";
 import { customColors } from "../util/Theme";
 import { Button, Card, TextField } from "@mui/material";
+import { API } from "../network/API";
 
 export const ShoppingCart = (props: { items: IShoppingCartItem[] }) => {
+  React.useEffect(() => {
+    API.getBasket("3").then((response) => {
+      console.log(response);
+    });
+  }, []);
+
   return (
     <div style={{ display: "flex", width: "100%" }}>
       <div

@@ -1,10 +1,9 @@
 import { Card, CardMedia } from "@mui/material";
 import * as React from "react";
-import { Product } from "../network/APITypes";
-import { getImagePath } from "../util/Helpers";
-import { customColors } from "../util/Theme";
-import { CustomNumberField } from "../ui/ProductCartNumberField";
 import { useGeneralStore } from "../../stores/GeneralStore";
+import { Product } from "../network/APITypes";
+import { CustomNumberField } from "../ui/ProductCartNumberField";
+import { customColors } from "../util/Theme";
 
 export const ProductCard = (props: { product: Product }) => {
   const generalStore = useGeneralStore();
@@ -14,7 +13,8 @@ export const ProductCard = (props: { product: Product }) => {
       <CardMedia
         component="img"
         height="300"
-        image={getImagePath(props.product.ImageURL)}
+        // TODO: Images
+        // image={getImagePath(props.product.ImageURL)}
         alt={props.product.Name}
       />
       <div

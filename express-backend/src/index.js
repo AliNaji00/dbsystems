@@ -6,7 +6,7 @@ import users from "./api/users.js";
 import products from "./api/products.js";
 import basket from "./api/basket.js";
 
-const port = 3000;
+const port = 8080;
 const pool = createPool({
   host: "localhost",
   user: "admin",
