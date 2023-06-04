@@ -18,10 +18,10 @@ export const useBasket = (user_id: string) => {
 
         if (response && response.data && response.data.data) {
           setBasket(response.data.data);
+          generalStore.basketLoaded = true;
         }
       } catch (err) {
         console.log(err);
-        setBasket([]);
       } finally {
         generalStore.isLoading = false;
       }

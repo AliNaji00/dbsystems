@@ -21,6 +21,7 @@ export class GeneralStore {
 
   basketItems: null | number = null;
   basketChangeFlag = false;
+  basketLoaded = false;
 
   constructor() {
     makeAutoObservable(this);

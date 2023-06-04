@@ -23,8 +23,6 @@ import { logo } from "../../util/Images";
 import { customColors } from "../../util/Theme";
 import { title } from "../router/RouteNames";
 
-// TODO Errors when wrong password
-
 export const LoginSite = observer(() => {
   const {
     register,
