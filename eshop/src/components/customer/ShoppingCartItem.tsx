@@ -46,7 +46,7 @@ export const ShoppingCartItem = (props: { item: IShoppingCartItem }) => {
         <p style={{ margin: "0 16px" }}>{props.item.description}</p>
         <div style={{ flex: 1 }} />
         <h4 style={{ margin: "8px 16px" }}>Quantity:</h4>
-        <div style={{ width: 100, marginBottom: 8 }}>
+        <div style={{ width: 80, marginBottom: 8, marginLeft: 10 }}>
           <CustomNumberField
             initialAmount={Number(props.item.quantity)}
             maxAmount={props.item.stock_quantity}
