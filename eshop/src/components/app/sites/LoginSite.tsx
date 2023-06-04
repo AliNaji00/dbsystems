@@ -17,7 +17,7 @@ import {
   customerPrefix,
 } from "../../customer/router/CustomerRouteNames";
 import { API } from "../../network/API";
-import { LoginFormInputs } from "../../network/APITypes";
+import { ILoginFormInputs } from "../../network/APITypes";
 import { AnimatedGradient } from "../../ui/Components";
 import { logo } from "../../util/Images";
 import { customColors } from "../../util/Theme";
@@ -28,14 +28,14 @@ export const LoginSite = observer(() => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginFormInputs>();
+  } = useForm<ILoginFormInputs>();
   const [showPassword, setShowPassword] = React.useState(false);
   const [invalidCredentials, setInvalidCredentials] = React.useState(false);
   const navigate = useNavigate();
 
   const generalStore = useGeneralStore();
 
-  const onSubmit = async (data: LoginFormInputs) => {
+  const onSubmit = async (data: ILoginFormInputs) => {
     try {
       const response = await API.login(data);
 

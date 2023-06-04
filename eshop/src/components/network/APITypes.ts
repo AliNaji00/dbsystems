@@ -2,28 +2,28 @@ export type UserRole = "admin" | "customer" | "seller";
 
 export interface ILoginResponse {
   msg: string;
-  data: LoginResponseData;
+  data: ILoginResponseData;
 }
 
-export interface LoginResponseData {
+export interface ILoginResponseData {
   user_id: string; // user id
   ImageURL: string; // link to image of profile picture
   userroles: Array<UserRole>; // array of user roles (e.g. "admin", "customer")
   name: string; // name of user
 }
 
-export interface LoginFormInputs {
+export interface ILoginFormInputs {
   email: string;
   password: string;
 }
 
-export interface GetProductsResponse {
+export interface IGetProductsResponse {
   msg: string;
   code: number;
   data: Array<IProduct>;
 }
 
-export interface GetProductsRequest {
+export interface IGetProductsRequest {
   keyword?: string;
   user_id: string;
 }
@@ -39,13 +39,13 @@ export interface IProduct {
   original_price?: number;
 }
 
-export interface GetSingleProductResponse {
+export interface IGetSingleProductResponse {
   msg: string;
   code: number;
   data: ISingleProduct;
 }
 
-export interface GetSingleProductRequest {
+export interface IGetSingleProductRequest {
   product_id: string;
   user_id: string;
 }
@@ -69,7 +69,7 @@ export interface ISingleProduct {
   coupon_percentage: number | undefined;
 }
 
-export interface GetBasketResponse {
+export interface IGetBasketResponse {
   msg: string;
   data: Array<IShoppingCartItem>;
 }
@@ -85,16 +85,16 @@ export interface IShoppingCartItem {
   quantity: number;
 }
 
-export interface PutShoppingCartResponse {
+export interface IPutShoppingCartResponse {
   msg: string;
 }
 
-export interface GetOrdersResponse {
+export interface IGetOrdersResponse {
   msg: string;
   data: Array<IOrder>;
 }
 
-export interface GetOrdersRequest {
+export interface IGetOrdersRequest {
   user_id: string;
 }
 
@@ -123,7 +123,26 @@ export interface IOrderItem {
   shipping_cost: number;
 }
 
-export const getOrdersResponseMockData: GetOrdersResponse = {
+export interface IGetUserResponse {
+  msg: string;
+  data: IUser;
+}
+
+export interface IGetUserRequest {
+  user_id: string;
+}
+
+export interface IUser {
+  user_id: string;
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+  ImageURL: string;
+  userroles: Array<UserRole>;
+}
+
+export const getOrdersResponseMockData: IGetOrdersResponse = {
   msg: "Success",
   data: [
     {
@@ -201,7 +220,7 @@ export const getOrdersResponseMockData: GetOrdersResponse = {
   ],
 };
 
-export const getSingleProductResponseMockData: GetSingleProductResponse = {
+export const getSingleProductResponseMockData: IGetSingleProductResponse = {
   msg: "Success",
   code: 200,
   data: {
