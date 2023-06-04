@@ -8,6 +8,7 @@ import { CustomerRouteNames } from "./CustomerRouteNames";
 import { useGeneralStore } from "../../../stores/GeneralStore";
 import { useProducts } from "../../../stores/useProducts";
 import { CustomerProductSite } from "../sites/CustomerProductSite";
+import { CustomerOrderHistorySite } from "../sites/CustomerOrderHistorySite";
 
 export const CustomerRouter = observer(() => {
   const generalStore = useGeneralStore();
@@ -21,6 +22,10 @@ export const CustomerRouter = observer(() => {
         <Route
           path={CustomerRouteNames.SHOPPING_CART}
           element={<CustomerShoppingCartSite />}
+        />
+        <Route
+          path={CustomerRouteNames.ORDER_HISTORY}
+          element={<CustomerOrderHistorySite />}
         />
         <Route
           path={CustomerRouteNames.PRODUCT}

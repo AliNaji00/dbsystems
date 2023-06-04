@@ -1,5 +1,7 @@
 import styled, { keyframes } from "styled-components";
 import { customColors } from "../util/Theme";
+import { TableCell, TableCellProps } from "@mui/material";
+import React from "react";
 
 const gradientAnimation = keyframes`
   0% {
@@ -38,3 +40,17 @@ export const CustomerBackground = styled.div`
   padding-top: 70px;
   border-radius: ${BACKGROUND_BORDER_RADIUS}px;
 `;
+
+export const CustomTableCell = (props: {
+  children?: React.ReactNode;
+  tableCellProps?: TableCellProps;
+}) => {
+  return (
+    <TableCell
+      sx={{ color: customColors.body1, fontSize: 16 }}
+      {...props.tableCellProps}
+    >
+      {props.children}
+    </TableCell>
+  );
+};

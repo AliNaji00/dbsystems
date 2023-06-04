@@ -89,6 +89,118 @@ export interface PutShoppingCartResponse {
   msg: string;
 }
 
+export interface GetOrdersResponse {
+  msg: string;
+  data: Array<IOrder>;
+}
+
+export interface GetOrdersRequest {
+  user_id: string;
+}
+
+export interface IOrder {
+  order_id: number;
+  order_date: string;
+  order_status: string;
+  order_total: number;
+  order_items: Array<IOrderItem>;
+}
+
+// shipping gleich pro product
+// in order gespeichert werden die preise der produkte nach applyen aller discounts
+// order total ist summe der produkte + shipping
+// ab einem gewissen threshold des gesamtpreises für einen gewissen händler wird shipping für jedes Item dieses händlers gratis (wenn coupon im FE validiert wird)
+// status wird für jedes Item von einem Händler derselbe angezeigt
+// order_status ist entweder "pending", "processing" oder "delivered",
+// pending wenn noch keine produkte shipped wurden, processing wenn mindestens ein produkt shipped wurde, delivered wenn alle produkte shipped wurden
+
+export interface IOrderItem {
+  product_id: number;
+  name: string;
+  price: number;
+  quantity: number;
+  status: string;
+  shipping_cost: number;
+}
+
+export const getOrdersResponseMockData: GetOrdersResponse = {
+  msg: "Success",
+  data: [
+    {
+      order_id: 1,
+      order_date: "2021-05-01",
+      order_status: "pending",
+      order_total: 100,
+      order_items: [
+        {
+          product_id: 1,
+          name: "Product 1",
+          price: 10,
+          quantity: 1,
+          status: "pending",
+          shipping_cost: 10,
+        },
+        {
+          product_id: 2,
+          name: "Product 2",
+          price: 20,
+          quantity: 2,
+          status: "pending",
+          shipping_cost: 10,
+        },
+      ],
+    },
+    {
+      order_id: 2,
+      order_date: "2021-05-01",
+      order_status: "processing",
+      order_total: 100,
+      order_items: [
+        {
+          product_id: 3,
+          name: "Product 3",
+          price: 30,
+          quantity: 3,
+          status: "processing",
+          shipping_cost: 10,
+        },
+        {
+          product_id: 4,
+          name: "Product 4",
+          price: 40,
+          quantity: 4,
+          status: "processing",
+          shipping_cost: 10,
+        },
+      ],
+    },
+    {
+      order_id: 3,
+      order_date: "2021-05-01",
+      order_status: "delivered",
+      order_total: 100,
+      order_items: [
+        {
+          product_id: 5,
+          name: "Product 5",
+          price: 50,
+          quantity: 5,
+          status: "delivered",
+          shipping_cost: 10,
+        },
+        {
+          product_id: 6,
+          name: "Product 6",
+          price: 60,
+          quantity: 6,
+          status: "delivered",
+          shipping_cost: 10,
+        },
+      ],
+    },
+  ],
+};
+
 export const getSingleProductResponseMockData: GetSingleProductResponse = {
   msg: "Success",
   code: 200,

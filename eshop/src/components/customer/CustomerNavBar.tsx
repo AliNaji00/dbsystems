@@ -103,6 +103,7 @@ export const CustomerNavBar = observer(
                   flex: 1,
                   display: "flex",
                   justifyContent: "space-between",
+                  alignItems: "center",
                   maxWidth: 1000,
                 }}
               >
