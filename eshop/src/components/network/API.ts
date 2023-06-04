@@ -6,6 +6,8 @@ import {
   PutShoppingCartResponse,
   GetBasketResponse,
   GetProductsRequest,
+  GetSingleProductResponse,
+  GetSingleProductRequest,
 } from "./APITypes";
 
 export const STATUS_CODE_UNAUTHORIZED = 401;
@@ -44,6 +46,28 @@ export const API = {
 
       const response = await axios.get<GetProductsResponse>(
         prefix("/products"),
+        {
+          params: params,
+        }
+      );
+      return response;
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  async getProduct(
+    product_id: string,
+    user_id: string
+  ): Promise<AxiosResponse<GetSingleProductResponse>> {
+    try {
+      const params: GetSingleProductRequest = {
+        product_id: product_id,
+        user_id: user_id,
+      };
+
+      const response = await axios.get<GetSingleProductResponse>(
+        prefix("/product"),
         {
           params: params,
         }

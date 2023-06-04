@@ -6,18 +6,22 @@ import { CustomNumberField } from "../ui/ProductCartNumberField";
 import { customColors } from "../util/Theme";
 import { getImagePath } from "../util/Helpers";
 import { API } from "../network/API";
+import { Link } from "react-router-dom";
+import { customerPrefix } from "./router/CustomerRouteNames";
 
 export const ProductCard = (props: { product: IProduct }) => {
   const generalStore = useGeneralStore();
 
   return (
     <Card sx={{ width: 200, height: 355 }} elevation={6}>
-      <CardMedia
-        component="img"
-        height="300"
-        image={getImagePath(props.product.picture)}
-        alt={props.product.name}
-      />
+      <Link to={customerPrefix(String(props.product.product_id))}>
+        <CardMedia
+          component="img"
+          height="300"
+          image={getImagePath(props.product.picture)}
+          alt={props.product.name}
+        />
+      </Link>
       <div
         style={{
           backgroundColor: customColors.backgroundColor,

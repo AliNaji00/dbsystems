@@ -8,10 +8,7 @@ export const SEARCH_DEBOUNCE_MS = 500;
 export const imgageHost = "http://localhost:8080";
 
 export class GeneralStore {
-  keyword = "";
-  productsChangeFlag = false;
   isHydrated = false;
-
   isLoading = false;
 
   userId: string = "";
@@ -20,8 +17,13 @@ export class GeneralStore {
   userImage: null | string = null;
 
   products: Array<IProduct> = [];
-  basketItems: null | number = null;
+  keyword = "";
+  productsChangeFlag = false;
 
+  currentProductLoaded = false;
+  productChangeFlag = false;
+
+  basketItems: null | number = null;
   basketChangeFlag = false;
   basketLoaded = false;
 
