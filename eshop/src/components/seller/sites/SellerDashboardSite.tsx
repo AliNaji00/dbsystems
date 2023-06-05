@@ -22,7 +22,7 @@ export const SellerDashboardSite = () => {
       </Helmet>
       <BackgroundContainer style={{ minHeight: 200 }}>
         <CenteredContent>
-          <h3 style={{ marginBottom: 32 }}>
+          <h3 style={{ marginBottom: 16 }}>
             Welcome, <b>{generalStore.userName?.split(" ")[0]}</b>!
           </h3>
           <div style={{ height: "100%", display: "flex" }}>

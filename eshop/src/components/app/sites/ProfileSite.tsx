@@ -43,6 +43,7 @@ export const ProfileSite = () => {
   };
 
   const handleFileUpload = (files: FilePondFile[]) => {
+    // TODO file upload
     console.log(files);
   };
 

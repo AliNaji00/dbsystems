@@ -1,7 +1,8 @@
+import { Paper } from "@mui/material";
+import _ from "lodash";
 import * as React from "react";
 import {
   CartesianGrid,
-  Legend,
   Line,
   LineChart,
   ResponsiveContainer,
@@ -11,7 +12,44 @@ import {
 } from "recharts";
 import { ISalesStatistics } from "../network/APITypes";
 import { customColors } from "../util/Theme";
-import _ from "lodash";
+
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: any[];
+  label?: string;
+}
+
+const CustomTooltip: React.FC<CustomTooltipProps> = ({
+  active,
+  payload,
+  label,
+}) => {
+  if (active && payload && payload.length) {
+    console.log(payload);
+    return (
+      <Paper
+        elevation={6}
+        sx={{ backgroundColor: customColors.primaryColor, padding: 2 }}
+      >
+        {
+          // TODO: fix data formating
+        }
+        <p
+          style={{ color: customColors.primaryColorLight, margin: 0 }}
+        >{`${payload[0].payload.startDate} - ${payload[0].payload.endDate}`}</p>
+        <h4
+          style={{
+            color: customColors.white,
+            fontSize: 22,
+            margin: 0,
+          }}
+        >{`$ ${payload[0].payload.salesVolume}`}</h4>
+      </Paper>
+    );
+  }
+
+  return null;
+};
 
 export const SalesChartTile = (props: {
   salesChartData: Array<ISalesStatistics>;
@@ -40,7 +78,7 @@ export const SalesChartTile = (props: {
           ]}
           tickMargin={12}
         />
-        <Tooltip />
+        <Tooltip content={<CustomTooltip />} />
         <Line
           type="monotone"
           dataKey="salesVolume"

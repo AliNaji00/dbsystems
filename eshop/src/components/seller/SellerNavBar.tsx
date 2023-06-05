@@ -160,8 +160,6 @@ const ActiveIndicator = observer(
       );
       const activeElement = props.itemsRef.current[activeItemIndex];
 
-      console.log("activeElement", activeElement);
-
       if (activeElement) {
         // This timeout ensures that the transition happens after the element has been rendered
         // with its initial position.
