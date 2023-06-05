@@ -8,8 +8,6 @@ export const useBasket = (user_id: string) => {
   const [basket, setBasket] = React.useState<IShoppingCartItem[]>([]);
   const generalStore = useGeneralStore();
 
-  // TODO: correctly handle empty basket in try compartmet after change in BE
-
   React.useEffect(() => {
     const loadProducts = async () => {
       try {

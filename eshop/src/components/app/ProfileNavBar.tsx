@@ -11,6 +11,10 @@ import { NavBarContainer } from "../ui/NavBarContainer";
 import { getImagePath } from "../util/Helpers";
 import { logo_transparent } from "../util/Images";
 import { customColors } from "../util/Theme";
+import {
+  SellerRouteNames,
+  sellerPrefix,
+} from "../seller/router/SellerRouteNames";
 
 // TODO add routing for all the menu items
 
@@ -63,7 +67,14 @@ export const ProfileNavBar = observer(
             Shopping
           </MenuItem>
           {generalStore.userRoles.includes("seller") && (
-            <MenuItem onClick={handleClose}>Seller Dashboard</MenuItem>
+            <MenuItem
+              onClick={() => {
+                handleClose();
+                navigate(sellerPrefix(SellerRouteNames.DASHBOARD));
+              }}
+            >
+              Seller Dashboard
+            </MenuItem>
           )}
           {generalStore.userRoles.includes("admin") && (
             <MenuItem onClick={handleClose}>Admin Dashbaord</MenuItem>

@@ -23,6 +23,10 @@ import { logo } from "../../util/Images";
 import { customColors } from "../../util/Theme";
 import { title } from "../router/RouteNames";
 import { emailRegex } from "../../util/Helpers";
+import {
+  SellerRouteNames,
+  sellerPrefix,
+} from "../../seller/router/SellerRouteNames";
 
 export const LoginSite = observer(() => {
   const {
@@ -49,7 +53,13 @@ export const LoginSite = observer(() => {
         if (response.data.data.ImageURL) {
           generalStore.userImage = response.data.data.ImageURL;
         }
-        navigate(customerPrefix(CustomerRouteNames.HOME));
+        if (response.data.data.userroles.includes("admin")) {
+          // TODO navigate to admin site
+        } else if (response.data.data.userroles.includes("seller")) {
+          navigate(sellerPrefix(SellerRouteNames.DASHBOARD));
+        } else {
+          navigate(customerPrefix(CustomerRouteNames.HOME));
+        }
       }
     } catch (e: any) {
       if (e.response && e.response.status === 403) {
@@ -72,7 +82,13 @@ export const LoginSite = observer(() => {
 
   React.useEffect(() => {
     if (generalStore.loggedIn) {
-      navigate(customerPrefix(CustomerRouteNames.HOME));
+      if (generalStore.userRoles.includes("admin")) {
+        // TODO navigate to admin site
+      } else if (generalStore.userRoles.includes("seller")) {
+        navigate(sellerPrefix(SellerRouteNames.DASHBOARD));
+      } else {
+        navigate(customerPrefix(CustomerRouteNames.HOME));
+      }
     }
   }, [generalStore.loggedIn, navigate]);
 
@@ -149,7 +165,7 @@ export const LoginSite = observer(() => {
                         onMouseDown={handleMouseDownPassword}
                         edge="end"
                       >
-                        {showPassword ? <Visibility /> : <VisibilityOff />}
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
                       </IconButton>
                     </InputAdornment>
                   ),

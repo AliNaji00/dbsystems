@@ -15,6 +15,10 @@ import {
   CustomerRouteNames,
   customerPrefix,
 } from "./router/CustomerRouteNames";
+import {
+  SellerRouteNames,
+  sellerPrefix,
+} from "../seller/router/SellerRouteNames";
 
 type SiteType = "Search" | "Other";
 
@@ -147,7 +151,14 @@ export const CustomerNavBar = observer(
               Profile
             </MenuItem>
             {generalStore.userRoles.includes("seller") && (
-              <MenuItem onClick={handleClose}>Seller Dashboard</MenuItem>
+              <MenuItem
+                onClick={() => {
+                  handleClose();
+                  navigate(sellerPrefix(SellerRouteNames.DASHBOARD));
+                }}
+              >
+                Seller Dashboard
+              </MenuItem>
             )}
             {generalStore.userRoles.includes("admin") && (
               <MenuItem onClick={handleClose}>Admin Dashbaord</MenuItem>
