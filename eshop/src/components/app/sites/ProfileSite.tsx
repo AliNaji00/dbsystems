@@ -128,21 +128,6 @@ export const ProfileSite = () => {
                   helperText={errors.email?.message}
                 />
                 <TextField
-                  {...register("phone", {
-                    required: "Phone number is required",
-                    pattern: {
-                      value: phoneRegex,
-                      message: "Enter a valid phone number",
-                    },
-                  })}
-                  label="Phone number"
-                  variant="outlined"
-                  fullWidth
-                  color="primary"
-                  error={!!errors.phone}
-                  helperText={errors.phone?.message}
-                />
-                <TextField
                   {...register("address", {
                     required: "Address is required",
                   })}
@@ -192,7 +177,6 @@ export const ProfileSite = () => {
               >
                 <h1>Name: {userData.name}</h1>
                 <h3>Email: {userData.email}</h3>
-                <h3>Phone: {userData.phone}</h3>
                 <h3>Address: {userData.address}</h3>
                 <div
                   style={{

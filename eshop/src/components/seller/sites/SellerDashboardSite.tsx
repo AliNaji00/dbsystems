@@ -1,14 +1,14 @@
 import * as React from "react";
 import { Helmet } from "react-helmet";
+import { useGeneralStore } from "../../../stores/GeneralStore";
 import { title } from "../../app/router/RouteNames";
+import { getSalesStatisticMockData } from "../../network/APITypes";
 import { CenteredContent } from "../../ui/CenteredContent";
 import { BackgroundContainer } from "../../ui/Components";
-import { useGeneralStore } from "../../../stores/GeneralStore";
-import { customColors } from "../../util/Theme";
 import { OrdersTile } from "../OrdersTile";
-import { getSalesStatisticMockData } from "../../network/APITypes";
 import { ProfitTile } from "../ProfitTile";
 import { SalesChartTile } from "../SalesChartTile";
+import { TopProductsTile } from "../TopProductsTile";
 
 export const SellerDashboardSite = () => {
   const generalStore = useGeneralStore();
@@ -25,7 +25,7 @@ export const SellerDashboardSite = () => {
           <h3 style={{ marginBottom: 16 }}>
             Welcome, <b>{generalStore.userName?.split(" ")[0]}</b>!
           </h3>
-          <div style={{ height: "100%", display: "flex" }}>
+          <div style={{ height: "100%", display: "flex", gap: 32 }}>
             <div
               style={{
                 display: "flex",
@@ -54,12 +54,19 @@ export const SellerDashboardSite = () => {
                 <h2 style={{ marginBottom: 32, fontSize: 22 }}>
                   Sales statistics
                 </h2>
-                <SalesChartTile salesChartData={salesStatistics.data} />
+                <SalesChartTile salesChartData={salesStatistics.sales_data} />
               </div>
             </div>
             <div
-              style={{ flex: 5, backgroundColor: customColors.primaryColor }}
-            ></div>
+              style={{
+                flex: 5,
+                padding: 16,
+                display: "flex",
+                flexDirection: "column",
+              }}
+            >
+              <TopProductsTile products={salesStatistics.top_products} />
+            </div>
           </div>
         </CenteredContent>
       </BackgroundContainer>

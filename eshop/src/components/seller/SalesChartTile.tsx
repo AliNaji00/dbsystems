@@ -42,7 +42,7 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({
             fontSize: 22,
             margin: 0,
           }}
-        >{`$ ${payload[0].payload.salesVolume}`}</h4>
+        >{`$ ${payload[0].payload.salesProfit}`}</h4>
       </Paper>
     );
   }
@@ -69,10 +69,10 @@ export const SalesChartTile = (props: {
         <YAxis
           domain={[
             (_.min(
-              props.salesChartData.map((data) => data.salesVolume)
+              props.salesChartData.map((data) => data.salesProfit)
             ) as number) - 100,
             (_.max(
-              props.salesChartData.map((data) => data.salesVolume)
+              props.salesChartData.map((data) => data.salesProfit)
             ) as number) + 100,
           ]}
           tickMargin={12}
@@ -80,7 +80,7 @@ export const SalesChartTile = (props: {
         <Tooltip content={<CustomTooltip />} />
         <Line
           type="monotone"
-          dataKey="salesVolume"
+          dataKey="salesProfit"
           stroke={customColors.primaryColor}
           activeDot={{ r: 8 }}
         />

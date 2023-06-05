@@ -136,7 +136,6 @@ export interface IUser {
   user_id: string;
   name: string;
   email: string;
-  phone: string;
   address: string;
   ImageURL: string;
   password: string;
@@ -147,7 +146,6 @@ export interface IPutUserRequest {
   user_id: string;
   name: string;
   email: string;
-  phone: string;
   address: string;
   ImageURL: string;
   password: string;
@@ -160,13 +158,21 @@ export interface IGetSalesStatisticsRequest {
 
 export interface IGetSalesStatisticsResponse {
   msg: string;
-  profit: number;
-  total_sales: number;
-  data: Array<ISalesStatistics>;
+  profit: number; // total amount money earned (just sum of sold products)
+  total_sales: number; // total number of sales
+  sales_data: Array<ISalesStatistics>;
+  top_products: Array<ITopSalesProduct>;
+}
+
+export interface ITopSalesProduct {
+  product_id: number;
+  name: string;
+  sales_volume: number; // number of times the product was sold
+  ImageURL: string;
 }
 
 export interface ISalesStatistics {
-  salesVolume: number;
+  salesProfit: number; // total money of products sold
   startDate: string;
   endDate: string;
   name: string;
@@ -176,30 +182,62 @@ export const getSalesStatisticMockData: IGetSalesStatisticsResponse = {
   msg: "Success",
   profit: 17328.53,
   total_sales: 194,
-  data: [
+  sales_data: [
     {
-      salesVolume: 2000,
+      salesProfit: 2000,
       startDate: "1.5",
       endDate: "7.5.2021",
       name: "Week 1",
     },
     {
-      salesVolume: 3200,
+      salesProfit: 3200,
       startDate: "8.5",
       endDate: "14.5.2021",
       name: "Week 2",
     },
     {
-      salesVolume: 2800,
+      salesProfit: 2800,
       startDate: "15.5",
       endDate: "21.5.2021",
       name: "Week 3",
     },
     {
-      salesVolume: 4000,
+      salesProfit: 4000,
       startDate: "22.5",
       endDate: "28.5.2021",
       name: "Week 4",
+    },
+  ],
+  top_products: [
+    {
+      product_id: 1,
+      name: "Product 1",
+      sales_volume: 100,
+      ImageURL: "/api/img/placeholder.png",
+    },
+    {
+      product_id: 2,
+      name: "Product 2",
+      sales_volume: 80,
+      ImageURL: "/api/img/placeholder.png",
+    },
+    {
+      product_id: 3,
+      name: "Product 3",
+      sales_volume: 60,
+      ImageURL: "/api/img/placeholder.png",
+    },
+    {
+      product_id: 4,
+      name: "Product 4",
+      sales_volume: 40,
+      ImageURL: "/api/img/placeholder.png",
+    },
+    {
+      product_id: 5,
+      name: "Product 5",
+      sales_volume: 20,
+      ImageURL: "/api/img/placeholder.png",
     },
   ],
 };
@@ -210,7 +248,6 @@ export const getUserResponseMockData: IGetUserResponse = {
     user_id: "1",
     name: "John Doe",
     email: "john.doe@gmail.com",
-    phone: "+33 123 456 789",
     address: "12 Street, City, Country",
     password: "123456",
     ImageURL: "/api/img/placeholder.png",
