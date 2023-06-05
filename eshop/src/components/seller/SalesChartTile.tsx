@@ -25,7 +25,6 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({
   label,
 }) => {
   if (active && payload && payload.length) {
-    console.log(payload);
     return (
       <Paper
         elevation={6}

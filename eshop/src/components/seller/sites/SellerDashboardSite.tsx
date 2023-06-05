@@ -51,7 +51,9 @@ export const SellerDashboardSite = () => {
                 />
               </div>
               <div style={{ margin: 16, maxHeight: "60%" }}>
-                <h2 style={{ marginBottom: 32 }}>Sales statistics</h2>
+                <h2 style={{ marginBottom: 32, fontSize: 22 }}>
+                  Sales statistics
+                </h2>
                 <SalesChartTile salesChartData={salesStatistics.data} />
               </div>
             </div>
