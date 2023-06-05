@@ -4,7 +4,7 @@ export default ({ pool }) => {
   const route = Router();
 
   route.get("/", (req, res, next) => {
-    const user_id = req.query.user_id;
+    const user_id = req.query.user_id === undefined ? -1 : req.query.user_id;
     pool
       .getConnection()
       .then((conn) => {

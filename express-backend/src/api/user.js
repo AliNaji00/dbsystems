@@ -11,7 +11,7 @@ export default ({ pool }) => {
       .then((conn) => {
         conn
           .query(
-            "SELECT u.user_id, u.name, NOT ISNULL(s.user_id) AS isSeller, NOT ISNULL(a.user_id) AS isAdmin FROM users u LEFT JOIN seller s ON u.user_id = s.user_id LEFT JOIN admin a ON u.user_id = a.user_id WHERE email = ? AND password = ?",
+            "SELECT u.user_id, u.name, NOT ISNULL(s.user_id) AS isSeller, NOT ISNULL(a.user_id) AS isAdmin, NOT ISNULL(c.user_id) AS isCustomer FROM users u LEFT JOIN customer c ON u.user_id = c.user_id LEFT JOIN seller s ON u.user_id = s.user_id LEFT JOIN admin a ON u.user_id = a.user_id WHERE email = ? AND password = ?",
             [email, password]
           )
           .then((rows) => {
@@ -23,9 +23,12 @@ export default ({ pool }) => {
             if (user.isAdmin) {
               roles.push("admin");
             }
+            if (user.isCustomer) {
+              roles.push("customer");
+            }
             const loginResponseData = {
               user_id: user.user_id,
-              ImageURL: "/api/img/placeholder.png",
+              ImageURL: "/api/users/" + user.user_id + "/avatar",
               userroles: roles,
               name: user.name,
             };

@@ -58,7 +58,9 @@ export default ({ pool }) => {
             })
             .catch((err) => {
               console.log(err);
-              res.status(404).json({ msg: "user or product does not exist" });
+              res
+                .status(404)
+                .json({ msg: "customer or product does not exist" });
             })
             .finally(() => conn.close());
         }
