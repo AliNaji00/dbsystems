@@ -12,6 +12,7 @@ import { getImagePath } from "../util/Helpers";
 import { logo_transparent } from "../util/Images";
 import { customColors } from "../util/Theme";
 import { SellerRouteNames, sellerPrefix } from "./router/SellerRouteNames";
+import { RouteNames } from "../app/router/RouteNames";
 
 // TODO add routing for all the menu items
 
@@ -106,6 +107,14 @@ export const SellerNavBar = observer(
             "aria-labelledby": "basic-button",
           }}
         >
+          <MenuItem
+            onClick={() => {
+              navigate(RouteNames.PROFILE);
+              handleClose();
+            }}
+          >
+            Profile
+          </MenuItem>
           <MenuItem
             onClick={() => {
               handleClose();

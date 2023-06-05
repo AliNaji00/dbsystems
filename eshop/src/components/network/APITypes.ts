@@ -154,6 +154,51 @@ export interface IPutUserRequest {
   userroles: Array<UserRole>;
 }
 
+export interface IGetSalesStatisticsRequest {
+  user_id: string;
+}
+
+export interface IGetSalesStatisticsResponse {
+  msg: string;
+  profit: number;
+  total_sales: number;
+  data: Array<ISalesStatistics>;
+}
+
+export interface ISalesStatistics {
+  salesVolume: number;
+  startDate: string;
+  endDate: string;
+}
+
+export const getSalesStatisticMockData: IGetSalesStatisticsResponse = {
+  msg: "Success",
+  profit: 17328.53,
+  total_sales: 194,
+  data: [
+    {
+      salesVolume: 2000,
+      startDate: "2021-05-01",
+      endDate: "2021-05-7",
+    },
+    {
+      salesVolume: 3200,
+      startDate: "2021-05-08",
+      endDate: "2021-05-14",
+    },
+    {
+      salesVolume: 2800,
+      startDate: "2021-05-15",
+      endDate: "2021-05-21",
+    },
+    {
+      salesVolume: 4000,
+      startDate: "2021-05-22",
+      endDate: "2021-05-28",
+    },
+  ],
+};
+
 export const getUserResponseMockData: IGetUserResponse = {
   msg: "Success",
   data: {

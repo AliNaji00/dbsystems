@@ -47,6 +47,7 @@ export const LoginSite = observer(() => {
       if (response.status === 200) {
         generalStore.loggedIn = true;
         generalStore.userId = response.data.data.user_id;
+        generalStore.userName = response.data.data.name;
         generalStore.userRoles = generalStore.userRoles.concat(
           response.data.data.userroles
         );

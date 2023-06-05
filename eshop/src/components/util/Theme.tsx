@@ -4,6 +4,8 @@ export const customColors = {
   primaryColor: "#42427D",
   primaryColorDark: "#2C2C53",
   primaryColorLight: "#8a8ac1",
+  sky: "#C7F2FF",
+  rose: "#FFE5EE",
   backgroundColor: "#EBEEF2",
   green: "#6b8f71",
   tomato: "#fe654f",

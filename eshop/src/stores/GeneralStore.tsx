@@ -15,6 +15,7 @@ export class GeneralStore {
   loggedIn = false;
   userRoles: Array<UserRole> = ["customer"];
   userImage: null | string = null;
+  userName: null | string = null;
 
   products: Array<IProduct> = [];
   keyword = "";
@@ -32,7 +33,7 @@ export class GeneralStore {
 
     makePersistable(this, {
       name: "GeneralStore",
-      properties: ["loggedIn", "userId", "userRoles", "userImage"],
+      properties: ["loggedIn", "userId", "userRoles", "userImage", "userName"],
       storage: window.localStorage,
     }).then(
       action((persistStore) => {
