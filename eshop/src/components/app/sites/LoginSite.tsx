@@ -22,6 +22,7 @@ import { AnimatedGradient } from "../../ui/Components";
 import { logo } from "../../util/Images";
 import { customColors } from "../../util/Theme";
 import { title } from "../router/RouteNames";
+import { emailRegex } from "../../util/Helpers";
 
 export const LoginSite = observer(() => {
   const {
@@ -68,9 +69,6 @@ export const LoginSite = observer(() => {
   ) => {
     event.preventDefault();
   };
-
-  // Validate email
-  const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
 
   React.useEffect(() => {
     if (generalStore.loggedIn) {

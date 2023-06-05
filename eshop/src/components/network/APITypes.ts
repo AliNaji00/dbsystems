@@ -139,6 +139,18 @@ export interface IUser {
   phone: string;
   address: string;
   ImageURL: string;
+  password: string;
+  userroles: Array<UserRole>;
+}
+
+export interface IPutUserRequest {
+  user_id: string;
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+  ImageURL: string;
+  password: string;
   userroles: Array<UserRole>;
 }
 
@@ -150,6 +162,7 @@ export const getUserResponseMockData: IGetUserResponse = {
     email: "john.doe@gmail.com",
     phone: "+33 123 456 789",
     address: "12 Street, City, Country",
+    password: "123456",
     ImageURL: "/api/img/placeholder.png",
     userroles: ["customer"],
   },

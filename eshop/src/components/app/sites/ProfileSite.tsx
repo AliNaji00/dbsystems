@@ -1,19 +1,63 @@
+import EditIcon from "@mui/icons-material/Edit";
 import { Button, TextField } from "@mui/material";
+import Dialog from "@mui/material/Dialog";
+import DialogContent from "@mui/material/DialogContent";
+import IconButton from "@mui/material/IconButton";
+import { FilePondFile, registerPlugin } from "filepond";
+import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
+import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
+import FilePondPluginImagePreview from "filepond-plugin-image-preview";
+import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
+import "filepond/dist/filepond.min.css";
 import * as React from "react";
+import { FilePond } from "react-filepond";
 import { Helmet } from "react-helmet";
-import { getUserResponseMockData } from "../../network/APITypes";
+import { useForm } from "react-hook-form";
+import {
+  IPutUserRequest,
+  getUserResponseMockData,
+} from "../../network/APITypes";
 import { CenteredContent } from "../../ui/CenteredContent";
 import { BackgroundContainer } from "../../ui/Components";
-import { getImagePath } from "../../util/Helpers";
+import { emailRegex, getImagePath, phoneRegex } from "../../util/Helpers";
 import { ProfileNavBar } from "../ProfileNavBar";
 import { title } from "../router/RouteNames";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+
+// Register the plugins
+registerPlugin(
+  FilePondPluginImageExifOrientation,
+  FilePondPluginImagePreview,
+  FilePondPluginFileValidateType
+);
 
 export const ProfileSite = () => {
   const [isEditing, setIsEditing] = React.useState(false);
   const [userData, setUserData] = React.useState(getUserResponseMockData.data);
+  const [isDialogOpen, setIsDialogOpen] = React.useState(false);
+  const [showPassword, setShowPassword] = React.useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUserData({ ...userData, [e.target.name]: e.target.value });
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const handleFileUpload = (files: FilePondFile[]) => {
+    console.log(files);
+  };
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<IPutUserRequest>({ defaultValues: userData });
+
+  const onSubmit = async (data: IPutUserRequest) => {
+    try {
+      setIsEditing(false);
+    } catch (e: any) {
+      console.log(e);
+    }
   };
 
   return (
@@ -32,57 +76,183 @@ export const ProfileSite = () => {
               gap: 128,
             }}
           >
-            <img
-              src={getImagePath(userData.ImageURL)}
-              alt={userData.name}
-              style={{ alignSelf: "flex-start", width: 200 }}
-            />
+            <div style={{ position: "relative" }}>
+              <img
+                src={getImagePath(userData.ImageURL)}
+                alt={userData.name}
+                style={{ alignSelf: "flex-start", width: 300 }}
+              />
+              <IconButton
+                style={{ position: "absolute", top: 0, right: 0 }}
+                onClick={() => setIsDialogOpen(true)}
+              >
+                <EditIcon />
+              </IconButton>
+            </div>
             {isEditing ? (
-              <div
+              <form
+                onSubmit={handleSubmit(onSubmit)}
                 style={{
                   display: "flex",
                   flexDirection: "column",
-                  marginRight: 64,
                   gap: 16,
+                  marginRight: 64,
+                  width: 500,
                 }}
               >
                 <TextField
-                  name="name"
-                  value={userData.name}
-                  onChange={handleChange}
+                  {...register("name", {
+                    required: "Name is required",
+                  })}
+                  label="Name"
+                  variant="outlined"
+                  fullWidth
+                  color="primary"
+                  error={!!errors.name}
+                  helperText={errors.name?.message}
                 />
                 <TextField
-                  name="email"
-                  value={userData.email}
-                  onChange={handleChange}
+                  {...register("email", {
+                    required: "Email is required",
+                    pattern: {
+                      value: emailRegex,
+                      message: "Enter a valid email address",
+                    },
+                  })}
+                  label="Email"
+                  variant="outlined"
+                  fullWidth
+                  color="primary"
+                  error={!!errors.email}
+                  helperText={errors.email?.message}
                 />
                 <TextField
-                  name="phone"
-                  value={userData.phone}
-                  onChange={handleChange}
+                  {...register("phone", {
+                    required: "Phone number is required",
+                    pattern: {
+                      value: phoneRegex,
+                      message: "Enter a valid phone number",
+                    },
+                  })}
+                  label="Phone number"
+                  variant="outlined"
+                  fullWidth
+                  color="primary"
+                  error={!!errors.phone}
+                  helperText={errors.phone?.message}
                 />
                 <TextField
-                  name="address"
-                  value={userData.address}
-                  onChange={handleChange}
+                  {...register("address", {
+                    required: "Address is required",
+                  })}
+                  label="Address"
+                  variant="outlined"
+                  type="text"
+                  error={!!errors.address}
+                  helperText={errors.address?.message}
+                  fullWidth
+                  color="primary"
                 />
-                <Button variant="contained" onClick={() => setIsEditing(false)}>
+                <TextField
+                  {...register("password", {
+                    required: "Password is required",
+                    minLength: {
+                      value: 5,
+                      message: "Password must be at least 5 characters",
+                    },
+                  })}
+                  label="Password"
+                  variant="outlined"
+                  type="text"
+                  error={!!errors.password}
+                  helperText={errors.password?.message}
+                  fullWidth
+                  color="primary"
+                />
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  size="large"
+                  sx={{ alignSelf: "flex-start" }}
+                >
                   Save
                 </Button>
-              </div>
+              </form>
             ) : (
-              <div style={{ marginRight: 64 }}>
-                <h2>{userData.name}</h2>
-                <p>{userData.email}</p>
-                <p>{userData.phone}</p>
-                <p>{userData.address}</p>
-                <Button variant="contained" onClick={() => setIsEditing(true)}>
+              <div
+                style={{
+                  marginRight: 64,
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 16,
+                  width: 500,
+                }}
+              >
+                <h1>Name: {userData.name}</h1>
+                <h3>Email: {userData.email}</h3>
+                <h3>Phone: {userData.phone}</h3>
+                <h3>Address: {userData.address}</h3>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    maxWidth: 400,
+                  }}
+                >
+                  <h3>
+                    Password: {showPassword ? userData.password : "•".repeat(8)}
+                  </h3>
+
+                  <IconButton onClick={toggleShowPassword}>
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </div>
+
+                <Button
+                  variant="contained"
+                  size="large"
+                  sx={{ alignSelf: "flex-start" }}
+                  onClick={() => setIsEditing(true)}
+                >
                   Edit
                 </Button>
               </div>
             )}
           </div>
         </CenteredContent>
+        <Dialog open={isDialogOpen} onClose={() => setIsDialogOpen(false)}>
+          <DialogContent
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              padding: "48px",
+              gap: "32px",
+            }}
+          >
+            <h2 style={{ textAlign: "center" }}>Upload new profile picture</h2>
+            <div style={{ height: 300 }}>
+              <FilePond
+                onupdatefiles={handleFileUpload}
+                allowMultiple={false}
+                maxFiles={1}
+                name="image"
+                labelIdle='Drag & Drop your files or <span class="filepond--label-action">Browse</span>'
+                acceptedFileTypes={["image/jpeg", "image/png"]}
+              />
+            </div>
+
+            <Button
+              variant="contained"
+              size="large"
+              onClick={() => setIsDialogOpen(false)}
+            >
+              Submit
+            </Button>
+          </DialogContent>
+        </Dialog>
       </BackgroundContainer>
     </>
   );

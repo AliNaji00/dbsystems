@@ -1,18 +1,17 @@
+import { Avatar } from "@mui/material";
 import * as React from "react";
 import { Helmet } from "react-helmet";
-import { title } from "../../app/router/RouteNames";
-import { CenteredContent } from "../../ui/CenteredContent";
-import { BackgroundContainer } from "../../ui/Components";
-import { CustomerNavBar } from "../CustomerNavBar";
 import { useParams } from "react-router-dom";
 import { useGeneralStore } from "../../../stores/GeneralStore";
-import { useProduct } from "../../../stores/useProduct";
+import { title } from "../../app/router/RouteNames";
+import { API } from "../../network/API";
 import { getSingleProductResponseMockData } from "../../network/APITypes";
+import { CenteredContent } from "../../ui/CenteredContent";
+import { BackgroundContainer } from "../../ui/Components";
+import { CustomNumberField } from "../../ui/ProductCartNumberField";
 import { getImagePath } from "../../util/Helpers";
 import { customColors } from "../../util/Theme";
-import { CustomNumberField } from "../../ui/ProductCartNumberField";
-import { API } from "../../network/API";
-import { Avatar } from "@mui/material";
+import { CustomerNavBar } from "../CustomerNavBar";
 
 type ProductIdParam = {
   productId: string;
@@ -26,6 +25,7 @@ export const CustomerProductSite = () => {
     return () => {
       generalStore.currentProductLoaded = false;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // const product = useProduct(generalStore.userId, productId);
