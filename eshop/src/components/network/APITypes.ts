@@ -169,6 +169,7 @@ export interface ISalesStatistics {
   salesVolume: number;
   startDate: string;
   endDate: string;
+  name: string;
 }
 
 export const getSalesStatisticMockData: IGetSalesStatisticsResponse = {
@@ -180,21 +181,25 @@ export const getSalesStatisticMockData: IGetSalesStatisticsResponse = {
       salesVolume: 2000,
       startDate: "2021-05-01",
       endDate: "2021-05-7",
+      name: "Week 1",
     },
     {
       salesVolume: 3200,
       startDate: "2021-05-08",
       endDate: "2021-05-14",
+      name: "Week 2",
     },
     {
       salesVolume: 2800,
       startDate: "2021-05-15",
       endDate: "2021-05-21",
+      name: "Week 3",
     },
     {
       salesVolume: 4000,
       startDate: "2021-05-22",
       endDate: "2021-05-28",
+      name: "Week 4",
     },
   ],
 };

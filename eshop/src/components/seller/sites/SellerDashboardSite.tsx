@@ -8,6 +8,7 @@ import { customColors } from "../../util/Theme";
 import { OrdersTile } from "../OrdersTile";
 import { getSalesStatisticMockData } from "../../network/APITypes";
 import { ProfitTile } from "../ProfitTile";
+import { SalesChartTile } from "../SalesChartTile";
 
 export const SellerDashboardSite = () => {
   const generalStore = useGeneralStore();
@@ -30,8 +31,7 @@ export const SellerDashboardSite = () => {
                 display: "flex",
                 flexDirection: "column",
                 flex: 8,
-                gap: 32,
-                height: 650,
+                height: 600,
               }}
             >
               <div
@@ -50,9 +50,10 @@ export const SellerDashboardSite = () => {
                   style={{ flex: 4 }}
                 />
               </div>
-              <div
-                style={{ height: "100%", backgroundColor: customColors.tomato }}
-              ></div>
+              <div style={{ margin: 16, maxHeight: "60%" }}>
+                <h2 style={{ marginBottom: 32 }}>Sales statistics</h2>
+                <SalesChartTile salesChartData={salesStatistics.data} />
+              </div>
             </div>
             <div
               style={{ flex: 5, backgroundColor: customColors.primaryColor }}
