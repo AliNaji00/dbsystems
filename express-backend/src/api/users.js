@@ -181,7 +181,7 @@ export default ({ pool }) => {
         res
           .status(201)
           .location("/users/" + user_id)
-          .send();
+          .json({ msg: "success", data: { user_id: user_id } });
       } catch (err) {
         conn.rollback();
         console.log(err);

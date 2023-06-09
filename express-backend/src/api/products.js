@@ -225,7 +225,7 @@ export default ({ pool }) => {
             res
               .status(201)
               .location("/products/" + rows.insertId)
-              .json({ msg: "success" });
+              .json({ msg: "success", data: { product_id: rows.insertId } });
           })
           .catch(() => {
             res.status(400).json({ msg: "Error creating product" });
