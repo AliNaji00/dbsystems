@@ -44,7 +44,6 @@ export const CustomerProductSite = observer(() => {
               <div
                 style={{
                   flex: 11, // This will take up 1/4 of the space
-                  backgroundColor: customColors.primaryColor,
                   alignSelf: "flex-start",
                 }}
               >

@@ -32,7 +32,7 @@ export interface IProduct {
   stock_quantity: number;
   description: string;
   product_id: number;
-  picture: string | null;
+  ImageURL: string | null;
   AmountInBasket: number;
   name: string;
   price: number; // actual price, possibly reduced price
@@ -74,7 +74,7 @@ export interface IGetBasketResponse {
 export interface IShoppingCartItem {
   product_id: number;
   stock_quantity: number;
-  picture: string | null;
+  ImageURL: string | null;
   name: string;
   price: number;
   original_price?: number;

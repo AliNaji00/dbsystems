@@ -28,7 +28,7 @@ export const ProductCard = (props: {
         <CardMedia
           component="img"
           height="300"
-          image={getImagePath(props.product.picture)}
+          image={getImagePath(props.product.ImageURL)}
           alt={props.product.name}
         />
       </Link>

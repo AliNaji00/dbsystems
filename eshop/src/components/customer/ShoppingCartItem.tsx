@@ -18,9 +18,8 @@ export const ShoppingCartItem = (props: { item: IShoppingCartItem }) => {
           flex: 1,
           minWidth: 0,
           height: "auto",
-          objectFit: "contain",
         }}
-        image={getImagePath(props.item.picture)}
+        image={getImagePath(props.item.ImageURL)}
         alt={props.item.name}
       />
       <div
