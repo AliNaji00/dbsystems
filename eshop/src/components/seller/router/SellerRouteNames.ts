@@ -3,6 +3,7 @@ export const SellerRouteNames = {
   DASHBOARD: "dashboard",
   ORDERS: "orders",
   PRODUCTS: "products",
+  PRODUCT: "product/:product_id",
   COUPONS: "coupons",
 };
 

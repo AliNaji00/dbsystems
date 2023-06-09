@@ -114,6 +114,7 @@ export default ({ pool }) => {
     }
   });
 
+  // get all products
   route.get("/", (req, res, next) => {
     const user_id = req.query.user_id === undefined ? -1 : req.query.user_id;
     pool
@@ -166,6 +167,7 @@ export default ({ pool }) => {
       .catch(next);
   });
 
+  // get product by id
   route.get("/:id", (req, res, next) => {
     const user_id = req.query.user_id !== undefined ? req.query.user_id : -1;
     const product_id = req.params.id;
@@ -174,7 +176,7 @@ export default ({ pool }) => {
       .then((conn) => {
         conn
           .query(
-            "SELECT p.stock_quantity, p.description, p.product_id, p.picture, COALESCE(SUM(CASE WHEN sib.c_uid = ? THEN sib.quantity ELSE 0 END), 0) AS AmountInBasket, p.name, p.price, s.store_name, s.store_address, s.store_email  FROM product p LEFT JOIN store_in_basket sib ON p.product_id = sib.product_id JOIN seller s ON p.s_uid = s.user_id JOIN users u ON s.user_id = u.user_id WHERE p.product_id = ? GROUP BY p.product_id",
+            "SELECT p.stock_quantity, p.description, p.product_id, COALESCE(SUM(CASE WHEN sib.c_uid = ? THEN sib.quantity ELSE 0 END), 0) AS AmountInBasket, p.name, p.price, s.store_name, s.store_address, s.store_email, s.phone_no FROM product p LEFT JOIN store_in_basket sib ON p.product_id = sib.product_id JOIN seller s ON p.s_uid = s.user_id JOIN users u ON s.user_id = u.user_id WHERE p.product_id = ? GROUP BY p.product_id",
             [user_id, product_id]
           )
           .then((rows) => {
@@ -195,6 +197,7 @@ export default ({ pool }) => {
       .catch(next);
   });
 
+  // create product
   route.post("/", (req, res, next) => {
     const seller_id = req.body.seller_id;
     const stock_quantity = req.body.stock_quantity;
@@ -225,6 +228,7 @@ export default ({ pool }) => {
       .catch(next);
   });
 
+  // update product
   route.put("/:id", (req, res, next) => {
     const product_id = req.params.id;
     const stock_quantity = req.body.stock_quantity;

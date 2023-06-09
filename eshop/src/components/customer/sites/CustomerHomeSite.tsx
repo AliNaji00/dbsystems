@@ -27,7 +27,11 @@ export const CustomerHomeSite = observer(() => {
             }}
           >
             {generalStore.products.map((product) => (
-              <ProductCard product={product} key={product.product_id} />
+              <ProductCard
+                product={product}
+                key={product.product_id}
+                type="customer"
+              />
             ))}
           </div>
         </CenteredContent>

@@ -31,7 +31,7 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({
         sx={{ backgroundColor: customColors.primaryColor, padding: 2 }}
       >
         {
-          // TODO: fix data formating
+          // TODO: fix data formating (the dates from the backend will likely not come in this nice format, I should write code to format them here for output below)
         }
         <p
           style={{ color: customColors.primaryColorLight, margin: 0 }}

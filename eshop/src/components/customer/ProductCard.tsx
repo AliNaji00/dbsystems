@@ -8,13 +8,23 @@ import { getImagePath } from "../util/Helpers";
 import { API } from "../network/API";
 import { Link } from "react-router-dom";
 import { customerPrefix } from "./router/CustomerRouteNames";
+import { sellerPrefix } from "../seller/router/SellerRouteNames";
 
-export const ProductCard = (props: { product: IProduct }) => {
+export const ProductCard = (props: {
+  product: IProduct;
+  type: "customer" | "seller";
+}) => {
   const generalStore = useGeneralStore();
 
   return (
     <Card sx={{ width: 200, height: 355 }} elevation={6}>
-      <Link to={customerPrefix(String(props.product.product_id))}>
+      <Link
+        to={
+          props.type === "customer"
+            ? customerPrefix("product/" + String(props.product.product_id))
+            : sellerPrefix("product/" + String(props.product.product_id))
+        }
+      >
         <CardMedia
           component="img"
           height="300"
@@ -57,26 +67,28 @@ export const ProductCard = (props: { product: IProduct }) => {
           </div>
         </div>
         <div style={{ flex: 1, display: "flex", justifyContent: "end" }}>
-          <CustomNumberField
-            initialAmount={Number(props.product.AmountInBasket)}
-            maxAmount={props.product.stock_quantity}
-            changeValue={async (newNumber: number) => {
-              try {
-                generalStore.isLoading = true;
+          {props.type === "customer" && (
+            <CustomNumberField
+              initialAmount={Number(props.product.AmountInBasket)}
+              maxAmount={props.product.stock_quantity}
+              changeValue={async (newNumber: number) => {
+                try {
+                  generalStore.isLoading = true;
 
-                await API.putBasket(
-                  generalStore.userId,
-                  props.product.product_id,
-                  newNumber
-                );
-              } catch (err) {
-                console.log(err);
-              } finally {
-                generalStore.isLoading = false;
-                generalStore.toggleProductsChangeFlag();
-              }
-            }}
-          />
+                  await API.putBasket(
+                    generalStore.userId,
+                    props.product.product_id,
+                    newNumber
+                  );
+                } catch (err) {
+                  console.log(err);
+                } finally {
+                  generalStore.isLoading = false;
+                  generalStore.toggleProductsChangeFlag();
+                }
+              }}
+            />
+          )}
         </div>
       </div>
     </Card>

@@ -65,12 +65,11 @@ export const API = {
   ): Promise<AxiosResponse<IGetSingleProductResponse>> {
     try {
       const params: IGetSingleProductRequest = {
-        product_id: product_id,
         user_id: user_id,
       };
 
       const response = await axios.get<IGetSingleProductResponse>(
-        prefix("/product"),
+        prefix(`/products/${product_id}`),
         {
           params: params,
         }

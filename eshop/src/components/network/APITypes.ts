@@ -39,14 +39,12 @@ export interface IProduct {
   original_price?: number;
 }
 
-export interface IGetSingleProductResponse {
+export interface IGetSingleProductResponse extends ISingleProduct {
   msg: string;
   code: number;
-  data: ISingleProduct;
 }
 
 export interface IGetSingleProductRequest {
-  product_id: string;
   user_id: string;
 }
 
@@ -63,7 +61,7 @@ export interface ISingleProduct {
   store_name: string;
   store_address: string;
   store_email: string;
-  store_phone: string;
+  phone_no: string;
   coupon_code: string | undefined;
   coupon_description: string | undefined;
 }
@@ -320,28 +318,4 @@ export const getOrdersResponseMockData: IGetOrdersResponse = {
       ],
     },
   ],
-};
-
-export const getSingleProductResponseMockData: IGetSingleProductResponse = {
-  msg: "Success",
-  code: 200,
-  data: {
-    stock_quantity: 14,
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent cursus justo a erat vulputate mollis. Vivamus ultrices, sapien ac rhoncus porttitor, metus lorem accumsan magna, sit amet iaculis massa mauris id dolor. Ut mauris ipsum, tincidunt eu malesuada at, suscipit et neque. Morbi vitae sem neque. Integer sit amet ante iaculis, blandit tortor sed, gravida sapien. Integer aliquam felis a dui pharetra fringilla. Proin vulputate ligula ut tristique suscipit. Curabitur elementum tortor id risus tempor ultricies id ut lacus. Maecenas id risus suscipit, semper felis vitae, semper magna. Donec placerat velit nec diam congue aliquam. Sed a ullamcorper ante.",
-    product_id: 1,
-    ImageURL: "/api/img/placeholder.png",
-    AmountInBasket: 3,
-    name: "Product 1",
-    price: 10,
-    original_price: 20,
-    seller_image_url: "/api/img/placeholder.png",
-    store_name: "Store 1",
-    store_address: "12 Street, City, Country",
-    store_email: "email@example.com",
-    store_phone: "+33 123 456 789",
-    coupon_code: "CODE123",
-    coupon_description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. mauris id dolor. a ullamcorper ante.",
-  },
 };

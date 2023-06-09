@@ -18,7 +18,7 @@ export const useProduct = (user_id: string, product_id?: string) => {
           const response = await API.getProduct(product_id, user_id);
 
           if (response && response.data) {
-            setProduct(response.data.data);
+            setProduct(response.data);
           }
         }
       } catch (err) {
@@ -30,7 +30,7 @@ export const useProduct = (user_id: string, product_id?: string) => {
 
     loadProduct();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [product_id, generalStore.productChangeFlag]);
+  }, [product_id, user_id, generalStore.productChangeFlag]);
 
   return product;
 };

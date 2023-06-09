@@ -23,7 +23,6 @@ export class GeneralStore {
   keyword = "";
   productsChangeFlag = false;
 
-  currentProductLoaded = false;
   productChangeFlag = false;
 
   basketItems: null | number = null;
