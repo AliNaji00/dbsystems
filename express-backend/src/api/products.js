@@ -182,7 +182,7 @@ export default ({ pool }) => {
       .then((conn) => {
         conn
           .query(
-            "SELECT p.s_uid, p.stock_quantity, p.description, p.product_id, COALESCE(SUM(CASE WHEN sib.c_uid = ? THEN sib.quantity ELSE 0 END), 0) AS AmountInBasket, p.name, p.price, s.store_name, s.store_address, s.store_email  FROM product p LEFT JOIN store_in_basket sib ON p.product_id = sib.product_id JOIN seller s ON p.s_uid = s.user_id JOIN users u ON s.user_id = u.user_id WHERE p.product_id = ? GROUP BY p.product_id",
+            "SELECT p.s_uid, p.stock_quantity, p.description, p.product_id, COALESCE(SUM(CASE WHEN sib.c_uid = ? THEN sib.quantity ELSE 0 END), 0) AS AmountInBasket, p.name, p.price, s.store_name, s.store_address, s.store_email, s.phone_no FROM product p LEFT JOIN store_in_basket sib ON p.product_id = sib.product_id JOIN seller s ON p.s_uid = s.user_id JOIN users u ON s.user_id = u.user_id WHERE p.product_id = ? GROUP BY p.product_id",
             [user_id, product_id]
           )
           .then((rows) => {
