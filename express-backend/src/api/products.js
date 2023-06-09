@@ -1,7 +1,118 @@
 import { Router } from "express";
+import multer from "multer";
+import path from "path";
 
 export default ({ pool }) => {
   const route = Router();
+  const upload = multer({ storage: multer.memoryStorage() });
+
+  const __dirname = path.resolve(path.dirname(""));
+
+  // post product picture
+  route.post(
+    "/:product_id/picture",
+    upload.single("image"),
+    async (req, res, next) => {
+      const product_id = req.params.product_id;
+
+      if (req.file === undefined) {
+        res.status(400).json({ msg: "Empty file" });
+      }
+      if (
+        req.file.mimetype !== "image/png" &&
+        req.file.mimetype !== "image/jpeg"
+      ) {
+        res.status(400).json({ msg: "Invalid file type" });
+        return;
+      }
+
+      try {
+        const conn = await pool.getConnection();
+        try {
+          const png = new Uint8Array(
+            req.file.mimetype === "image/png" ? [1] : [0]
+          );
+          const buffer = req.file.buffer;
+          const new_buffer = Buffer.concat([buffer, png]);
+          const query_res = await conn.query(
+            "UPDATE product SET picture = ? WHERE product_id = ?",
+            [new_buffer, product_id]
+          );
+          if (query_res.affectedRows !== 1) {
+            throw Error();
+          }
+          res.status(200).json({ msg: "success" });
+        } catch (err) {
+          res.status(400).json({
+            msg: "Error uploading product picture",
+          });
+        } finally {
+          conn.close();
+        }
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
+
+  // delete product picture
+  route.delete("/:product_id/picture", async (req, res, next) => {
+    const product_id = req.params.product_id;
+    try {
+      const conn = await pool.getConnection();
+      try {
+        const query_res = await conn.query(
+          "UPDATE product SET picture = NULL WHERE product_id = ?",
+          product_id
+        );
+        if (query_res.affectedRows < 1) {
+          throw Error();
+        }
+        res.json({ msg: "success" });
+      } catch (err) {
+        console.log(err);
+        res.status(400).json({ msg: "Error deleting product picture" });
+      } finally {
+        conn.close();
+      }
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  // get product picture
+  route.get("/:product_id/picture", async (req, res, next) => {
+    const product_id = req.params.product_id;
+    try {
+      const conn = await pool.getConnection();
+      try {
+        const rows = await conn.query(
+          "SELECT picture FROM product WHERE product_id = ?",
+          product_id
+        );
+        if (rows.length < 1) {
+          throw Error();
+        }
+        if (rows.length > 0 && rows[0].picture !== null) {
+          const buffer = rows[0].picture;
+          const png = buffer[buffer.length - 1];
+          const data = rows[0].picture.subarray(0, buffer.length - 1);
+          res.contentType(png ? "image/png" : "image/jpeg").send(data);
+        } else {
+          res
+            .contentType("image/png")
+            .sendFile(`${__dirname}/img/product_placeholder.png`);
+        }
+      } catch (err) {
+        console.log(err);
+        res.status(400).json({ msg: "Error getting product picture" });
+      } finally {
+        conn.close();
+      }
+    } catch (err) {
+      next(err);
+    }
+  });
 
   route.get("/", (req, res, next) => {
     const user_id = req.query.user_id === undefined ? -1 : req.query.user_id;
@@ -11,13 +122,17 @@ export default ({ pool }) => {
         if (req.query.keyword === undefined) {
           conn
             .query(
-              "SELECT p.stock_quantity, p.description, p.product_id, p.picture, COALESCE(SUM(CASE WHEN sib.c_uid = ? THEN sib.quantity ELSE 0 END), 0) AS AmountInBasket, p.name, p.price  FROM product p LEFT JOIN store_in_basket sib ON p.product_id = sib.product_id GROUP BY p.product_id",
+              "SELECT p.stock_quantity, p.description, p.product_id, COALESCE(SUM(CASE WHEN sib.c_uid = ? THEN sib.quantity ELSE 0 END), 0) AS AmountInBasket, p.name, p.price  FROM product p LEFT JOIN store_in_basket sib ON p.product_id = sib.product_id GROUP BY p.product_id",
               [user_id]
             )
             .then((rows) => {
               const res_rows = rows.map((row) => {
-                return { ...row, AmountInBasket: Number(row.AmountInBasket) };
-              }, rows);
+                return {
+                  ...row,
+                  AmountInBasket: Number(row.AmountInBasket),
+                  ImageURL: "/api/products/" + row.product_id + "/picture",
+                };
+              });
               res.json({ msg: "success", data: res_rows });
             })
             .catch(() =>
@@ -28,10 +143,19 @@ export default ({ pool }) => {
           const k = "%" + req.query.keyword + "%"; // yes, we can inject wildcards
           conn
             .query(
-              "SELECT p.stock_quantity, p.description, p.product_id, p.picture, COALESCE(SUM(CASE WHEN sib.c_uid = ? THEN sib.quantity ELSE 0 END), 0) AS AmountInBasket, p.name, p.price  FROM product p LEFT JOIN store_in_basket sib ON p.product_id = sib.product_id WHERE p.name LIKE ? OR p.description LIKE ? GROUP BY p.product_id",
+              "SELECT p.stock_quantity, p.description, p.product_id, COALESCE(SUM(CASE WHEN sib.c_uid = ? THEN sib.quantity ELSE 0 END), 0) AS AmountInBasket, p.name, p.price  FROM product p LEFT JOIN store_in_basket sib ON p.product_id = sib.product_id WHERE p.name LIKE ? OR p.description LIKE ? GROUP BY p.product_id",
               [user_id, k, k]
             )
-            .then((rows) => res.json({ msg: "success", data: rows }))
+            .then((rows) => {
+              const res_rows = rows.map((row) => {
+                return {
+                  ...row,
+                  AmountInBasket: Number(row.AmountInBasket),
+                  ImageURL: "/api/products/" + row.product_id + "/picture",
+                };
+              });
+              res.json({ msg: "success", data: res_rows });
+            })
             .catch((err) => {
               res.status(400).json({ msg: "error getting products" });
               console.log(err);
@@ -50,13 +174,14 @@ export default ({ pool }) => {
       .then((conn) => {
         conn
           .query(
-            "SELECT p.stock_quantity, p.description, p.product_id, p.picture, COALESCE(SUM(CASE WHEN sib.c_uid = ? THEN sib.quantity ELSE 0 END), 0) AS AmountInBasket, p.name, p.price, u.profile_picture, s.store_name, s.store_address, s.store_email  FROM product p LEFT JOIN store_in_basket sib ON p.product_id = sib.product_id JOIN seller s ON p.s_uid = s.user_id JOIN users u ON s.user_id = u.user_id WHERE p.product_id = ? GROUP BY p.product_id",
+            "SELECT p.stock_quantity, p.description, p.product_id, p.picture, COALESCE(SUM(CASE WHEN sib.c_uid = ? THEN sib.quantity ELSE 0 END), 0) AS AmountInBasket, p.name, p.price, s.store_name, s.store_address, s.store_email  FROM product p LEFT JOIN store_in_basket sib ON p.product_id = sib.product_id JOIN seller s ON p.s_uid = s.user_id JOIN users u ON s.user_id = u.user_id WHERE p.product_id = ? GROUP BY p.product_id",
             [user_id, product_id]
           )
           .then((rows) => {
             if (rows.length > 0) {
               const res_row = {
                 ...rows[0],
+                ImageURL: "/api/products/" + product_id + "/picture",
                 AmountInBasket: Number(rows[0].AmountInBasket),
               };
               res.json(res_row);
@@ -131,6 +256,9 @@ export default ({ pool }) => {
             } else {
               res.status(400).json({ msg: err.message });
             }
+          })
+          .finally(() => {
+            conn.close();
           });
       })
       .catch(next);

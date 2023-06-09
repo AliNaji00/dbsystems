@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { Router, query } from "express";
 import multer from "multer";
 import path from "path";
 
@@ -34,20 +34,24 @@ export default ({ pool }) => {
           );
           const buffer = req.file.buffer;
           const new_buffer = Buffer.concat([buffer, png]);
-          conn.query("UPDATE users SET profile_picture = ? WHERE user_id = ?", [
-            new_buffer,
-            user_id,
-          ]);
+          const query_res = await conn.query(
+            "UPDATE users SET profile_picture = ? WHERE user_id = ?",
+            [new_buffer, user_id]
+          );
+          if (query_res.affectedRows !== 1) {
+            throw Error();
+          }
           res.status(200).json({ msg: "success" });
         } catch (err) {
           res.status(400).json({
             msg: "Error uploading profile picture",
           });
+        } finally {
+          conn.close();
         }
       } catch (err) {
         next(err);
       }
-      res.status(200).send();
     }
   );
 
@@ -57,10 +61,13 @@ export default ({ pool }) => {
     try {
       const conn = await pool.getConnection();
       try {
-        await conn.query(
+        const query_res = await conn.query(
           "UPDATE users SET profile_picture = NULL WHERE user_id = ?",
           user_id
         );
+        if (query_res.affectedRows < 1) {
+          throw Error();
+        }
         res.json({ msg: "success" });
       } catch (err) {
         console.log(err);
@@ -83,7 +90,10 @@ export default ({ pool }) => {
           "SELECT profile_picture FROM users WHERE user_id = ?",
           user_id
         );
-        if (rows.length > 0 && rows[0].profile_picture !== null) {
+        if (rows.length < 1) {
+          throw Error();
+        }
+        if (rows[0].profile_picture !== null) {
           const buffer = rows[0].profile_picture;
           const png = buffer[buffer.length - 1];
           const data = rows[0].profile_picture.subarray(0, buffer.length - 1);
@@ -91,11 +101,13 @@ export default ({ pool }) => {
         } else {
           res
             .contentType("image/png")
-            .sendFile(`${__dirname}/img/placeholder.png`);
+            .sendFile(`${__dirname}/img/user_placeholder.png`);
         }
       } catch (err) {
         console.log(err);
         res.status(400).json({ msg: "Error getting profile picture" });
+      } finally {
+        conn.close();
       }
     } catch (err) {
       next(err);
