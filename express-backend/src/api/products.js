@@ -117,14 +117,15 @@ export default ({ pool }) => {
   // get all products
   route.get("/", (req, res, next) => {
     const user_id = req.query.user_id === undefined ? -1 : req.query.user_id;
+    const seller_id = req.query.seller_id;
     pool
       .getConnection()
       .then((conn) => {
-        if (req.query.keyword === undefined) {
+        if (seller_id !== undefined) {
           conn
             .query(
-              "SELECT p.stock_quantity, p.description, p.product_id, COALESCE(SUM(CASE WHEN sib.c_uid = ? THEN sib.quantity ELSE 0 END), 0) AS AmountInBasket, p.name, p.price  FROM product p LEFT JOIN store_in_basket sib ON p.product_id = sib.product_id GROUP BY p.product_id",
-              [user_id]
+              "SELECT p.stock_quantity, p.description, p.product_id, p.name, p.price FROM product p WHERE p.s_uid = ?",
+              seller_id
             )
             .then((rows) => {
               const res_rows = rows.map((row) => {
@@ -136,15 +137,19 @@ export default ({ pool }) => {
               });
               res.json({ msg: "success", data: res_rows });
             })
-            .catch(() =>
-              res.status(400).json({ msg: "error getting products" })
-            )
+            .catch(() => {
+              res
+                .status(400)
+                .json({ msg: "Error getting products for seller" });
+            })
             .finally(() => conn.close());
         } else {
-          const k = "%" + req.query.keyword + "%"; // yes, we can inject wildcards
+          const keyword =
+            req.query.keyword === undefined ? "" : req.query.keyword;
+          const k = "%" + keyword + "%"; // yes, we can inject wildcards
           conn
             .query(
-              "SELECT p.stock_quantity, p.description, p.product_id, COALESCE(SUM(CASE WHEN sib.c_uid = ? THEN sib.quantity ELSE 0 END), 0) AS AmountInBasket, p.name, p.price  FROM product p LEFT JOIN store_in_basket sib ON p.product_id = sib.product_id WHERE p.name LIKE ? OR p.description LIKE ? GROUP BY p.product_id",
+              "SELECT p.s_uid, p.stock_quantity, p.description, p.product_id, COALESCE(SUM(CASE WHEN sib.c_uid = ? THEN sib.quantity ELSE 0 END), 0) AS AmountInBasket, p.name, p.price  FROM product p LEFT JOIN store_in_basket sib ON p.product_id = sib.product_id WHERE p.name LIKE ? OR p.description LIKE ? GROUP BY p.product_id",
               [user_id, k, k]
             )
             .then((rows) => {
@@ -153,6 +158,7 @@ export default ({ pool }) => {
                   ...row,
                   AmountInBasket: Number(row.AmountInBasket),
                   ImageURL: "/api/products/" + row.product_id + "/picture",
+                  SellerImageURL: "/api/users/" + row.s_uid + "/avatar",
                 };
               });
               res.json({ msg: "success", data: res_rows });
@@ -176,7 +182,7 @@ export default ({ pool }) => {
       .then((conn) => {
         conn
           .query(
-            "SELECT p.stock_quantity, p.description, p.product_id, COALESCE(SUM(CASE WHEN sib.c_uid = ? THEN sib.quantity ELSE 0 END), 0) AS AmountInBasket, p.name, p.price, s.store_name, s.store_address, s.store_email, s.phone_no FROM product p LEFT JOIN store_in_basket sib ON p.product_id = sib.product_id JOIN seller s ON p.s_uid = s.user_id JOIN users u ON s.user_id = u.user_id WHERE p.product_id = ? GROUP BY p.product_id",
+            "SELECT p.s_uid, p.stock_quantity, p.description, p.product_id, COALESCE(SUM(CASE WHEN sib.c_uid = ? THEN sib.quantity ELSE 0 END), 0) AS AmountInBasket, p.name, p.price, s.store_name, s.store_address, s.store_email  FROM product p LEFT JOIN store_in_basket sib ON p.product_id = sib.product_id JOIN seller s ON p.s_uid = s.user_id JOIN users u ON s.user_id = u.user_id WHERE p.product_id = ? GROUP BY p.product_id",
             [user_id, product_id]
           )
           .then((rows) => {
@@ -185,8 +191,9 @@ export default ({ pool }) => {
                 ...rows[0],
                 ImageURL: "/api/products/" + product_id + "/picture",
                 AmountInBasket: Number(rows[0].AmountInBasket),
+                SellerImageURL: "/api/users/" + rows[0].s_uid + "/avatar",
               };
-              res.json(res_row);
+              res.json({ msg: "success", data: res_row });
             } else {
               throw Error();
             }

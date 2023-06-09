@@ -25,7 +25,7 @@ name varchar(30) not null,
 email varchar(30) not null unique, 
 password varchar(30) not null,
 address varchar(30) not null,
-profile_picture blob
+profile_picture MEDIUMBLOB
 );
 
 create table admin (
@@ -69,7 +69,7 @@ s_uid int not null,
 stock_quantity int not null,
 price int not null,
 name varchar(50) not null,
-picture blob,
+picture MEDIUMBLOB,
 available boolean not null DEFAULT true,
 description text not null,
 Constraint FK_s_uid1 FOREIGN KEY (s_uid) REFERENCES seller(user_id) 
