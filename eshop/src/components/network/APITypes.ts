@@ -204,6 +204,9 @@ export interface IPostProductRequest {
 
 export interface IPostProductResponse {
   msg: string;
+  data: {
+    product_id: number;
+  };
 }
 
 export const getSalesStatisticMockData: IGetSalesStatisticsResponse = {

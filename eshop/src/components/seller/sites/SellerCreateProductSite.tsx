@@ -57,7 +57,10 @@ export const SellerCreateProductSite = () => {
       setFormError("");
       if (selectedFile) {
         try {
-          // await API.postProductPicture(response.data.product_id, selectedFile);
+          await API.postProductPicture(
+            response.data.data.product_id,
+            selectedFile
+          );
         } catch (e: any) {
           console.log(e);
         }
