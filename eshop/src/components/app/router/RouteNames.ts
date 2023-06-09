@@ -5,6 +5,7 @@ export const RouteNames = {
   SELLER: "/seller/*",
   PROFILE: "/profile",
   LOG_IN: "/log-in",
+  REGISTER: "/register",
 };
 
 export const title = (title: string) => title + " - eShop";

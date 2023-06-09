@@ -17,58 +17,40 @@ import {
   customerPrefix,
 } from "../../customer/router/CustomerRouteNames";
 import { API } from "../../network/API";
-import { ILoginFormInputs } from "../../network/APITypes";
-import { AnimatedGradient } from "../../ui/Components";
-import { logo } from "../../util/Images";
-import { customColors } from "../../util/Theme";
-import { RouteNames, title } from "../router/RouteNames";
-import { emailRegex } from "../../util/Helpers";
+import { IPostUserRequest } from "../../network/APITypes";
 import {
   SellerRouteNames,
   sellerPrefix,
 } from "../../seller/router/SellerRouteNames";
+import { AnimatedGradient } from "../../ui/Components";
+import { emailRegex } from "../../util/Helpers";
+import { logo } from "../../util/Images";
+import { RouteNames, title } from "../router/RouteNames";
 
-export const LoginSite = observer(() => {
+export const RegisterSite = observer(() => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<ILoginFormInputs>();
+  } = useForm<IPostUserRequest>();
   const [showPassword, setShowPassword] = React.useState(false);
-  const [invalidCredentials, setInvalidCredentials] = React.useState(false);
   const navigate = useNavigate();
 
   const generalStore = useGeneralStore();
 
-  const onSubmit = async (data: ILoginFormInputs) => {
+  const onSubmit = async (data: IPostUserRequest) => {
     try {
-      const response = await API.login(data);
+      data.user_type = "customer";
+      const response = await API.postUser(data);
 
-      if (response.status === 200) {
+      if (response.status === 201) {
         generalStore.loggedIn = true;
         generalStore.userId = response.data.data.user_id;
-        generalStore.userName = response.data.data.name;
-        generalStore.userRoles = generalStore.userRoles.concat(
-          response.data.data.userroles
-        );
-        if (response.data.data.ImageURL) {
-          generalStore.userImage = response.data.data.ImageURL;
-        }
-        if (response.data.data.userroles.includes("admin")) {
-          // TODO navigate to admin site
-        } else if (response.data.data.userroles.includes("seller")) {
-          navigate(sellerPrefix(SellerRouteNames.DASHBOARD));
-        } else if (response.data.data.userroles.includes("customer")) {
-          navigate(customerPrefix(CustomerRouteNames.HOME));
-        } else {
-          navigate(RouteNames.PROFILE);
-        }
+        generalStore.userName = data.name;
+        generalStore.userRoles = ["customer"];
+        navigate(customerPrefix(CustomerRouteNames.HOME));
       }
     } catch (e: any) {
-      if (e.response && e.response.status === 403) {
-        setInvalidCredentials(true);
-      }
-
       console.log(e);
     }
   };
@@ -126,11 +108,22 @@ export const LoginSite = observer(() => {
               width: 400,
             }}
           >
-            <h1 style={{ marginBottom: 32 }}>Login</h1>
+            <h1 style={{ marginBottom: 32 }}>Register</h1>
             <form
               onSubmit={handleSubmit(onSubmit)}
               style={{ display: "flex", flexDirection: "column", gap: 16 }}
             >
+              <TextField
+                {...register("name", {
+                  required: "Name is required",
+                })}
+                label="Name"
+                variant="outlined"
+                fullWidth
+                color="primary"
+                error={!!errors.name}
+                helperText={errors.name?.message}
+              />
               <TextField
                 {...register("email", {
                   required: "Email is required",
@@ -145,6 +138,17 @@ export const LoginSite = observer(() => {
                 color="primary"
                 error={!!errors.email}
                 helperText={errors.email?.message}
+              />
+              <TextField
+                {...register("address", {
+                  required: "Address is required",
+                })}
+                label="Address"
+                variant="outlined"
+                fullWidth
+                color="primary"
+                error={!!errors.address}
+                helperText={errors.address?.message}
               />
               <TextField
                 {...register("password", {
@@ -176,13 +180,6 @@ export const LoginSite = observer(() => {
                   ),
                 }}
               />
-              <div style={{ height: 8 }}>
-                {invalidCredentials && (
-                  <p style={{ color: customColors.tomato, marginTop: 0 }}>
-                    Wrong email or password!
-                  </p>
-                )}
-              </div>
               <div
                 style={{
                   marginTop: 8,
@@ -190,9 +187,9 @@ export const LoginSite = observer(() => {
                   justifyContent: "space-between",
                 }}
               >
-                <Link to={RouteNames.REGISTER}>
+                <Link to={RouteNames.LOG_IN}>
                   <Button variant="outlined" color="primary" size="large">
-                    Register
+                    Log in
                   </Button>
                 </Link>
                 <Button

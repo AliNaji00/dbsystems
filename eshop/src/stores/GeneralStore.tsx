@@ -82,6 +82,8 @@ export class GeneralStore {
     this.loggedIn = false;
     this.userId = "";
     this.userRoles = [];
+    this.userImage = null;
+    this.userName = null;
   };
 
   SearchField = (props: { placeholder: string; maxWidth?: boolean }) => {

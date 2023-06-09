@@ -154,6 +154,21 @@ export interface IPutUserResponse {
   msg: string;
 }
 
+export interface IPostUserRequest {
+  name: string;
+  email: string;
+  address: string;
+  password: string;
+  user_type: string;
+}
+
+export interface IPostUserResponse {
+  msg: string;
+  data: {
+    user_id: string;
+  };
+}
+
 export interface IGetSalesStatisticsRequest {
   user_id: string;
 }

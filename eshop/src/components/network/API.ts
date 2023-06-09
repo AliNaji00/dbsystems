@@ -15,6 +15,8 @@ import {
   IPutProductResponse,
   IPostProductRequest,
   IPostProductResponse,
+  IPostUserRequest,
+  IPostUserResponse,
 } from "./APITypes";
 
 export const STATUS_CODE_UNAUTHORIZED = 401;
@@ -32,6 +34,71 @@ export const API = {
         email: data.email,
         password: data.password,
       });
+      return response;
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  async getUser(user_id?: string): Promise<AxiosResponse<IGetUserResponse>> {
+    try {
+      const response = await axios.get<IGetUserResponse>(
+        prefix(`/users/${user_id}`)
+      );
+      return response;
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  async putUser(
+    data: IPutUserRequest
+  ): Promise<AxiosResponse<IPutUserResponse>> {
+    try {
+      const response = await axios.put<IPutUserResponse>(
+        prefix(`/users/${data.user_id}`),
+        {
+          name: data.name,
+          email: data.email,
+          password: data.password,
+          address: data.address,
+          user_type: data.user_type,
+        }
+      );
+      return response;
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  async postUser(data: IPostUserRequest) {
+    try {
+      const response = await axios.post<IPostUserResponse>(prefix(`/users`), {
+        name: data.name,
+        email: data.email,
+        password: data.password,
+        address: data.address,
+        user_type: data.user_type,
+      });
+      return response;
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  async postAvatar(user_id: string, file: File) {
+    try {
+      const formData = new FormData();
+      formData.append("image", file);
+      const response = await axios.post(
+        prefix(`/users/${user_id}/avatar`),
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
       return response;
     } catch (err) {
       throw err;
@@ -169,56 +236,6 @@ export const API = {
         {
           product_id: product_id,
           quantity: quantity,
-        }
-      );
-      return response;
-    } catch (err) {
-      throw err;
-    }
-  },
-
-  async getUser(user_id?: string): Promise<AxiosResponse<IGetUserResponse>> {
-    try {
-      const response = await axios.get<IGetUserResponse>(
-        prefix(`/users/${user_id}`)
-      );
-      return response;
-    } catch (err) {
-      throw err;
-    }
-  },
-
-  async putUser(
-    data: IPutUserRequest
-  ): Promise<AxiosResponse<IPutUserResponse>> {
-    try {
-      const response = await axios.put<IPutUserResponse>(
-        prefix(`/users/${data.user_id}`),
-        {
-          name: data.name,
-          email: data.email,
-          password: data.password,
-          address: data.address,
-          user_type: data.user_type,
-        }
-      );
-      return response;
-    } catch (err) {
-      throw err;
-    }
-  },
-
-  async postAvatar(user_id: string, file: File) {
-    try {
-      const formData = new FormData();
-      formData.append("image", file);
-      const response = await axios.post(
-        prefix(`/users/${user_id}/avatar`),
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
         }
       );
       return response;

@@ -12,11 +12,13 @@ import {
 } from "../../util/ProtectedRoutes";
 import { ProfileSite } from "../sites/ProfileSite";
 import { SellerRouter } from "../../seller/router/SellerRouter";
+import { RegisterSite } from "../sites/RegisterSite";
 
 export const AppRouter = observer(() => (
   <BrowserRouter>
     <Routes>
       <Route path={RouteNames.LOG_IN} element={<LoginSite />} />
+      <Route path={RouteNames.REGISTER} element={<RegisterSite />} />
       <Route
         path={RouteNames.PROFILE}
         element={
