@@ -7,9 +7,11 @@ import { CenteredContent } from "../../ui/CenteredContent";
 import { BackgroundContainer } from "../../ui/Components";
 import { CustomerNavBar } from "../CustomerNavBar";
 import { ProductCard } from "../ProductCard";
+import { useBasket } from "../../../stores/useBasket";
 
 export const CustomerHomeSite = observer(() => {
   const generalStore = useGeneralStore();
+  useBasket(generalStore.userId);
 
   return (
     <>

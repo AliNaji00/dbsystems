@@ -37,16 +37,23 @@ export const API = {
   },
 
   async getProducts(
-    search_keyword: string,
-    user_id: string
+    search_keyword?: string,
+    user_id?: string,
+    seller_id?: string
   ): Promise<AxiosResponse<IGetProductsResponse>> {
     try {
-      const params: IGetProductsRequest = {
-        user_id: user_id,
-      };
+      const params: IGetProductsRequest = {};
+
+      if (user_id) {
+        params["user_id"] = user_id;
+      }
 
       if (search_keyword) {
         params["keyword"] = search_keyword;
+      }
+
+      if (seller_id) {
+        params["seller_id"] = seller_id;
       }
 
       const response = await axios.get<IGetProductsResponse>(

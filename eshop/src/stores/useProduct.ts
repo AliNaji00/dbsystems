@@ -18,7 +18,7 @@ export const useProduct = (user_id: string, product_id?: string) => {
           const response = await API.getProduct(product_id, user_id);
 
           if (response && response.data) {
-            setProduct(response.data);
+            setProduct(response.data.data);
           }
         }
       } catch (err) {

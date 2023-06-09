@@ -35,7 +35,7 @@ export const useBasket = (user_id: string) => {
 
     loadProducts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [generalStore.basketChangeFlag]);
+  }, [generalStore.basketChangeFlag, user_id]);
 
   return basket;
 };

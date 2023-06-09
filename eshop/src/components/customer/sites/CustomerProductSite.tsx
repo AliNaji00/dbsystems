@@ -113,7 +113,7 @@ export const CustomerProductSite = observer(() => {
             </div>
             <div style={{ display: "flex", padding: 16, gap: 16 }}>
               <Avatar
-                src={getImagePath(product.seller_image_url)}
+                src={getImagePath(product.SellerImageURL)}
                 sx={{ bgcolor: customColors.primaryColor }}
               />
               <div style={{ maxWidth: 300, paddingTop: 3 }}>

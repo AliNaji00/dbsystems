@@ -25,7 +25,8 @@ export interface IGetProductsResponse {
 
 export interface IGetProductsRequest {
   keyword?: string;
-  user_id: string;
+  user_id?: string;
+  seller_id?: string;
 }
 
 export interface IProduct {
@@ -39,9 +40,10 @@ export interface IProduct {
   original_price?: number;
 }
 
-export interface IGetSingleProductResponse extends ISingleProduct {
+export interface IGetSingleProductResponse {
   msg: string;
   code: number;
+  data: ISingleProduct;
 }
 
 export interface IGetSingleProductRequest {
@@ -57,7 +59,7 @@ export interface ISingleProduct {
   name: string;
   price: number; // actual price, possibly reduced price
   original_price: number | undefined;
-  seller_image_url: string | undefined;
+  SellerImageURL: string | undefined;
   store_name: string;
   store_address: string;
   store_email: string;

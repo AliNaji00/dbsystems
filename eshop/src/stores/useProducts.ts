@@ -3,7 +3,11 @@ import * as React from "react";
 import { API } from "../components/network/API";
 import { useGeneralStore } from "./GeneralStore";
 
-export const useProducts = (keyword: string, user_id: string) => {
+export const useProducts = (
+  keyword: string,
+  user_id: string,
+  seller_id?: string
+) => {
   const generalStore = useGeneralStore();
 
   React.useEffect(() => {
@@ -11,17 +15,11 @@ export const useProducts = (keyword: string, user_id: string) => {
       try {
         generalStore.isLoading = true;
 
-        const response = await API.getProducts(keyword, user_id);
+        const response = await API.getProducts(keyword, user_id, seller_id);
 
         if (response && response.data) {
           generalStore.setProducts(response.data.data);
-          const sumOfProductsInBasket = _.sum(
-            response.data.data.map((product) => {
-              return Number(product.AmountInBasket);
-            })
-          );
-
-          generalStore.setBasketItems(sumOfProductsInBasket);
+          generalStore.toggleBasketChangeFlag();
         }
       } catch (err) {
         console.log(err);
@@ -32,5 +30,5 @@ export const useProducts = (keyword: string, user_id: string) => {
 
     loadProducts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [keyword, generalStore.productsChangeFlag]);
+  }, [keyword, generalStore.productsChangeFlag, user_id, seller_id]);
 };

@@ -12,7 +12,7 @@ export const SellerProductsSite = observer(() => {
   const generalStore = useGeneralStore();
 
   // TODO: adapt below custom hook to get seller products
-  useProducts("", generalStore.userId);
+  useProducts("", "", generalStore.userId);
 
   return (
     <>
