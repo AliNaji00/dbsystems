@@ -141,4 +141,23 @@ export const API = {
       throw err;
     }
   },
+
+  async postAvatar(user_id: string, file: File) {
+    try {
+      const formData = new FormData();
+      formData.append("image", file);
+      const response = await axios.post(
+        prefix(`/users/${user_id}/avatar`),
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      return response;
+    } catch (err) {
+      throw err;
+    }
+  },
 };

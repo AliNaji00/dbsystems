@@ -13,7 +13,7 @@ export class GeneralStore {
 
   userId: string = "";
   loggedIn = false;
-  userRoles: Array<UserRole> = ["customer"];
+  userRoles: Array<UserRole> = [];
   userImage: null | string = null;
   userName: null | string = null;
   userChangeFlag = false;

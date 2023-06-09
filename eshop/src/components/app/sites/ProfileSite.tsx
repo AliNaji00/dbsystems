@@ -25,6 +25,7 @@ import { ProfileNavBar } from "../ProfileNavBar";
 import { title } from "../router/RouteNames";
 import { API } from "../../network/API";
 import { observer } from "mobx-react";
+import { customColors } from "../../util/Theme";
 
 // Register the plugins
 registerPlugin(
@@ -34,10 +35,13 @@ registerPlugin(
 );
 
 export const ProfileSite = observer(() => {
-  const [serverError, setServerError] = React.useState("");
+  const [formError, setFormError] = React.useState("");
+  const [imageError, setImageError] = React.useState("");
   const [isEditing, setIsEditing] = React.useState(false);
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
   const [showPassword, setShowPassword] = React.useState(false);
+  const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
+  const [imageKey, setImageKey] = React.useState(0);
 
   const generalStore = useGeneralStore();
 
@@ -48,8 +52,24 @@ export const ProfileSite = observer(() => {
   };
 
   const handleFileUpload = (files: FilePondFile[]) => {
-    // TODO file upload
-    console.log(files);
+    if (files[0] && files[0].file) {
+      setSelectedFile(files[0].file as File);
+    }
+  };
+
+  const handleSubmitFile = async () => {
+    try {
+      if (selectedFile && userData) {
+        await API.postAvatar(generalStore.userId, selectedFile);
+        setIsDialogOpen(false);
+        setImageKey((prevKey) => prevKey + 1);
+      } else {
+        setImageError("No file selected!");
+      }
+    } catch (e: any) {
+      setImageError(e.response.data.msg || "An error occurred");
+      console.log(e);
+    }
   };
 
   const {
@@ -71,7 +91,7 @@ export const ProfileSite = observer(() => {
       generalStore.toggleUserChangeFlag();
       setIsEditing(false);
     } catch (e: any) {
-      setServerError(e.response.data.msg || "An error occurred");
+      setFormError(e.response.data.msg || "An error occurred");
       console.log(e);
     }
   };
@@ -95,10 +115,12 @@ export const ProfileSite = observer(() => {
             >
               <div style={{ position: "relative" }}>
                 <img
+                  key={imageKey}
                   src={getImagePath(userData.ImageURL)}
                   alt={userData.name}
                   style={{ alignSelf: "flex-start", width: 300 }}
                 />
+
                 <IconButton
                   style={{ position: "absolute", top: 0, right: 0 }}
                   onClick={() => setIsDialogOpen(true)}
@@ -180,7 +202,9 @@ export const ProfileSite = observer(() => {
                   >
                     Save
                   </Button>
-                  {serverError && <p style={{ color: "red" }}>{serverError}</p>}
+                  {formError && (
+                    <p style={{ color: customColors.tomato }}>{formError}</p>
+                  )}
                 </form>
               ) : (
                 <div
@@ -226,7 +250,13 @@ export const ProfileSite = observer(() => {
             </div>
           </CenteredContent>
         )}
-        <Dialog open={isDialogOpen} onClose={() => setIsDialogOpen(false)}>
+        <Dialog
+          open={isDialogOpen}
+          onClose={() => {
+            setImageError("");
+            setIsDialogOpen(false);
+          }}
+        >
           <DialogContent
             sx={{
               display: "flex",
@@ -237,7 +267,7 @@ export const ProfileSite = observer(() => {
             }}
           >
             <h2 style={{ textAlign: "center" }}>Upload new profile picture</h2>
-            <div style={{ height: 300 }}>
+            <div style={{ height: 280 }}>
               <FilePond
                 onupdatefiles={handleFileUpload}
                 allowMultiple={false}
@@ -247,12 +277,11 @@ export const ProfileSite = observer(() => {
                 acceptedFileTypes={["image/jpeg", "image/png"]}
               />
             </div>
+            <p style={{ color: customColors.tomato, margin: 0, minHeight: 20 }}>
+              {imageError}
+            </p>
 
-            <Button
-              variant="contained"
-              size="large"
-              onClick={() => setIsDialogOpen(false)}
-            >
+            <Button variant="contained" size="large" onClick={handleSubmitFile}>
               Submit
             </Button>
           </DialogContent>

@@ -17,6 +17,8 @@ export const useUser = (user_id: string) => {
 
           if (response && response.data) {
             setUser(response.data.data);
+            generalStore.userName = response.data.data.name;
+            generalStore.userImage = response.data.data.ImageURL;
           }
         }
       } catch (err) {

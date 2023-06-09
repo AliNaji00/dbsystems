@@ -93,7 +93,7 @@ export const LoginSite = observer(() => {
         navigate(customerPrefix(CustomerRouteNames.HOME));
       }
     }
-  }, [generalStore.loggedIn, navigate]);
+  }, [generalStore.loggedIn, navigate, generalStore.userRoles]);
 
   return (
     <>

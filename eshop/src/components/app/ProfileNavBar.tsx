@@ -58,7 +58,7 @@ export const ProfileNavBar = observer(
             "aria-labelledby": "basic-button",
           }}
         >
-          {generalStore.userRoles.includes("seller") && (
+          {generalStore.userRoles.includes("customer") && (
             <MenuItem
               onClick={() => {
                 handleClose();
