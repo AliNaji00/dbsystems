@@ -16,8 +16,6 @@ import {
   sellerPrefix,
 } from "../seller/router/SellerRouteNames";
 
-// TODO add routing for all the menu items
-
 export const ProfileNavBar = observer(
   (props: { style?: React.CSSProperties }) => {
     const generalStore = useGeneralStore();
@@ -45,6 +43,7 @@ export const ProfileNavBar = observer(
           }}
         />
         <Avatar
+          key={generalStore.userImageChangeCounter}
           src={getImagePath(generalStore.userImage)}
           onClick={(e) => handleClick(e)}
           sx={{ cursor: "pointer", bgcolor: customColors.primaryColor }}

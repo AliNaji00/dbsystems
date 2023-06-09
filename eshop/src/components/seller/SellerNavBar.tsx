@@ -93,6 +93,7 @@ export const SellerNavBar = observer(
           ))}
         </div>
         <Avatar
+          key={generalStore.userImageChangeCounter}
           src={getImagePath(generalStore.userImage)}
           onClick={(e) => handleClick(e)}
           sx={{ cursor: "pointer", bgcolor: customColors.primaryColor }}

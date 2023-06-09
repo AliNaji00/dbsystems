@@ -129,6 +129,7 @@ export const CustomerNavBar = observer(
             </Badge>
           </Link>
           <Avatar
+            key={generalStore.userImageChangeCounter}
             src={getImagePath(generalStore.userImage)}
             onClick={(e) => handleClick(e)}
             sx={{ cursor: "pointer", bgcolor: customColors.primaryColor }}

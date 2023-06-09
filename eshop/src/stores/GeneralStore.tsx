@@ -17,6 +17,7 @@ export class GeneralStore {
   userImage: null | string = null;
   userName: null | string = null;
   userChangeFlag = false;
+  userImageChangeCounter = 0;
 
   products: Array<IProduct> = [];
   keyword = "";

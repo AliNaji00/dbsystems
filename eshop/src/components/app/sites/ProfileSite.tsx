@@ -41,7 +41,6 @@ export const ProfileSite = observer(() => {
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
   const [showPassword, setShowPassword] = React.useState(false);
   const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
-  const [imageKey, setImageKey] = React.useState(0);
 
   const generalStore = useGeneralStore();
 
@@ -61,8 +60,8 @@ export const ProfileSite = observer(() => {
     try {
       if (selectedFile && userData) {
         await API.postAvatar(generalStore.userId, selectedFile);
+        generalStore.userImageChangeCounter++;
         setIsDialogOpen(false);
-        setImageKey((prevKey) => prevKey + 1);
       } else {
         setImageError("No file selected!");
       }
@@ -115,7 +114,7 @@ export const ProfileSite = observer(() => {
             >
               <div style={{ position: "relative" }}>
                 <img
-                  key={imageKey}
+                  key={generalStore.userImageChangeCounter}
                   src={getImagePath(userData.ImageURL)}
                   alt={userData.name}
                   style={{ alignSelf: "flex-start", width: 300 }}
