@@ -17,7 +17,7 @@ import * as React from "react";
 import { FilePond } from "react-filepond";
 import { Helmet } from "react-helmet";
 import { useForm } from "react-hook-form";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useGeneralStore } from "../../../stores/GeneralStore";
 import { useProduct } from "../../../stores/useProduct";
 import { title } from "../../app/router/RouteNames";
@@ -28,6 +28,8 @@ import { BackgroundContainer } from "../../ui/Components";
 import { getImagePath } from "../../util/Helpers";
 import { customColors } from "../../util/Theme";
 import { SellerNavBar } from "../SellerNavBar";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { SellerRouteNames, sellerPrefix } from "../router/SellerRouteNames";
 
 // Register the plugins
 registerPlugin(
@@ -50,6 +52,7 @@ export const SellerSingleProductSite = observer(() => {
   const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
 
   const generalStore = useGeneralStore();
+  const navigate = useNavigate();
 
   const product = useProduct("", product_id);
 
@@ -97,6 +100,24 @@ export const SellerSingleProductSite = observer(() => {
     } catch (e: any) {
       setFormError(e.response.data.msg || "An error occurred");
       console.log(e);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      if (product) {
+        const data: IPutProductRequest = {
+          available: false,
+          ...product,
+        };
+        await API.putProduct(data);
+        setFormError("");
+        setIsEditing(false);
+      }
+    } catch (e: any) {
+      console.log(e);
+    } finally {
+      navigate(sellerPrefix(SellerRouteNames.PRODUCTS));
     }
   };
 
@@ -226,7 +247,19 @@ export const SellerSingleProductSite = observer(() => {
                     marginLeft: 48,
                   }}
                 >
-                  <h2>{product.name}</h2>
+                  <div
+                    style={{ display: "flex", justifyContent: "space-between" }}
+                  >
+                    <h2>{product.name}</h2>
+                    <Button
+                      variant="contained"
+                      startIcon={<DeleteIcon />}
+                      sx={{ backgroundColor: customColors.tomato }}
+                      onClick={handleDelete}
+                    >
+                      Delete
+                    </Button>
+                  </div>
                   <p style={{ fontSize: 16, marginBottom: 32 }}>
                     {product.description}
                   </p>
