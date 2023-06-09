@@ -75,7 +75,7 @@ export class GeneralStore {
   logout = () => {
     this.loggedIn = false;
     this.userId = "";
-    this.userRoles = ["customer"];
+    this.userRoles = [];
   };
 
   SearchField = (props: { placeholder: string; maxWidth?: boolean }) => {

@@ -6,6 +6,7 @@ import { RouteNames } from "./RouteNames";
 import { LoginSite } from "../sites/LoginSite";
 import { CustomerRouter } from "../../customer/router/CustomerRouter";
 import {
+  ProtectedCustomerRoute,
   ProtectedRoute,
   ProtectedSellerRoute,
 } from "../../util/ProtectedRoutes";
@@ -27,9 +28,9 @@ export const AppRouter = observer(() => (
       <Route
         path={RouteNames.CUSTOMER}
         element={
-          <ProtectedRoute>
+          <ProtectedCustomerRoute>
             <CustomerRouter />
-          </ProtectedRoute>
+          </ProtectedCustomerRoute>
         }
       />
       <Route

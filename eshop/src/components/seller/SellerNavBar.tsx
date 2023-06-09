@@ -115,14 +115,16 @@ export const SellerNavBar = observer(
           >
             Profile
           </MenuItem>
-          <MenuItem
-            onClick={() => {
-              handleClose();
-              navigate(customerPrefix(CustomerRouteNames.HOME));
-            }}
-          >
-            Shopping
-          </MenuItem>
+          {generalStore.userRoles.includes("customer") && (
+            <MenuItem
+              onClick={() => {
+                handleClose();
+                navigate(customerPrefix(CustomerRouteNames.HOME));
+              }}
+            >
+              Shopping
+            </MenuItem>
+          )}
           {generalStore.userRoles.includes("admin") && (
             <MenuItem onClick={handleClose}>Admin Dashbaord</MenuItem>
           )}

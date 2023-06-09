@@ -21,7 +21,7 @@ import { ILoginFormInputs } from "../../network/APITypes";
 import { AnimatedGradient } from "../../ui/Components";
 import { logo } from "../../util/Images";
 import { customColors } from "../../util/Theme";
-import { title } from "../router/RouteNames";
+import { RouteNames, title } from "../router/RouteNames";
 import { emailRegex } from "../../util/Helpers";
 import {
   SellerRouteNames,
@@ -58,8 +58,10 @@ export const LoginSite = observer(() => {
           // TODO navigate to admin site
         } else if (response.data.data.userroles.includes("seller")) {
           navigate(sellerPrefix(SellerRouteNames.DASHBOARD));
-        } else {
+        } else if (response.data.data.userroles.includes("customer")) {
           navigate(customerPrefix(CustomerRouteNames.HOME));
+        } else {
+          navigate(RouteNames.PROFILE);
         }
       }
     } catch (e: any) {

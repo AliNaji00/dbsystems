@@ -58,14 +58,16 @@ export const ProfileNavBar = observer(
             "aria-labelledby": "basic-button",
           }}
         >
-          <MenuItem
-            onClick={() => {
-              handleClose();
-              navigate(customerPrefix(CustomerRouteNames.HOME));
-            }}
-          >
-            Shopping
-          </MenuItem>
+          {generalStore.userRoles.includes("seller") && (
+            <MenuItem
+              onClick={() => {
+                handleClose();
+                navigate(customerPrefix(CustomerRouteNames.HOME));
+              }}
+            >
+              Shopping
+            </MenuItem>
+          )}
           {generalStore.userRoles.includes("seller") && (
             <MenuItem
               onClick={() => {
