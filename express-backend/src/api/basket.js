@@ -10,12 +10,19 @@ export default ({ pool }) => {
       .then((conn) => {
         conn
           .query(
-            "SELECT p.stock_quantity, p.description, p.product_id, p.picture, sib.quantity, p.name, p.price FROM product p JOIN store_in_basket sib ON p.product_id = sib.product_id WHERE sib.c_uid = ?",
+            "SELECT p.stock_quantity, p.description, p.product_id, sib.quantity, p.name, p.price FROM product p JOIN store_in_basket sib ON p.product_id = sib.product_id WHERE sib.c_uid = ?",
             user_id
           )
           .then((rows) => {
+            
             if (rows.length > 0) {
-              res.json({ msg: "success", data: rows });
+              const res_rows = rows.map((row) => {
+                return {
+                  ...row,
+                  ImageURL: "/api/products/" + row.product_id + "/picture",
+                };
+              });
+              res.json({ msg: "success", data: res_rows });
             } else {
               res.json({ msg: "success", data: [] });
             }
