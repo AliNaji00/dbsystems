@@ -193,6 +193,19 @@ export interface IPutProductResponse {
   msg: string;
 }
 
+export interface IPostProductRequest {
+  stock_quantity: number;
+  price: number;
+  name: string;
+  available: boolean;
+  description: string;
+  seller_id: string;
+}
+
+export interface IPostProductResponse {
+  msg: string;
+}
+
 export const getSalesStatisticMockData: IGetSalesStatisticsResponse = {
   msg: "Success",
   profit: 17328.53,

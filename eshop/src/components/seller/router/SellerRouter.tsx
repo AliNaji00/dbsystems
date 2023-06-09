@@ -10,6 +10,7 @@ import { SellerCouponsSite } from "../sites/SellerCouponsSite";
 import { SellerNavBar } from "../SellerNavBar";
 import _ from "lodash";
 import { SellerSingleProductSite } from "../sites/SellerSingleProductSite";
+import { SellerCreateProductSite } from "../sites/SellerCreateProductSite";
 
 export const SellerRouter = observer(() => {
   const location = useLocation();
@@ -21,6 +22,7 @@ export const SellerRouter = observer(() => {
       }
       {_.values(SellerRouteNames)
         .map((route) => sellerPrefix(route))
+        .slice(0, 4)
         .includes(location.pathname) && <SellerNavBar />}
       <Routes>
         <Route
@@ -43,6 +45,11 @@ export const SellerRouter = observer(() => {
         <Route
           path={SellerRouteNames.PRODUCT}
           element={<SellerSingleProductSite />}
+        />
+
+        <Route
+          path={SellerRouteNames.CREATE_PROCUCT}
+          element={<SellerCreateProductSite />}
         />
 
         <Route path="*" element={<NotFoundSite />} />

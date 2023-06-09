@@ -7,6 +7,9 @@ import { ProductCard } from "../../customer/ProductCard";
 import { useGeneralStore } from "../../../stores/GeneralStore";
 import { useProducts } from "../../../stores/useProducts";
 import { observer } from "mobx-react";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import { Link } from "react-router-dom";
+import { SellerRouteNames, sellerPrefix } from "../router/SellerRouteNames";
 
 export const SellerProductsSite = observer(() => {
   const generalStore = useGeneralStore();
@@ -21,6 +24,14 @@ export const SellerProductsSite = observer(() => {
       </Helmet>
       <BackgroundContainer style={{ minHeight: 200 }}>
         <CenteredContent>
+          <div style={{ display: "flex", width: "100%" }}>
+            <Link to={sellerPrefix(SellerRouteNames.CREATE_PROCUCT)}>
+              <AddCircleOutlineIcon
+                color="primary"
+                sx={{ width: 48, height: 48, marginBottom: 2 }}
+              />
+            </Link>
+          </div>
           <div
             style={{
               display: "flex",

@@ -13,6 +13,8 @@ import {
   IPutUserResponse,
   IPutProductRequest,
   IPutProductResponse,
+  IPostProductRequest,
+  IPostProductResponse,
 } from "./APITypes";
 
 export const STATUS_CODE_UNAUTHORIZED = 401;
@@ -99,6 +101,25 @@ export const API = {
           price: data.price,
           stock_quantity: data.stock_quantity,
           available: data.available,
+        }
+      );
+      return response;
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  async postProduct(data: IPostProductRequest) {
+    try {
+      const response = await axios.post<IPostProductResponse>(
+        prefix(`/products`),
+        {
+          name: data.name,
+          description: data.description,
+          price: data.price,
+          stock_quantity: data.stock_quantity,
+          available: data.available,
+          seller_id: data.seller_id,
         }
       );
       return response;
