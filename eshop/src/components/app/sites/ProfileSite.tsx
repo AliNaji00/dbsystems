@@ -88,6 +88,7 @@ export const ProfileSite = observer(() => {
     try {
       await API.putUser(data);
       generalStore.toggleUserChangeFlag();
+      setFormError("");
       setIsEditing(false);
     } catch (e: any) {
       setFormError(e.response.data.msg || "An error occurred");

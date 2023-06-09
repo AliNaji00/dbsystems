@@ -178,6 +178,19 @@ export interface ISalesStatistics {
   name: string;
 }
 
+export interface IPutProductRequest {
+  product_id: number;
+  stock_quantity: number;
+  price: number;
+  name: string;
+  available: boolean;
+  description: string;
+}
+
+export interface IPutProductResponse {
+  msg: string;
+}
+
 export const getSalesStatisticMockData: IGetSalesStatisticsResponse = {
   msg: "Success",
   profit: 17328.53,

@@ -11,6 +11,8 @@ import {
   IGetUserResponse,
   IPutUserRequest,
   IPutUserResponse,
+  IPutProductRequest,
+  IPutProductResponse,
 } from "./APITypes";
 
 export const STATUS_CODE_UNAUTHORIZED = 401;
@@ -72,6 +74,43 @@ export const API = {
         prefix(`/products/${product_id}`),
         {
           params: params,
+        }
+      );
+      return response;
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  async putProduct(data: IPutProductRequest) {
+    try {
+      const response = await axios.put<IPutProductResponse>(
+        prefix(`/products/${data.product_id}`),
+        {
+          name: data.name,
+          description: data.description,
+          price: data.price,
+          stock_quantity: data.stock_quantity,
+          available: data.available,
+        }
+      );
+      return response;
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  async postProductPicture(product_id: number, file: File) {
+    try {
+      const formData = new FormData();
+      formData.append("image", file);
+      const response = await axios.post(
+        prefix(`/products/${product_id}/picture`),
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
         }
       );
       return response;

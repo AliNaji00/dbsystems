@@ -24,6 +24,7 @@ export class GeneralStore {
   productsChangeFlag = false;
 
   productChangeFlag = false;
+  productImageChangeCounter = 0;
 
   basketItems: null | number = null;
   basketChangeFlag = false;
