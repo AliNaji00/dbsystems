@@ -1,4 +1,6 @@
 import EditIcon from "@mui/icons-material/Edit";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { Button, TextField } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
@@ -13,17 +15,14 @@ import * as React from "react";
 import { FilePond } from "react-filepond";
 import { Helmet } from "react-helmet";
 import { useForm } from "react-hook-form";
-import {
-  IPutUserRequest,
-  getUserResponseMockData,
-} from "../../network/APITypes";
+import { useGeneralStore } from "../../../stores/GeneralStore";
+import { useUser } from "../../../stores/useUser";
+import { IPutUserRequest } from "../../network/APITypes";
 import { CenteredContent } from "../../ui/CenteredContent";
 import { BackgroundContainer } from "../../ui/Components";
-import { emailRegex, getImagePath, phoneRegex } from "../../util/Helpers";
+import { emailRegex, getImagePath } from "../../util/Helpers";
 import { ProfileNavBar } from "../ProfileNavBar";
 import { title } from "../router/RouteNames";
-import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 // Register the plugins
 registerPlugin(
@@ -34,9 +33,12 @@ registerPlugin(
 
 export const ProfileSite = () => {
   const [isEditing, setIsEditing] = React.useState(false);
-  const [userData, setUserData] = React.useState(getUserResponseMockData.data);
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
   const [showPassword, setShowPassword] = React.useState(false);
+
+  const generalStore = useGeneralStore();
+
+  const userData = useUser(generalStore.userId);
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -68,145 +70,148 @@ export const ProfileSite = () => {
       </Helmet>
       <ProfileNavBar />
       <BackgroundContainer style={{ minHeight: 200 }}>
-        <CenteredContent>
-          <div
-            style={{
-              display: "flex",
-              width: "100%",
-              justifyContent: "center",
-              gap: 128,
-            }}
-          >
-            <div style={{ position: "relative" }}>
-              <img
-                src={getImagePath(userData.ImageURL)}
-                alt={userData.name}
-                style={{ alignSelf: "flex-start", width: 300 }}
-              />
-              <IconButton
-                style={{ position: "absolute", top: 0, right: 0 }}
-                onClick={() => setIsDialogOpen(true)}
-              >
-                <EditIcon />
-              </IconButton>
-            </div>
-            {isEditing ? (
-              <form
-                onSubmit={handleSubmit(onSubmit)}
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 16,
-                  marginRight: 64,
-                  width: 500,
-                }}
-              >
-                <TextField
-                  {...register("name", {
-                    required: "Name is required",
-                  })}
-                  label="Name"
-                  variant="outlined"
-                  fullWidth
-                  color="primary"
-                  error={!!errors.name}
-                  helperText={errors.name?.message}
+        {userData && (
+          <CenteredContent>
+            <div
+              style={{
+                display: "flex",
+                width: "100%",
+                justifyContent: "center",
+                gap: 128,
+              }}
+            >
+              <div style={{ position: "relative" }}>
+                <img
+                  src={getImagePath(userData.ImageURL)}
+                  alt={userData.name}
+                  style={{ alignSelf: "flex-start", width: 300 }}
                 />
-                <TextField
-                  {...register("email", {
-                    required: "Email is required",
-                    pattern: {
-                      value: emailRegex,
-                      message: "Enter a valid email address",
-                    },
-                  })}
-                  label="Email"
-                  variant="outlined"
-                  fullWidth
-                  color="primary"
-                  error={!!errors.email}
-                  helperText={errors.email?.message}
-                />
-                <TextField
-                  {...register("address", {
-                    required: "Address is required",
-                  })}
-                  label="Address"
-                  variant="outlined"
-                  type="text"
-                  error={!!errors.address}
-                  helperText={errors.address?.message}
-                  fullWidth
-                  color="primary"
-                />
-                <TextField
-                  {...register("password", {
-                    required: "Password is required",
-                    minLength: {
-                      value: 5,
-                      message: "Password must be at least 5 characters",
-                    },
-                  })}
-                  label="Password"
-                  variant="outlined"
-                  type="text"
-                  error={!!errors.password}
-                  helperText={errors.password?.message}
-                  fullWidth
-                  color="primary"
-                />
-                <Button
-                  type="submit"
-                  variant="contained"
-                  color="primary"
-                  size="large"
-                  sx={{ alignSelf: "flex-start" }}
+                <IconButton
+                  style={{ position: "absolute", top: 0, right: 0 }}
+                  onClick={() => setIsDialogOpen(true)}
                 >
-                  Save
-                </Button>
-              </form>
-            ) : (
-              <div
-                style={{
-                  marginRight: 64,
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 16,
-                  width: 500,
-                }}
-              >
-                <h1>Name: {userData.name}</h1>
-                <h3>Email: {userData.email}</h3>
-                <h3>Address: {userData.address}</h3>
-                <div
+                  <EditIcon />
+                </IconButton>
+              </div>
+              {isEditing ? (
+                <form
+                  onSubmit={handleSubmit(onSubmit)}
                   style={{
                     display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    maxWidth: 400,
+                    flexDirection: "column",
+                    gap: 16,
+                    marginRight: 64,
+                    width: 500,
                   }}
                 >
-                  <h3>
-                    Password: {showPassword ? userData.password : "•".repeat(8)}
-                  </h3>
-
-                  <IconButton onClick={toggleShowPassword}>
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </div>
-
-                <Button
-                  variant="contained"
-                  size="large"
-                  sx={{ alignSelf: "flex-start" }}
-                  onClick={() => setIsEditing(true)}
+                  <TextField
+                    {...register("name", {
+                      required: "Name is required",
+                    })}
+                    label="Name"
+                    variant="outlined"
+                    fullWidth
+                    color="primary"
+                    error={!!errors.name}
+                    helperText={errors.name?.message}
+                  />
+                  <TextField
+                    {...register("email", {
+                      required: "Email is required",
+                      pattern: {
+                        value: emailRegex,
+                        message: "Enter a valid email address",
+                      },
+                    })}
+                    label="Email"
+                    variant="outlined"
+                    fullWidth
+                    color="primary"
+                    error={!!errors.email}
+                    helperText={errors.email?.message}
+                  />
+                  <TextField
+                    {...register("address", {
+                      required: "Address is required",
+                    })}
+                    label="Address"
+                    variant="outlined"
+                    type="text"
+                    error={!!errors.address}
+                    helperText={errors.address?.message}
+                    fullWidth
+                    color="primary"
+                  />
+                  <TextField
+                    {...register("password", {
+                      required: "Password is required",
+                      minLength: {
+                        value: 5,
+                        message: "Password must be at least 5 characters",
+                      },
+                    })}
+                    label="Password"
+                    variant="outlined"
+                    type="text"
+                    error={!!errors.password}
+                    helperText={errors.password?.message}
+                    fullWidth
+                    color="primary"
+                  />
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    color="primary"
+                    size="large"
+                    sx={{ alignSelf: "flex-start" }}
+                  >
+                    Save
+                  </Button>
+                </form>
+              ) : (
+                <div
+                  style={{
+                    marginRight: 64,
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 16,
+                    width: 500,
+                  }}
                 >
-                  Edit
-                </Button>
-              </div>
-            )}
-          </div>
-        </CenteredContent>
+                  <h1>Name: {userData.name}</h1>
+                  <h3>Email: {userData.email}</h3>
+                  <h3>Address: {userData.address}</h3>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      maxWidth: 400,
+                    }}
+                  >
+                    <h3>
+                      Password:{" "}
+                      {showPassword ? userData.password : "•".repeat(8)}
+                    </h3>
+
+                    <IconButton onClick={toggleShowPassword}>
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </div>
+
+                  <Button
+                    variant="contained"
+                    size="large"
+                    sx={{ alignSelf: "flex-start" }}
+                    onClick={() => setIsEditing(true)}
+                  >
+                    Edit
+                  </Button>
+                </div>
+              )}
+            </div>
+          </CenteredContent>
+        )}
         <Dialog open={isDialogOpen} onClose={() => setIsDialogOpen(false)}>
           <DialogContent
             sx={{

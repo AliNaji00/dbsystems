@@ -8,6 +8,7 @@ import {
   IGetProductsRequest,
   IGetSingleProductResponse,
   IGetSingleProductRequest,
+  IGetUserResponse,
 } from "./APITypes";
 
 export const STATUS_CODE_UNAUTHORIZED = 401;
@@ -101,6 +102,17 @@ export const API = {
           product_id: product_id,
           quantity: quantity,
         }
+      );
+      return response;
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  async getUser(user_id?: string): Promise<AxiosResponse<IGetUserResponse>> {
+    try {
+      const response = await axios.get<IGetUserResponse>(
+        prefix(`/users/${user_id}`)
       );
       return response;
     } catch (err) {

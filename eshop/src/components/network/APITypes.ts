@@ -242,19 +242,6 @@ export const getSalesStatisticMockData: IGetSalesStatisticsResponse = {
   ],
 };
 
-export const getUserResponseMockData: IGetUserResponse = {
-  msg: "Success",
-  data: {
-    user_id: "1",
-    name: "John Doe",
-    email: "john.doe@gmail.com",
-    address: "12 Street, City, Country",
-    password: "123456",
-    ImageURL: "/api/img/placeholder.png",
-    userroles: ["customer"],
-  },
-};
-
 export const getOrdersResponseMockData: IGetOrdersResponse = {
   msg: "Success",
   data: [

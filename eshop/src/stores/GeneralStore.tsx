@@ -16,6 +16,7 @@ export class GeneralStore {
   userRoles: Array<UserRole> = ["customer"];
   userImage: null | string = null;
   userName: null | string = null;
+  userChangeFlag = false;
 
   products: Array<IProduct> = [];
   keyword = "";

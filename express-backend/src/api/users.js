@@ -109,7 +109,7 @@ export default ({ pool }) => {
       const conn = await pool.getConnection();
       try {
         const rows = await conn.query(
-          "SELECT u.user_id, u.name, NOT ISNULL(s.user_id) AS isSeller, NOT ISNULL(a.user_id) AS isAdmin, NOT ISNULL(c.user_id) AS isCustomer FROM users u LEFT JOIN customer c ON u.user_id = c.user_id LEFT JOIN seller s ON u.user_id = s.user_id LEFT JOIN admin a ON u.user_id = a.user_id WHERE u.user_id = ?",
+          "SELECT u.user_id, u.name, u.email, u.address, u.password FROM users u WHERE u.user_id = ?",
           user_id
         );
         if (!(rows.length > 0)) {
@@ -117,22 +117,11 @@ export default ({ pool }) => {
           return;
         }
         const user = rows[0];
-        let roles = [];
-        if (user.isSeller) {
-          roles.push("seller");
-        }
-        if (user.isAdmin) {
-          roles.push("admin");
-        }
-        if (user.isCustomer) {
-          roles.push("customer");
-        }
         res.json({
           msg: "success",
           data: {
             ...user,
             ImageURL: "/api/users/" + user_id + "/avatar",
-            userroles: roles,
           },
         });
       } catch (err) {
