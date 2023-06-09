@@ -8,6 +8,7 @@ export default ({ pool }) => {
 
   const __dirname = path.resolve(path.dirname(""));
 
+  // post avatar
   route.post(
     "/:user_id/avatar",
     upload.single("image"),
@@ -50,6 +51,7 @@ export default ({ pool }) => {
     }
   );
 
+  // delete avatar
   route.delete("/:user_id/avatar", async (req, res, next) => {
     const user_id = req.params.user_id;
     try {
@@ -71,6 +73,7 @@ export default ({ pool }) => {
     }
   });
 
+  // get avatar
   route.get("/:user_id/avatar", async (req, res, next) => {
     const user_id = req.params.user_id;
     try {
@@ -99,6 +102,7 @@ export default ({ pool }) => {
     }
   });
 
+  // get user
   route.get("/:user_id", async (req, res, next) => {
     const user_id = req.params.user_id;
     try {
@@ -141,6 +145,7 @@ export default ({ pool }) => {
     }
   });
 
+  // post user
   route.post("/", async (req, res, next) => {
     const user_type = req.body.user_type;
     const name = req.body.name;
@@ -188,6 +193,7 @@ export default ({ pool }) => {
     }
   });
 
+  // put user
   route.put("/:user_id", async (req, res, next) => {
     const user_id = req.params.user_id;
     console.log(user_id);
