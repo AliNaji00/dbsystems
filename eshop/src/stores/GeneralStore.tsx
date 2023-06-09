@@ -69,6 +69,10 @@ export class GeneralStore {
     this.basketChangeFlag = !this.basketChangeFlag;
   };
 
+  toggleUserChangeFlag = () => {
+    this.userChangeFlag = !this.userChangeFlag;
+  };
+
   handleSearchChange = (search: string) => {
     this.keyword = search;
   };

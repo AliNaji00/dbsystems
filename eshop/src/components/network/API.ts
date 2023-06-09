@@ -9,6 +9,8 @@ import {
   IGetSingleProductResponse,
   IGetSingleProductRequest,
   IGetUserResponse,
+  IPutUserRequest,
+  IPutUserResponse,
 } from "./APITypes";
 
 export const STATUS_CODE_UNAUTHORIZED = 401;
@@ -113,6 +115,26 @@ export const API = {
     try {
       const response = await axios.get<IGetUserResponse>(
         prefix(`/users/${user_id}`)
+      );
+      return response;
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  async putUser(
+    data: IPutUserRequest
+  ): Promise<AxiosResponse<IPutUserResponse>> {
+    try {
+      const response = await axios.put<IPutUserResponse>(
+        prefix(`/users/${data.user_id}`),
+        {
+          name: data.name,
+          email: data.email,
+          password: data.password,
+          address: data.address,
+          user_type: data.user_type,
+        }
       );
       return response;
     } catch (err) {

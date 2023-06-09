@@ -23,6 +23,8 @@ import { BackgroundContainer } from "../../ui/Components";
 import { emailRegex, getImagePath } from "../../util/Helpers";
 import { ProfileNavBar } from "../ProfileNavBar";
 import { title } from "../router/RouteNames";
+import { API } from "../../network/API";
+import { observer } from "mobx-react";
 
 // Register the plugins
 registerPlugin(
@@ -31,7 +33,8 @@ registerPlugin(
   FilePondPluginFileValidateType
 );
 
-export const ProfileSite = () => {
+export const ProfileSite = observer(() => {
+  const [serverError, setServerError] = React.useState("");
   const [isEditing, setIsEditing] = React.useState(false);
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
   const [showPassword, setShowPassword] = React.useState(false);
@@ -53,12 +56,22 @@ export const ProfileSite = () => {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<IPutUserRequest>({ defaultValues: userData });
+
+  React.useEffect(() => {
+    if (userData) {
+      reset(userData);
+    }
+  }, [userData, reset]);
 
   const onSubmit = async (data: IPutUserRequest) => {
     try {
+      await API.putUser(data);
+      generalStore.toggleUserChangeFlag();
       setIsEditing(false);
     } catch (e: any) {
+      setServerError(e.response.data.msg || "An error occurred");
       console.log(e);
     }
   };
@@ -167,6 +180,7 @@ export const ProfileSite = () => {
                   >
                     Save
                   </Button>
+                  {serverError && <p style={{ color: "red" }}>{serverError}</p>}
                 </form>
               ) : (
                 <div
@@ -246,4 +260,4 @@ export const ProfileSite = () => {
       </BackgroundContainer>
     </>
   );
-};
+});

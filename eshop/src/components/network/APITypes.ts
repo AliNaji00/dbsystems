@@ -66,7 +66,6 @@ export interface ISingleProduct {
   store_phone: string;
   coupon_code: string | undefined;
   coupon_description: string | undefined;
-  coupon_percentage: number | undefined;
 }
 
 export interface IGetBasketResponse {
@@ -147,9 +146,12 @@ export interface IPutUserRequest {
   name: string;
   email: string;
   address: string;
-  ImageURL: string;
   password: string;
-  userroles: Array<UserRole>;
+  user_type?: string;
+}
+
+export interface IPutUserResponse {
+  msg: string;
 }
 
 export interface IGetSalesStatisticsRequest {
@@ -341,6 +343,5 @@ export const getSingleProductResponseMockData: IGetSingleProductResponse = {
     coupon_code: "CODE123",
     coupon_description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. mauris id dolor. a ullamcorper ante.",
-    coupon_percentage: 50,
   },
 };
