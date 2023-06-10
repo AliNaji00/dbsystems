@@ -15,6 +15,7 @@ import {
   SellerRouteNames,
   sellerPrefix,
 } from "../seller/router/SellerRouteNames";
+import { AdminRouteNames, adminPrefix } from "../admin/router/AdminRouteNames";
 
 export const ProfileNavBar = observer(
   (props: { style?: React.CSSProperties }) => {
@@ -78,7 +79,14 @@ export const ProfileNavBar = observer(
             </MenuItem>
           )}
           {generalStore.userRoles.includes("admin") && (
-            <MenuItem onClick={handleClose}>Admin Dashbaord</MenuItem>
+            <MenuItem
+              onClick={() => {
+                handleClose();
+                navigate(adminPrefix(AdminRouteNames.HOME));
+              }}
+            >
+              Admin Dashbaord
+            </MenuItem>
           )}
           <MenuItem
             onClick={() => {

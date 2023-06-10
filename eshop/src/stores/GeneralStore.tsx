@@ -30,6 +30,8 @@ export class GeneralStore {
   basketChangeFlag = false;
   basketLoaded = false;
 
+  usersChangeFlag = false;
+
   constructor() {
     makeAutoObservable(this);
 
@@ -72,6 +74,10 @@ export class GeneralStore {
 
   toggleUserChangeFlag = () => {
     this.userChangeFlag = !this.userChangeFlag;
+  };
+
+  toggleUsersChangeFlag = () => {
+    this.usersChangeFlag = !this.usersChangeFlag;
   };
 
   handleSearchChange = (search: string) => {

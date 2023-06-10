@@ -226,6 +226,30 @@ export interface IPostProductResponse {
   };
 }
 
+export interface IGetUsersResponse {
+  msg: string;
+  data: Array<IUser>;
+}
+
+export interface IGetCouponsRequest {
+  seller_id: string;
+}
+
+export interface IGetCouponsResponse {
+  msg: string;
+  data: Array<ICoupon>;
+}
+
+export interface ICoupon {
+  code: string;
+  description: string;
+  start_time: string;
+  end_time: string;
+  type: "special_event" | "seasonal" | "shipping";
+  percentage?: number;
+  threshold?: number;
+}
+
 export const getSalesStatisticMockData: IGetSalesStatisticsResponse = {
   msg: "Success",
   profit: 17328.53,
@@ -364,6 +388,78 @@ export const getOrdersResponseMockData: IGetOrdersResponse = {
           shipping_cost: 10,
         },
       ],
+    },
+  ],
+};
+
+export const getUsersResponseMockData: IGetUsersResponse = {
+  msg: "Success",
+  data: [
+    {
+      user_id: "1",
+      name: "User 1",
+      email: "yourmum@example.com",
+      address: "1, Your Mum's House, Your Mum's Street, Your Mum's City",
+      ImageURL: "/api/img/user_placeholder.png",
+      password: "password",
+      userroles: ["admin"],
+    },
+    {
+      user_id: "2",
+      name: "User 2",
+      email: "idgaf@example.com",
+      address: "2, IDGAF Street, IDGAF City",
+      ImageURL: "/api/img/user_placeholder.png",
+      password: "password",
+      userroles: ["customer", "seller"],
+    },
+    {
+      user_id: "3",
+      name: "User 3",
+      email: "hard@bass.com",
+      address: "3, Hard Bass Street, Hard Bass City",
+      ImageURL: "/api/img/user_placeholder.png",
+      password: "password",
+      userroles: ["customer"],
+    },
+    {
+      user_id: "4",
+      name: "User 4",
+      email: "pokemon@go.everyday",
+      address: "4, Pokemon Street, Pokemon City",
+      ImageURL: "/api/img/user_placeholder.png",
+      password: "password",
+      userroles: ["customer"],
+    },
+  ],
+};
+
+export const getCouponsResponseMockData: IGetCouponsResponse = {
+  msg: "Success",
+  data: [
+    {
+      code: "10OFF",
+      description: "Mother's Day",
+      start_time: "2021-05-01",
+      end_time: "2021-05-09",
+      type: "special_event",
+      percentage: 10,
+    },
+    {
+      code: "20OFF",
+      description: "Summer Sale",
+      start_time: "2021-06-01",
+      end_time: "2021-06-09",
+      type: "seasonal",
+      percentage: 20,
+    },
+    {
+      code: "30OFF",
+      description: "Pride Month",
+      start_time: "2021-12-01",
+      end_time: "2021-12-09",
+      type: "shipping",
+      threshold: 100,
     },
   ],
 };
