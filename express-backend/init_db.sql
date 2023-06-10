@@ -91,7 +91,7 @@ Constraint FK_c_uid FOREIGN KEY (c_uid) REFERENCES customer(user_id)
 
 
 create table orders(
-order_id int primary key,
+order_id int not null AUTO_INCREMENT primary key,
 c_uid int not null,
 time timestamp not null,
 Constraint FK_c_uid1 FOREIGN KEY (c_uid) REFERENCES customer(user_id) 
