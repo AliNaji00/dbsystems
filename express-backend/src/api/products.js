@@ -124,16 +124,25 @@ export default ({ pool }) => {
         if (seller_id !== undefined) {
           conn
             .query(
-              "SELECT p.stock_quantity, p.description, p.product_id, p.name, p.price FROM product p WHERE p.s_uid = ?",
+              "SELECT p.stock_quantity, p.description, p.product_id, p.name, p.price, p.available, CASE WHEN CURDATE() BETWEEN c.start_time AND c.end_time THEN CAST((100 - se.percentage)/ 100 * p.price AS INT) ELSE NULL END AS ReducedPrice FROM product p LEFT JOIN special_event se ON p.code = se.code LEFT JOIN coupon c ON se.code = c.code WHERE p.s_uid = ?",
               seller_id
             )
             .then((rows) => {
               const res_rows = rows.map((row) => {
-                return {
-                  ...row,
-                  AmountInBasket: Number(row.AmountInBasket),
-                  ImageURL: "/api/products/" + row.product_id + "/picture",
-                };
+                const { ReducedPrice, ...rest } = row;
+                if (ReducedPrice !== null) {
+                  return {
+                    ...rest,
+                    ImageURL: "/api/products/" + row.product_id + "/picture",
+                    price: Number(ReducedPrice),
+                    original_price: row.price,
+                  };
+                } else {
+                  return {
+                    ...rest,
+                    ImageURL: "/api/products/" + row.product_id + "/picture",
+                  };
+                }
               });
               res.json({ msg: "success", data: res_rows });
             })
@@ -149,17 +158,29 @@ export default ({ pool }) => {
           const k = "%" + keyword + "%"; // yes, we can inject wildcards
           conn
             .query(
-              "SELECT p.s_uid, p.stock_quantity, p.description, p.product_id, COALESCE(SUM(CASE WHEN sib.c_uid = ? THEN sib.quantity ELSE 0 END), 0) AS AmountInBasket, p.name, p.price  FROM product p LEFT JOIN store_in_basket sib ON p.product_id = sib.product_id WHERE p.name LIKE ? OR p.description LIKE ? GROUP BY p.product_id",
+              "SELECT p.s_uid, p.stock_quantity, p.description, p.product_id, COALESCE(SUM(CASE WHEN sib.c_uid = ? THEN sib.quantity ELSE 0 END), 0) AS AmountInBasket, p.name, p.price, CASE WHEN CURDATE() BETWEEN c.start_time AND c.end_time THEN CAST((100 - se.percentage)/ 100 * p.price AS INT) ELSE NULL END AS ReducedPrice FROM product p LEFT JOIN store_in_basket sib ON p.product_id = sib.product_id LEFT JOIN special_event se ON p.code = se.code LEFT JOIN coupon c ON se.code = c.code WHERE p.available = 1 AND (p.name LIKE ? OR p.description LIKE ? ) GROUP BY p.product_id",
               [user_id, k, k]
             )
             .then((rows) => {
               const res_rows = rows.map((row) => {
-                return {
-                  ...row,
-                  AmountInBasket: Number(row.AmountInBasket),
-                  ImageURL: "/api/products/" + row.product_id + "/picture",
-                  SellerImageURL: "/api/users/" + row.s_uid + "/avatar",
-                };
+                const { ReducedPrice, ...rest } = row;
+                if (ReducedPrice !== null) {
+                  return {
+                    ...rest,
+                    AmountInBasket: Number(row.AmountInBasket),
+                    ImageURL: "/api/products/" + row.product_id + "/picture",
+                    SellerImageURL: "/api/users/" + row.s_uid + "/avatar",
+                    price: Number(ReducedPrice),
+                    original_price: row.price,
+                  };
+                } else {
+                  return {
+                    ...rest,
+                    AmountInBasket: Number(row.AmountInBasket),
+                    ImageURL: "/api/products/" + row.product_id + "/picture",
+                    SellerImageURL: "/api/users/" + row.s_uid + "/avatar",
+                  };
+                }
               });
               res.json({ msg: "success", data: res_rows });
             })
@@ -182,23 +203,41 @@ export default ({ pool }) => {
       .then((conn) => {
         conn
           .query(
-            "SELECT p.s_uid, p.stock_quantity, p.description, p.product_id, COALESCE(SUM(CASE WHEN sib.c_uid = ? THEN sib.quantity ELSE 0 END), 0) AS AmountInBasket, p.name, p.price, s.store_name, s.store_address, s.store_email, s.phone_no FROM product p LEFT JOIN store_in_basket sib ON p.product_id = sib.product_id JOIN seller s ON p.s_uid = s.user_id JOIN users u ON s.user_id = u.user_id WHERE p.product_id = ? GROUP BY p.product_id",
+            "SELECT se.code AS coupon_code, c.description AS coupon_description, p.s_uid, p.stock_quantity, p.description, p.product_id, p.available, COALESCE(SUM(CASE WHEN sib.c_uid = ? THEN sib.quantity ELSE 0 END), 0) AS AmountInBasket, p.name, p.price, s.store_name, s.store_address, s.store_email, s.phone_no AS store_phone, CASE WHEN CURDATE() BETWEEN c.start_time AND c.end_time THEN CAST((100 - se.percentage)/ 100 * p.price AS INT) ELSE NULL END AS ReducedPrice FROM product p LEFT JOIN store_in_basket sib ON p.product_id = sib.product_id JOIN seller s ON p.s_uid = s.user_id JOIN users u ON s.user_id = u.user_id LEFT JOIN special_event se ON p.code = se.code LEFT JOIN coupon c ON se.code = c.code WHERE p.product_id = ? GROUP BY p.product_id",
             [user_id, product_id]
           )
           .then((rows) => {
             if (rows.length > 0) {
-              const res_row = {
-                ...rows[0],
-                ImageURL: "/api/products/" + product_id + "/picture",
-                AmountInBasket: Number(rows[0].AmountInBasket),
-                SellerImageURL: "/api/users/" + rows[0].s_uid + "/avatar",
-              };
-              res.json({ msg: "success", data: res_row });
+              const { coupon_code, coupon_description, ReducedPrice, ...row } =
+                rows[0];
+              if (ReducedPrice !== null) {
+                const res_row = {
+                  ...row,
+                  ImageURL: "/api/products/" + product_id + "/picture",
+                  AmountInBasket: Number(row.AmountInBasket),
+                  price: Number(ReducedPrice),
+                  original_price: row.price,
+                  SellerImageURL: "/api/users/" + rows[0].s_uid + "/avatar",
+                  coupon_code: String(coupon_code),
+                  coupon_description: coupon_description,
+                };
+                res.json({ msg: "success", data: res_row });
+              } else {
+                const res_row = {
+                  ...row,
+                  ImageURL: "/api/products/" + product_id + "/picture",
+                  AmountInBasket: Number(row.AmountInBasket),
+                  SellerImageURL: "/api/users/" + rows[0].s_uid + "/avatar",
+                };
+                res.json({ msg: "success", data: res_row });
+              }
             } else {
               throw Error();
             }
           })
-          .catch(() => res.status(404).json({ msg: "Product not found" }))
+          .catch(() => {
+            res.status(404).json({ msg: "Product not found" });
+          })
           .finally(() => conn.close());
       })
       .catch(next);
@@ -225,10 +264,12 @@ export default ({ pool }) => {
             res
               .status(201)
               .location("/products/" + rows.insertId)
-              .json({ msg: "success", data: { product_id: String(rows.insertId) } });
+              .json({
+                msg: "success",
+                data: { product_id: String(rows.insertId) },
+              });
           })
-          .catch((e) => {
-            console.log(e);
+          .catch(() => {
             res.status(400).json({ msg: "Error creating product" });
           })
           .finally(() => conn.close());
