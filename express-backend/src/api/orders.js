@@ -3,9 +3,29 @@ import { Router } from "express";
 export default ({ pool }) => {
   const route = Router();
 
-  // modify existing order
-  route.put("/:order_id", (req, res, next) => {
+  // update order status
+  route.put("/:order_id", async (req, res, next) => {
+    const order_id = req.params.order_id;
+    const seller_id = req.body.seller_id;
+    const order_status = req.body.order_status;
     try {
+      const conn = await pool.getConnection();
+      try {
+        const rows = await conn.query(
+          "UPDATE manage SET status = ? WHERE order_id = ? AND s_uid = ?",
+          [order_status, order_id, seller_id]
+        );
+        if (!rows.affectedRows) {
+          throw Error();
+        }
+        res
+          .status(200)
+          .json({ msg: "success", data: { order_id: String(order_id) } });
+      } catch (err) {
+        res.status(400).json({ msg: "Error updating order status" });
+      } finally {
+        conn.close();
+      }
     } catch (err) {
       next(err);
     }
@@ -55,6 +75,7 @@ export default ({ pool }) => {
     }
   });
 
+  // TODO: Empty basket
   route.post("/", async (req, res, next) => {
     const user_id = req.body.user_id;
     const coupon_ids =
@@ -95,10 +116,12 @@ export default ({ pool }) => {
                 [item.quantity, item.product_id]
               );
             }
-            await conn.query("INSERT INTO manage VALUES (?, ?, ?)", [
+            await conn.query("INSERT INTO manage VALUES (?, ?, ?, ?, ?)", [
               order_id,
               "pending",
               seller_id,
+              seller_items.preshipping_price,
+              seller_items.shipping_cost,
             ]);
           }
           await conn.commit();
@@ -218,6 +241,7 @@ export default ({ pool }) => {
         return {
           ...seller,
           store_name: store_name,
+          preshipping_price: seasonal_discount_price,
           shipping_cost: shipping_cost,
           total_price: total_price,
         };

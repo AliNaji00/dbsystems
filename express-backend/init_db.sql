@@ -114,6 +114,8 @@ create table manage(
 order_id int not null, 
 status varchar(10) not null, 
 s_uid int not null,
+total_price int not null, -- price _before_ shipping
+shipping_cost int not null,
 Primary key (order_id, s_uid),
 Constraint FK_s_uid2 FOREIGN KEY (s_uid) REFERENCES seller(user_id) 
 								ON DELETE CASCADE ON UPDATE CASCADE,
@@ -231,16 +233,16 @@ INSERT INTO contains (order_id, product_id, quantity, price_per_piece) VALUES
 (2005, 1008, 1, 4500);
 
 -- Insert sample data into manage table
-INSERT INTO manage (order_id, status, s_uid) VALUES
-(2001, 'shipped', 8),
-(2001, 'shipped', 9),
-(2002, 'shipped', 8),
-(2003, 'shipped', 9),
-(2003, 'shipped', 10),
-(2004, 'shipped', 10),
-(2005, 'shipped', 8),
-(2005, 'shipped', 9),
-(2005, 'shipped', 10);
+INSERT INTO manage (order_id, status, s_uid, total_price, shipping_cost) VALUES
+(2001, 'shipped', 8, 6000, 600),
+(2001, 'shipped', 9, 1500, 150),
+(2002, 'shipped', 8, 2000, 200),
+(2003, 'shipped', 9, 9000, 0),
+(2003, 'shipped', 10, 1000, 100),
+(2004, 'shipped', 10, 1200, 120),
+(2005, 'shipped', 8, 8000, 0),
+(2005, 'shipped', 9, 1000, 100),
+(2005, 'shipped', 10, 8500, 0);
 
 -- Insert sample data into seasonal_coupon table
 INSERT INTO seasonal_coupon (code, percentage) VALUES
