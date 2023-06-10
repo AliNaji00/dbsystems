@@ -243,4 +243,19 @@ export const API = {
       throw err;
     }
   },
+
+  async checkOrder(
+    user_id: string,
+    coupon_codes: string[]
+  ): Promise<AxiosResponse<any>> {
+    try {
+      const response = await axios.post<any>(prefix(`/orders/check`), {
+        user_id: user_id,
+        coupon_ids: coupon_codes,
+      });
+      return response;
+    } catch (err) {
+      throw err;
+    }
+  },
 };
