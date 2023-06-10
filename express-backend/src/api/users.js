@@ -152,7 +152,7 @@ export default ({ pool }) => {
       const conn = await pool.getConnection();
       try {
         const rows = await conn.query(
-          "SELECT u.user_id, u.name, u.email, u.password, NOT ISNULL(s.user_id) AS isSeller, NOT ISNULL(a.user_id) AS isAdmin, NOT ISNULL(c.user_id) AS isCustomer FROM users u LEFT JOIN customer c ON u.user_id = c.user_id LEFT JOIN seller s ON u.user_id = s.user_id LEFT JOIN admin a ON u.user_id = a.user_id"
+          "SELECT u.user_id, u.name, u.email, u.password, u.address, NOT ISNULL(s.user_id) AS isSeller, NOT ISNULL(a.user_id) AS isAdmin, NOT ISNULL(c.user_id) AS isCustomer FROM users u LEFT JOIN customer c ON u.user_id = c.user_id LEFT JOIN seller s ON u.user_id = s.user_id LEFT JOIN admin a ON u.user_id = a.user_id"
         );
         const users = rows.map((user) => {
           let roles = [];
@@ -172,6 +172,7 @@ export default ({ pool }) => {
             name: user.name,
             email: user.email,
             password: user.password,
+            address: user.address,
           };
         });
         res.json({ msg: "success", data: users });
