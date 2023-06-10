@@ -38,6 +38,7 @@ export interface IProduct {
   name: string;
   price: number; // actual price, possibly reduced price
   original_price?: number;
+  available: boolean;
 }
 
 export interface IGetSingleProductResponse {
@@ -63,7 +64,7 @@ export interface ISingleProduct {
   store_name: string;
   store_address: string;
   store_email: string;
-  phone_no: string;
+  store_phone: string;
   coupon_code: string | undefined;
   coupon_description: string | undefined;
 }

@@ -107,8 +107,8 @@ export const SellerSingleProductSite = observer(() => {
     try {
       if (product) {
         const data: IPutProductRequest = {
-          available: false,
           ...product,
+          available: false,
         };
         await API.putProduct(data);
         setFormError("");
@@ -254,7 +254,10 @@ export const SellerSingleProductSite = observer(() => {
                     <Button
                       variant="contained"
                       startIcon={<DeleteIcon />}
-                      sx={{ backgroundColor: customColors.tomato }}
+                      sx={{
+                        backgroundColor: customColors.tomato,
+                        alignSelf: "flex-start",
+                      }}
                       onClick={handleDelete}
                     >
                       Delete

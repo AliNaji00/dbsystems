@@ -122,7 +122,7 @@ export const CustomerProductSite = observer(() => {
                   {product.store_email}
                 </p>
                 <p style={{ fontSize: 16, margin: "8px 0" }}>
-                  {product.phone_no}
+                  {product.store_phone}
                 </p>
                 <p style={{ fontSize: 16, margin: "8px 0" }}>
                   {product.store_address}
