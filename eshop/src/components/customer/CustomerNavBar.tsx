@@ -164,7 +164,7 @@ export const CustomerNavBar = observer(
               <MenuItem
                 onClick={() => {
                   handleClose();
-                  navigate(adminPrefix(AdminRouteNames.DASHBOARD));
+                  navigate(adminPrefix(AdminRouteNames.HOME));
                 }}
               >
                 Admin Dashbaord
