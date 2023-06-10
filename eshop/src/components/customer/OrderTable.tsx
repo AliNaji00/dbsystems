@@ -1,4 +1,9 @@
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import {
+  Box,
+  Button,
+  Collapse,
   IconButton,
   Paper,
   Table,
@@ -7,18 +12,31 @@ import {
   TableHead,
   TableRow,
   Typography,
-  Collapse,
-  Box,
 } from "@mui/material";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import * as React from "react";
-import { IOrder, getOrdersResponseMockData } from "../network/APITypes";
+import { IOrder } from "../network/APITypes";
 import { CustomTableCell } from "../ui/Components";
 import { customColors } from "../util/Theme";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 
-const Row = ({ order }: { order: IOrder }) => {
+const Row = ({ order, type }: { order: IOrder; type: string }) => {
   const [open, setOpen] = React.useState(false);
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
+  const handleOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
+  };
+
+  const handleChangeOrderStatus = (status: string) => {
+    console.log("Status changed to: " + status);
+    // TODO: Replace with actual functionality for changing status
+    handleCloseMenu();
+  };
 
   return (
     <React.Fragment>
@@ -50,9 +68,54 @@ const Row = ({ order }: { order: IOrder }) => {
             <Box
               sx={{ padding: 3, backgroundColor: customColors.backgroundColor }}
             >
-              <Typography variant="h6" gutterBottom component="div">
-                Order Items
-              </Typography>
+              <div
+                style={{
+                  display: "flex",
+                  width: "100%",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Typography variant="h6" gutterBottom component="div">
+                  Order Items
+                </Typography>
+
+                {type === "seller" && (
+                  <>
+                    <Button variant="contained" onClick={handleOpenMenu}>
+                      Change Status
+                    </Button>
+                    <Menu
+                      id="simple-menu"
+                      anchorEl={anchorEl}
+                      keepMounted
+                      open={Boolean(anchorEl)}
+                      onClose={handleCloseMenu}
+                    >
+                      <MenuItem
+                        onClick={() => handleChangeOrderStatus("received")}
+                      >
+                        Submitted (Received)
+                      </MenuItem>
+                      <MenuItem
+                        onClick={() => handleChangeOrderStatus("processing")}
+                      >
+                        Processed (Processing)
+                      </MenuItem>
+                      <MenuItem
+                        onClick={() => handleChangeOrderStatus("shipping")}
+                      >
+                        Delivered (Shipping)
+                      </MenuItem>
+                      <MenuItem
+                        onClick={() => handleChangeOrderStatus("closed")}
+                      >
+                        Completed (Closed)
+                      </MenuItem>
+                    </Menu>
+                  </>
+                )}
+              </div>
+
               <Table size="small" aria-label="purchases">
                 <TableHead>
                   <TableRow>
@@ -85,9 +148,10 @@ const Row = ({ order }: { order: IOrder }) => {
   );
 };
 
-export const CollapsibleTable = () => {
-  const orders = getOrdersResponseMockData.data;
-
+export const CollapsibleTable = (props: {
+  orders: IOrder[];
+  type: "customer" | "seller";
+}) => {
   return (
     <TableContainer component={Paper}>
       <Table aria-label="collapsible table">
@@ -120,8 +184,8 @@ export const CollapsibleTable = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {orders.map((order) => (
-            <Row key={order.order_id} order={order} />
+          {props.orders.map((order) => (
+            <Row key={order.order_id} order={order} type={props.type} />
           ))}
         </TableBody>
       </Table>

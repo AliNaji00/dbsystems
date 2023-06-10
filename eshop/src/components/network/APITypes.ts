@@ -95,6 +95,7 @@ export interface IGetOrdersResponse {
 
 export interface IGetOrdersRequest {
   user_id: string;
+  seller_id?: string;
 }
 
 export interface IOrder {
