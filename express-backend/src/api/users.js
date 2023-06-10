@@ -1,4 +1,4 @@
-import { Router, query } from "express";
+import { Router } from "express";
 import multer from "multer";
 import path from "path";
 
@@ -146,7 +146,46 @@ export default ({ pool }) => {
     }
   });
 
-  // post user
+  // get all users
+  route.get("/", async (req, res, next) => {
+    try {
+      const conn = await pool.getConnection();
+      try {
+        const rows = await conn.query(
+          "SELECT u.user_id, u.name, u.email, u.password, NOT ISNULL(s.user_id) AS isSeller, NOT ISNULL(a.user_id) AS isAdmin, NOT ISNULL(c.user_id) AS isCustomer FROM users u LEFT JOIN customer c ON u.user_id = c.user_id LEFT JOIN seller s ON u.user_id = s.user_id LEFT JOIN admin a ON u.user_id = a.user_id"
+        );
+        const users = rows.map((user) => {
+          let roles = [];
+          if (user.isSeller) {
+            roles.push("seller");
+          }
+          if (user.isAdmin) {
+            roles.push("admin");
+          }
+          if (user.isCustomer) {
+            roles.push("customer");
+          }
+          return {
+            user_id: user.user_id,
+            ImageURL: "/api/users/" + user.user_id + "/avatar",
+            userroles: roles,
+            name: user.name,
+            email: user.email,
+            password: user.password,
+          };
+        });
+        res.json({ msg: "success", data: users });
+      } catch (err) {
+        res.status(400).json({ msg: "Error getting all users" });
+      } finally {
+        conn.close();
+      }
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  // post user, this creates an new user with no roles
   route.post("/", async (req, res, next) => {
     const user_type = req.body.user_type;
     const name = req.body.name;
@@ -155,8 +194,9 @@ export default ({ pool }) => {
     const address = req.body.address;
     try {
       const conn = await pool.getConnection();
-      await conn.beginTransaction();
       try {
+        await conn.beginTransaction();
+
         const rows = await conn.query(
           "INSERT INTO users VALUES (DEFAULT, ?, ?, ?, ?, NULL)",
           [name, email, password, address]
