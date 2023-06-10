@@ -27,6 +27,10 @@ import {
   SellerRouteNames,
   sellerPrefix,
 } from "../../seller/router/SellerRouteNames";
+import {
+  AdminRouteNames,
+  adminPrefix,
+} from "../../admin/router/AdminRouteNames";
 
 export const LoginSite = observer(() => {
   const {
@@ -55,7 +59,7 @@ export const LoginSite = observer(() => {
           generalStore.userImage = response.data.data.ImageURL;
         }
         if (response.data.data.userroles.includes("admin")) {
-          // TODO navigate to admin site
+          navigate(adminPrefix(AdminRouteNames.HOME));
         } else if (response.data.data.userroles.includes("seller")) {
           navigate(sellerPrefix(SellerRouteNames.DASHBOARD));
         } else if (response.data.data.userroles.includes("customer")) {
@@ -86,7 +90,7 @@ export const LoginSite = observer(() => {
   React.useEffect(() => {
     if (generalStore.loggedIn) {
       if (generalStore.userRoles.includes("admin")) {
-        // TODO navigate to admin site
+        navigate(adminPrefix(AdminRouteNames.HOME));
       } else if (generalStore.userRoles.includes("seller")) {
         navigate(sellerPrefix(SellerRouteNames.DASHBOARD));
       } else if (generalStore.userRoles.includes("customer")) {

@@ -13,8 +13,7 @@ import { logo_transparent } from "../util/Images";
 import { customColors } from "../util/Theme";
 import { SellerRouteNames, sellerPrefix } from "./router/SellerRouteNames";
 import { RouteNames } from "../app/router/RouteNames";
-
-// TODO add routing for all the menu items
+import { AdminRouteNames, adminPrefix } from "../admin/router/AdminRouteNames";
 
 type NavigationItem = {
   label: string;
@@ -127,7 +126,14 @@ export const SellerNavBar = observer(
             </MenuItem>
           )}
           {generalStore.userRoles.includes("admin") && (
-            <MenuItem onClick={handleClose}>Admin Dashbaord</MenuItem>
+            <MenuItem
+              onClick={() => {
+                handleClose();
+                navigate(adminPrefix(AdminRouteNames.HOME));
+              }}
+            >
+              Admin Dashbaord
+            </MenuItem>
           )}
           <MenuItem
             onClick={() => {

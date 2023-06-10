@@ -44,3 +44,18 @@ export const ProtectedCustomerRoute = observer(
     return <>{props.children}</>;
   }
 );
+
+export const ProtectedAdminRoute = observer(
+  (props: { children: React.ReactNode }) => {
+    const generalStore = useGeneralStore();
+    if (!generalStore.loggedIn) {
+      // user is not authenticated
+      return <Navigate to={RouteNames.LOG_IN} />;
+    }
+    if (!generalStore.userRoles.includes("admin")) {
+      // user is not an admin
+      return <Navigate to={RouteNames.LOG_IN} />;
+    }
+    return <>{props.children}</>;
+  }
+);
