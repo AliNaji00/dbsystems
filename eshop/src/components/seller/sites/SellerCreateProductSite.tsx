@@ -9,6 +9,8 @@ import * as React from "react";
 import { FilePond } from "react-filepond";
 import { Helmet } from "react-helmet";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { useGeneralStore } from "../../../stores/GeneralStore";
 import { title } from "../../app/router/RouteNames";
 import { API } from "../../network/API";
 import { IPostProductRequest } from "../../network/APITypes";
@@ -16,8 +18,6 @@ import { CenteredContent } from "../../ui/CenteredContent";
 import { BackgroundContainer } from "../../ui/Components";
 import { customColors } from "../../util/Theme";
 import { SellerNavBar } from "../SellerNavBar";
-import { useGeneralStore } from "../../../stores/GeneralStore";
-import { useNavigate } from "react-router-dom";
 import { SellerRouteNames, sellerPrefix } from "../router/SellerRouteNames";
 
 // Register the plugins
