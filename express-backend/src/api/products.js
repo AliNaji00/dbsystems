@@ -235,8 +235,7 @@ export default ({ pool }) => {
               throw Error();
             }
           })
-          .catch((err) => {
-            console.log(err);
+          .catch(() => {
             res.status(404).json({ msg: "Product not found" });
           })
           .finally(() => conn.close());
@@ -265,7 +264,10 @@ export default ({ pool }) => {
             res
               .status(201)
               .location("/products/" + rows.insertId)
-              .json({ msg: "success" });
+              .json({
+                msg: "success",
+                data: { product_id: String(rows.insertId) },
+              });
           })
           .catch(() => {
             res.status(400).json({ msg: "Error creating product" });
