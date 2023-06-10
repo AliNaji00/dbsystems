@@ -1,9 +1,7 @@
 import * as React from "react";
+import { API } from "../components/network/API";
+import { IUser } from "../components/network/APITypes";
 import { useGeneralStore } from "./GeneralStore";
-import {
-  IUser,
-  getUsersResponseMockData,
-} from "../components/network/APITypes";
 
 export const useUsers = () => {
   const [users, setUsers] = React.useState<IUser[]>([]);
@@ -14,11 +12,10 @@ export const useUsers = () => {
       try {
         generalStore.isLoading = true;
 
-        // const response = await API.getUsers();
-        const response = getUsersResponseMockData;
+        const response = await API.getUsers();
 
         if (response && response.data) {
-          setUsers(response.data);
+          setUsers(response.data.data);
         }
       } catch (err) {
         console.log(err);

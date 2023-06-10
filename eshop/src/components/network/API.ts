@@ -17,6 +17,7 @@ import {
   IPostProductResponse,
   IPostUserRequest,
   IPostUserResponse,
+  IGetUsersResponse,
 } from "./APITypes";
 
 export const STATUS_CODE_UNAUTHORIZED = 401;
@@ -80,6 +81,15 @@ export const API = {
         address: data.address,
         user_type: data.user_type,
       });
+      return response;
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  async getUsers(): Promise<AxiosResponse<IGetUsersResponse>> {
+    try {
+      const response = await axios.get<IGetUsersResponse>(prefix(`/users`));
       return response;
     } catch (err) {
       throw err;
