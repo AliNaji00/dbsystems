@@ -25,6 +25,7 @@ import { useForm } from "react-hook-form";
 import { API } from "../../network/API";
 import { useGeneralStore } from "../../../stores/GeneralStore";
 import { observer } from "mobx-react";
+import { emailRegex, phoneRegex } from "../../util/Helpers";
 
 type MakeSellerParams = {
   store_name: string;
@@ -44,6 +45,7 @@ export const AdminSite = observer(() => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<MakeSellerParams>();
 
@@ -88,6 +90,7 @@ export const AdminSite = observer(() => {
       handleRoleChange(selectedUser.user_id, selectedRole, data);
     }
     // clear form
+    reset();
   };
 
   const onSubmit = (data?: MakeSellerParams) => {
@@ -177,29 +180,45 @@ export const AdminSite = observer(() => {
               style={{ display: "flex", flexDirection: "column", gap: 16 }}
             >
               <TextField
-                {...register("store_name", { required: true })}
+                {...register("store_name", {
+                  required: true,
+                })}
                 label="Store Name"
                 fullWidth
               />
-              {errors.store_name && <span>This field is required</span>}
+              {errors.store_name && <span>{errors.store_name.message}</span>}
               <TextField
                 {...register("store_address", { required: true })}
                 label="Store Address"
                 fullWidth
               />
-              {errors.store_address && <span>This field is required</span>}
+              {errors.store_address && (
+                <span>{errors.store_address.message}</span>
+              )}
               <TextField
-                {...register("phone_no", { required: true })}
+                {...register("phone_no", {
+                  required: true,
+                  pattern: {
+                    value: phoneRegex,
+                    message: "Enter a valid phone number",
+                  },
+                })}
                 label="Phone Number"
                 fullWidth
               />
-              {errors.phone_no && <span>This field is required</span>}
+              {errors.phone_no && <span>{errors.phone_no.message}</span>}
               <TextField
-                {...register("store_email", { required: true })}
+                {...register("store_email", {
+                  required: true,
+                  pattern: {
+                    value: emailRegex,
+                    message: "Enter a valid email address",
+                  },
+                })}
                 label="Store Email"
                 fullWidth
               />
-              {errors.store_email && <span>This field is required</span>}
+              {errors.store_email && <span>{errors.store_email.message}</span>}
               <div
                 style={{
                   padding: "0 0 20px",
