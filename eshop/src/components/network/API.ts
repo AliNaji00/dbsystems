@@ -24,6 +24,8 @@ import {
   IGetOrdersRequest,
   IGetSellerOrdersResponse,
   IPutOrderResponse,
+  IGetCouponsRequest,
+  IGetCouponsResponse,
 } from "./APITypes";
 
 export const STATUS_CODE_UNAUTHORIZED = 401;
@@ -352,6 +354,26 @@ export const API = {
         {
           order_status: status,
           seller_id: seller_id,
+        }
+      );
+      return response;
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  async getCoupons(
+    seller_id: string
+  ): Promise<AxiosResponse<IGetCouponsResponse>> {
+    try {
+      const params: IGetCouponsRequest = {
+        seller_id: seller_id,
+      };
+
+      const response = await axios.get<IGetCouponsResponse>(
+        prefix(`/coupons`),
+        {
+          params: params,
         }
       );
       return response;

@@ -43,8 +43,8 @@ export const SellerCouponsSite = () => {
               <TableHead>
                 <TableRow>
                   <TableCell>Code</TableCell>
-                  <TableCell>Start Time</TableCell>
-                  <TableCell>End Time</TableCell>
+                  <TableCell>Start Date</TableCell>
+                  <TableCell>End Date</TableCell>
                   <TableCell>Description</TableCell>
                   <TableCell>Type</TableCell>
                   <TableCell>Percentage</TableCell>
@@ -55,10 +55,22 @@ export const SellerCouponsSite = () => {
                 {coupons.map((coupon) => (
                   <TableRow key={coupon.code}>
                     <TableCell>{coupon.code}</TableCell>
-                    <TableCell>{coupon.start_time}</TableCell>
-                    <TableCell>{coupon.end_time}</TableCell>
+                    <TableCell>
+                      {new Date(coupon.start_time).toLocaleDateString("zh-TW", {
+                        year: "numeric",
+                        month: "2-digit",
+                        day: "2-digit",
+                      })}
+                    </TableCell>
+                    <TableCell>
+                      {new Date(coupon.end_time).toLocaleDateString("zh-TW", {
+                        year: "numeric",
+                        month: "2-digit",
+                        day: "2-digit",
+                      })}
+                    </TableCell>
                     <TableCell>{coupon.description}</TableCell>
-                    <TableCell>{coupon.type}</TableCell>
+                    <TableCell>{coupon.coupon_type}</TableCell>
                     <TableCell>
                       {coupon.percentage ? `${coupon.percentage}%` : "-"}
                     </TableCell>

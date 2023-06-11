@@ -268,7 +268,7 @@ export interface ICoupon {
   description: string;
   start_time: string;
   end_time: string;
-  type: "special_event" | "seasonal" | "shipping";
+  coupon_type: "special_event" | "seasonal" | "shipping";
   percentage?: number;
   threshold?: number;
 }
@@ -393,7 +393,7 @@ export const getCouponsResponseMockData: IGetCouponsResponse = {
       description: "Mother's Day",
       start_time: "2021-05-01",
       end_time: "2021-05-09",
-      type: "special_event",
+      coupon_type: "special_event",
       percentage: 10,
     },
     {
@@ -401,7 +401,7 @@ export const getCouponsResponseMockData: IGetCouponsResponse = {
       description: "Summer Sale",
       start_time: "2021-06-01",
       end_time: "2021-06-09",
-      type: "seasonal",
+      coupon_type: "seasonal",
       percentage: 20,
     },
     {
@@ -409,7 +409,7 @@ export const getCouponsResponseMockData: IGetCouponsResponse = {
       description: "Pride Month",
       start_time: "2021-12-01",
       end_time: "2021-12-09",
-      type: "shipping",
+      coupon_type: "shipping",
       threshold: 100,
     },
   ],

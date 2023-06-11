@@ -1,8 +1,6 @@
 import * as React from "react";
-import {
-  ICoupon,
-  getCouponsResponseMockData,
-} from "../components/network/APITypes";
+import { API } from "../components/network/API";
+import { ICoupon } from "../components/network/APITypes";
 import { useGeneralStore } from "./GeneralStore";
 
 export const useCoupons = (seller_id: string) => {
@@ -14,11 +12,10 @@ export const useCoupons = (seller_id: string) => {
       try {
         generalStore.isLoading = true;
 
-        // const response = await API.getCoupons(seller_id);
-        const response = getCouponsResponseMockData;
+        const response = await API.getCoupons(seller_id);
 
         if (response && response.data) {
-          setCoupons(response.data);
+          setCoupons(response.data.data);
         }
       } catch (err) {
         console.log(err);
