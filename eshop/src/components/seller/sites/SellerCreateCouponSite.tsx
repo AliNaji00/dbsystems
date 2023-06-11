@@ -20,7 +20,6 @@ import { BackgroundContainer } from "../../ui/Components";
 import { customColors } from "../../util/Theme";
 import { SellerNavBar } from "../SellerNavBar";
 import { SellerRouteNames, sellerPrefix } from "../router/SellerRouteNames";
-import dayjs, { Dayjs } from "dayjs";
 import { useProducts } from "../../../stores/useProducts";
 
 export const SellerCreateCouponSite = () => {
@@ -46,6 +45,7 @@ export const SellerCreateCouponSite = () => {
   const onSubmit = async (data: IPostCouponRequest) => {
     try {
       data.seller_id = generalStore.userId;
+      console.log(data);
       // TODO: API Call
       // const response = await API.postCoupon(data);
       setFormError("");
@@ -53,7 +53,7 @@ export const SellerCreateCouponSite = () => {
       setFormError(e.response.data.msg || "An error occurred");
       console.log(e);
     } finally {
-      navigate(sellerPrefix(SellerRouteNames.COUPONS));
+      // navigate(sellerPrefix(SellerRouteNames.COUPONS));
     }
   };
 
@@ -112,15 +112,21 @@ export const SellerCreateCouponSite = () => {
               />
 
               <TextField
-                {...register("code", { required: true })}
+                {...register("code", { required: "Code is required" })}
                 label="Code"
                 variant="outlined"
+                error={!!errors.code}
+                helperText={errors.code?.message}
               />
 
               <TextField
-                {...register("description", { required: true })}
+                {...register("description", {
+                  required: "Description is required",
+                })}
                 label="Description"
                 variant="outlined"
+                error={!!errors.description}
+                helperText={errors.description?.message}
               />
 
               <Controller
@@ -149,10 +155,22 @@ export const SellerCreateCouponSite = () => {
 
               {couponType === "shipping" && (
                 <TextField
-                  {...register("threshold", { required: true })}
+                  {...register("threshold", {
+                    required: "Threshold is required",
+                    min: {
+                      value: 0,
+                      message: "Threshold cannot be less than 0",
+                    },
+                    max: {
+                      value: 100,
+                      message: "Threshold cannot be more than 100",
+                    },
+                  })}
                   label="Threshold"
                   type="number"
                   variant="outlined"
+                  error={!!errors.threshold}
+                  helperText={errors.threshold?.message}
                 />
               )}
 
@@ -160,13 +178,21 @@ export const SellerCreateCouponSite = () => {
                 couponType === "seasonal") && (
                 <TextField
                   {...register("percentage", {
-                    required: true,
-                    min: 0,
-                    max: 100,
+                    required: "Percentage is required",
+                    min: {
+                      value: 0,
+                      message: "Percentage cannot be less than 0",
+                    },
+                    max: {
+                      value: 100,
+                      message: "Percentage cannot be more than 100",
+                    },
                   })}
                   label="Percentage"
                   type="number"
                   variant="outlined"
+                  error={!!errors.percentage}
+                  helperText={errors.percentage?.message}
                 />
               )}
 
@@ -174,7 +200,7 @@ export const SellerCreateCouponSite = () => {
                 name="product_ids"
                 control={control}
                 defaultValue={[]}
-                render={({ field }) => (
+                render={() => (
                   <div>
                     {couponType === "special_event" && (
                       <div style={{ maxHeight: "200px", overflowY: "auto" }}>
