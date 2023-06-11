@@ -2,7 +2,6 @@ import {
   Button,
   Checkbox,
   Dialog,
-  DialogActions,
   DialogContent,
   Paper,
   Table,
@@ -13,19 +12,19 @@ import {
   TableRow,
   TextField,
 } from "@mui/material";
+import { observer } from "mobx-react";
 import * as React from "react";
 import { Helmet } from "react-helmet";
+import { useForm } from "react-hook-form";
+import { useGeneralStore } from "../../../stores/GeneralStore";
 import { useUsers } from "../../../stores/useUsers";
 import { title } from "../../app/router/RouteNames";
+import { API } from "../../network/API";
 import { IPutUserRequest, IUser, UserRole } from "../../network/APITypes";
 import { CenteredContent } from "../../ui/CenteredContent";
 import { BackgroundContainer } from "../../ui/Components";
-import { AdminNavBar } from "../AdminNavBar";
-import { useForm } from "react-hook-form";
-import { API } from "../../network/API";
-import { useGeneralStore } from "../../../stores/GeneralStore";
-import { observer } from "mobx-react";
 import { emailRegex, phoneRegex } from "../../util/Helpers";
+import { AdminNavBar } from "../AdminNavBar";
 
 type MakeSellerParams = {
   store_name: string;

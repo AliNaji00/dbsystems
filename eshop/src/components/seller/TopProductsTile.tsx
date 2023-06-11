@@ -51,7 +51,7 @@ export const TopProductsTile = (props: {
         >
           <p style={{ color: customColors.primaryColor }}>{index + 1}</p>
           <img
-            src={getImagePath(product.ImageURL)}
+            src={getImagePath(product.ImageUrl)}
             alt={product.name}
             style={{
               borderRadius: "15px 0",

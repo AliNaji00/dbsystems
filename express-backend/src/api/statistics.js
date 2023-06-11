@@ -36,7 +36,7 @@ export default ({ pool }) => {
 
   const getProducts = async (conn, seller_id) => {
     const products = await conn.query(
-      "SELECT p.name, p.product_id, SUM(c.quantity) AS sales_volume FROM product p JOIN `contains` c ON c.product_id = p.product_id WHERE p.s_uid = ? GROUP BY (p.product_id) ORDER BY sales_volume DESC",
+      "SELECT p.name, p.product_id, SUM(c.quantity) AS sales_volume FROM product p JOIN `contains` c ON c.product_id = p.product_id WHERE p.s_uid = ? AND p.available = 1 GROUP BY (p.product_id) ORDER BY sales_volume DESC",
       seller_id
     );
     return products.map((product) => ({

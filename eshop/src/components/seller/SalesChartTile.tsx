@@ -10,7 +10,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { ISalesStatistics } from "../network/APITypes";
+import { ITimeSalesStatistics } from "../network/APITypes";
 import { customColors } from "../util/Theme";
 
 interface CustomTooltipProps {
@@ -30,12 +30,19 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({
         elevation={6}
         sx={{ backgroundColor: customColors.primaryColor, padding: 2 }}
       >
-        {
-          // TODO: fix data formating (the dates from the backend will likely not come in this nice format, I should write code to format them here for output below)
-        }
-        <p
-          style={{ color: customColors.primaryColorLight, margin: 0 }}
-        >{`${payload[0].payload.startDate} - ${payload[0].payload.endDate}`}</p>
+        <p style={{ color: customColors.white, margin: 0 }}>{`${new Date(
+          payload[0].payload.startDate
+        ).toLocaleDateString("zh-TW", {
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+        })} - ${new Date(payload[0].payload.endDate).toLocaleDateString(
+          "zh-TW",
+          {
+            month: "2-digit",
+            day: "2-digit",
+          }
+        )}`}</p>
         <h4
           style={{
             color: customColors.white,
@@ -51,7 +58,7 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({
 };
 
 export const SalesChartTile = (props: {
-  salesChartData: Array<ISalesStatistics>;
+  salesChartData: Array<ITimeSalesStatistics>;
 }) => {
   return (
     <ResponsiveContainer width="100%" height="100%">

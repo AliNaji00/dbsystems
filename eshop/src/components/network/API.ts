@@ -1,32 +1,33 @@
 import axios, { AxiosResponse } from "axios";
 import {
+  ICheckOrderResponse,
+  IGetBasketResponse,
+  IGetCouponsRequest,
+  IGetCouponsResponse,
+  IGetOrdersRequest,
+  IGetProductsRequest,
   IGetProductsResponse,
+  IGetSalesStatisticsResponse,
+  IGetSellerOrdersResponse,
+  IGetSingleProductRequest,
+  IGetSingleProductResponse,
+  IGetUserOrdersResponse,
+  IGetUserResponse,
+  IGetUsersResponse,
   ILoginFormInputs,
   ILoginResponse,
-  IPutShoppingCartResponse,
-  IGetBasketResponse,
-  IGetProductsRequest,
-  IGetSingleProductResponse,
-  IGetSingleProductRequest,
-  IGetUserResponse,
-  IPutUserRequest,
-  IPutUserResponse,
-  IPutProductRequest,
-  IPutProductResponse,
+  IPostCouponRequest,
+  IPostOrderResponse,
   IPostProductRequest,
   IPostProductResponse,
   IPostUserRequest,
   IPostUserResponse,
-  IGetUsersResponse,
-  ICheckOrderResponse,
-  IPostOrderResponse,
-  IGetUserOrdersResponse,
-  IGetOrdersRequest,
-  IGetSellerOrdersResponse,
   IPutOrderResponse,
-  IGetCouponsRequest,
-  IGetCouponsResponse,
-  IPostCouponRequest,
+  IPutProductRequest,
+  IPutProductResponse,
+  IPutShoppingCartResponse,
+  IPutUserRequest,
+  IPutUserResponse,
 } from "./APITypes";
 
 export const STATUS_CODE_UNAUTHORIZED = 401;
@@ -392,6 +393,20 @@ export const API = {
       };
 
       const response = await axios.post<any>(prefix(`/coupons`), data);
+      return response;
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  async getSalesStatistics(
+    seller_id: string
+  ): Promise<AxiosResponse<IGetSalesStatisticsResponse>> {
+    try {
+      const response = await axios.get<IGetSalesStatisticsResponse>(
+        prefix(`/statistics/${seller_id}`)
+      );
+
       return response;
     } catch (err) {
       throw err;
