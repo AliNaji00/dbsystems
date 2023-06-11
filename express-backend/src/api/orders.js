@@ -129,6 +129,7 @@ export default ({ pool }) => {
             .location("/api/orders/" + order_id)
             .json({ msg: "success", data: { order_id: String(order_id) } });
         } catch (err) {
+          console.log(err);
           conn.rollback();
           res.status(400).json({ msg: "Error processing order" });
         } finally {
@@ -152,7 +153,7 @@ export default ({ pool }) => {
     // If we have a shipping coupon for this seller, we check if our calculated price is above the threshold
     // If it is above the treshold, we don't add shipping costs, else we add the shipping costs (10% per seller)
     const basket_items = await conn.query(
-      "SELECT sib.product_id, sib.quantity, p.stock_quantity, p.price AS original_price, CASE WHEN CURDATE() BETWEEN c.start_time AND c.end_time THEN CAST((100 - se.percentage)/ 100 * p.price AS INT) ELSE NULL END AS ReducedPrice, p.s_uid FROM store_in_basket sib JOIN product p ON sib.product_id = p.product_id LEFT JOIN special_event se ON p.code = se.code LEFT JOIN coupon c ON se.code = c.code WHERE c_uid = ? AND p.available = 1 ORDER BY p.s_uid",
+      "SELECT sib.product_id, sib.quantity, p.stock_quantity, p.price AS original_price, p.available, CASE WHEN CURDATE() BETWEEN c.start_time AND c.end_time THEN CAST((100 - se.percentage)/ 100 * p.price AS INT) ELSE NULL END AS ReducedPrice, p.s_uid FROM store_in_basket sib JOIN product p ON sib.product_id = p.product_id LEFT JOIN special_event se ON p.code = se.code LEFT JOIN coupon c ON se.code = c.code WHERE c_uid = ? AND p.available = 1 ORDER BY p.s_uid",
       user_id
     );
     const placeholders = coupon_ids.map(() => "?").join(",");
