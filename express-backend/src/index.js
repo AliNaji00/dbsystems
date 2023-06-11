@@ -6,6 +6,7 @@ import users from "./api/users.js";
 import products from "./api/products.js";
 import basket from "./api/basket.js";
 import orders from "./api/orders.js";
+import coupons from "./api/coupons.js";
 
 const port = 8080;
 const pool = createPool({
@@ -45,6 +46,7 @@ router.use("/users", users({ pool }));
 router.use("/products", products({ pool }));
 router.use("/basket", basket({ pool }));
 router.use("/orders", orders({ pool }));
+router.use("/coupons", coupons({ pool }));
 
 app.use("/api", router);
 

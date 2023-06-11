@@ -173,7 +173,7 @@ INSERT INTO users (user_id, name, email, password, address, profile_picture) VAL
 INSERT INTO admin (user_id) VALUES (1), (2);
 
 -- Insert sample data into customer table
-INSERT INTO customer (user_id) VALUES (3), (4), (5), (6), (7);
+INSERT INTO customer (user_id) VALUES (1), (2), (3), (4), (5), (6), (7), (8), (9), (10);
 
 -- Insert sample data into seller table
 INSERT INTO seller (user_id, store_name, store_address, phone_no, store_email) VALUES
