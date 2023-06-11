@@ -62,7 +62,13 @@ const UserRow = ({ order }: { order: IUserOrder }) => {
           </IconButton>
         </CustomTableCell>
         <CustomTableCell>{order.order_id}</CustomTableCell>
-        <CustomTableCell>{order.time}</CustomTableCell>
+        <CustomTableCell>
+          {new Date(order.time).toLocaleDateString("zh-TW", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+          })}
+        </CustomTableCell>
         <CustomTableCell>{orderStatus}</CustomTableCell>
         <CustomTableCell>{totalShippingCost}</CustomTableCell>
         <CustomTableCell tableCellProps={{ align: "right" }}>
@@ -121,7 +127,7 @@ const UserRow = ({ order }: { order: IUserOrder }) => {
                           </IconButton>
                         </CustomTableCell>
                         <CustomTableCell>{item.seller_id}</CustomTableCell>
-                        <CustomTableCell>{item.seller_name}</CustomTableCell>
+                        <CustomTableCell>{item.store_name}</CustomTableCell>
                         <CustomTableCell>{item.status}</CustomTableCell>
                         <CustomTableCell>{item.shipping_cost}</CustomTableCell>
                         <CustomTableCell>{item.total_price}</CustomTableCell>
@@ -226,7 +232,13 @@ const SellerRow = ({ order }: { order: ISellerOrder }) => {
           </IconButton>
         </CustomTableCell>
         <CustomTableCell>{order.order_id}</CustomTableCell>
-        <CustomTableCell>{order.time}</CustomTableCell>
+        <CustomTableCell>
+          {new Date(order.time).toLocaleDateString("zh-TW", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+          })}
+        </CustomTableCell>
         <CustomTableCell>{order.status}</CustomTableCell>
         <CustomTableCell>{order.shipping_cost}</CustomTableCell>
         <CustomTableCell tableCellProps={{ align: "right" }}>

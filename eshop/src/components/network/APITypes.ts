@@ -117,7 +117,7 @@ export interface IUserOrderItem {
     quantity: number;
   }>;
   seller_id: string;
-  seller_name: string;
+  store_name: string;
   shipping_cost: number;
   status: string;
   total_price: number;

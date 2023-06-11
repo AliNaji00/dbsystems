@@ -17,13 +17,21 @@ export const useOrders = (user_id?: string, seller_id?: string) => {
           const response = await API.getUserOrders(user_id);
 
           if (response && response.data) {
-            setUserOrders(response.data.data);
+            // sort orders by date and set them
+            const sortedOrders = response.data.data.sort((a, b) => {
+              return new Date(b.time).getTime() - new Date(a.time).getTime();
+            });
+            setUserOrders(sortedOrders);
           }
         } else if (seller_id) {
           const response = await API.getSellerOrders(seller_id);
 
           if (response && response.data) {
-            setSellerOrders(response.data.data);
+            // sort orders by date and set them
+            const sortedOrders = response.data.data.sort((a, b) => {
+              return new Date(b.time).getTime() - new Date(a.time).getTime();
+            });
+            setSellerOrders(sortedOrders);
           }
         }
       } catch (err) {
