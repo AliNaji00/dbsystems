@@ -13,6 +13,7 @@ import { CustomNumberField } from "../../ui/ProductCartNumberField";
 import { getImagePath } from "../../util/Helpers";
 import { customColors } from "../../util/Theme";
 import { CustomerNavBar } from "../CustomerNavBar";
+import { useBasket } from "../../../stores/useBasket";
 
 type ProductIdParam = {
   product_id: string;
@@ -21,6 +22,8 @@ type ProductIdParam = {
 export const CustomerProductSite = observer(() => {
   const { product_id } = useParams<ProductIdParam>();
   const generalStore = useGeneralStore();
+
+  useBasket(generalStore.userId);
 
   const product = useProduct(generalStore.userId, product_id);
 
@@ -105,6 +108,7 @@ export const CustomerProductSite = observer(() => {
                         generalStore.isLoading = false;
                         generalStore.toggleProductsChangeFlag();
                         generalStore.toggleProductChangeFlag();
+                        generalStore.toggleBasketChangeFlag();
                       }
                     }}
                   />
