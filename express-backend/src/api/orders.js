@@ -39,7 +39,6 @@ export default ({ pool }) => {
       const conn = await pool.getConnection();
       try {
         if (user_id !== undefined) {
-          // 1. Get order ids
           const orders = await conn.query(
             "SELECT * FROM orders WHERE c_uid = ?",
             user_id
@@ -47,14 +46,14 @@ export default ({ pool }) => {
           const orders_by_id = await Promise.all(
             orders.map(async (order) => {
               const manage = await conn.query(
-                "SELECT status, s_uid, total_price AS preshipping_price, shipping_cost FROM manage WHERE order_id = ?",
+                "SELECT status, s_uid as seller_id, total_price AS preshipping_price, shipping_cost FROM manage WHERE order_id = ?",
                 order.order_id
               );
               const orders_by_manage = await Promise.all(
                 manage.map(async (m) => {
                   const products = await conn.query(
                     "SELECT p.name, c.quantity, c.price_per_piece, p.product_id FROM contains c JOIN product p ON c.product_id = p.product_id WHERE p.s_uid = ? AND c.order_id = ?",
-                    [m.s_uid, order.order_id]
+                    [m.seller_id, order.order_id]
                   );
                   return {
                     ...m,
@@ -69,6 +68,7 @@ export default ({ pool }) => {
               );
               return {
                 order_id: order.order_id,
+                time: order.time,
                 order_total: order_total,
                 order_items: orders_by_manage,
               };
@@ -76,11 +76,35 @@ export default ({ pool }) => {
           );
           res.json({ msg: "success", data: orders_by_id });
         } else if (seller_id !== undefined) {
+          const orders = await conn.query(
+            "SELECT order_id, status, total_price AS preshipping_price, shipping_cost FROM manage WHERE s_uid = ?",
+            seller_id
+          );
+          const manage = await Promise.all(
+            orders.map(async (order) => {
+              const order_time = await conn.query(
+                "SELECT time FROM orders WHERE order_id = ?",
+                order.order_id
+              );
+              const products = await conn.query(
+                "SELECT p.name, p.product_id, c.price_per_piece, c.quantity FROM orders o JOIN contains c ON o.order_id = c.order_id JOIN product p ON c.product_id = p.product_id WHERE o.order_id = ? AND p.s_uid = ?",
+                [order.order_id, seller_id]
+              );
+              return {
+                ...order,
+                total_price: order.shipping_cost + order.preshipping_price,
+                time: order_time[0].time,
+                products: products,
+              };
+            })
+          );
+          res.json({ msg: "success", data: manage });
         } else {
+          res.status(400).json({ msg: "seller_id or user_id not provided" });
         }
       } catch (err) {
         console.log(err);
-        res.status(400).json("");
+        res.status(400).json({ msg: "Error getting orders" });
       } finally {
         conn.close();
       }
@@ -113,7 +137,6 @@ export default ({ pool }) => {
     }
   });
 
-  // TODO: Empty basket
   route.post("/", async (req, res, next) => {
     const user_id = req.body.user_id;
     const coupon_ids =
