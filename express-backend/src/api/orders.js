@@ -39,10 +39,48 @@ export default ({ pool }) => {
       const conn = await pool.getConnection();
       try {
         if (user_id !== undefined) {
+          // 1. Get order ids
+          const orders = await conn.query(
+            "SELECT * FROM orders WHERE c_uid = ?",
+            user_id
+          );
+          const orders_by_id = await Promise.all(
+            orders.map(async (order) => {
+              const manage = await conn.query(
+                "SELECT status, s_uid, total_price AS preshipping_price, shipping_cost FROM manage WHERE order_id = ?",
+                order.order_id
+              );
+              const orders_by_manage = await Promise.all(
+                manage.map(async (m) => {
+                  const products = await conn.query(
+                    "SELECT p.name, c.quantity, c.price_per_piece, p.product_id FROM contains c JOIN product p ON c.product_id = p.product_id WHERE p.s_uid = ? AND c.order_id = ?",
+                    [m.s_uid, order.order_id]
+                  );
+                  return {
+                    ...m,
+                    total_price: m.preshipping_price + m.shipping_cost,
+                    products: products,
+                  };
+                })
+              );
+              const order_total = orders_by_manage.reduce(
+                (price, m) => price + m.total_price,
+                0
+              );
+              return {
+                order_id: order.order_id,
+                order_total: order_total,
+                order_items: orders_by_manage,
+              };
+            })
+          );
+          res.json({ msg: "success", data: orders_by_id });
         } else if (seller_id !== undefined) {
         } else {
         }
       } catch (err) {
+        console.log(err);
+        res.status(400).json("");
       } finally {
         conn.close();
       }
@@ -123,6 +161,10 @@ export default ({ pool }) => {
               seller_items.shipping_cost,
             ]);
           }
+          await conn.query(
+            "DELETE FROM store_in_basket WHERE c_uid = ?",
+            user_id
+          );
           await conn.commit();
           res
             .status(201)
