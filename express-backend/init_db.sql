@@ -114,6 +114,8 @@ create table manage(
 order_id int not null, 
 status varchar(10) not null, 
 s_uid int not null,
+total_price int not null, -- price _before_ shipping
+shipping_cost int not null,
 Primary key (order_id, s_uid),
 Constraint FK_s_uid2 FOREIGN KEY (s_uid) REFERENCES seller(user_id) 
 								ON DELETE CASCADE ON UPDATE CASCADE,
@@ -175,11 +177,11 @@ INSERT INTO seller (user_id, store_name, store_address, phone_no, store_email) V
 
 -- Insert sample data into coupon table
 INSERT INTO coupon (code, s_uid, description, start_time, coupon_type, end_time) VALUES
-(101, 8, '10% off Store A', '2023-01-01 00:00:00', 'seasonal', '2023-02-28 23:59:59'),
-(102, 9, '5% off Store B', '2023-01-01 00:00:00', 'special_event', '2023-01-31 23:59:59'),
-(103, 10, 'Free shipping on orders over $50', '2023-01-01 00:00:00', 'shipping', '2023-03-31 23:59:59'),
-(104, 8, '15% off Store A', '2023-02-01 00:00:00', 'special_event', '2023-02-14 23:59:59'),
-(105, 9, '20% off Store B', '2023-03-01 00:00:00', 'seasonal', '2023-03-31 23:59:59');
+(101, 8, '10% off Store A', '2023-01-01 00:00:00', 'seasonal', '2023-07-28 23:59:59'),
+(102, 9, '5% off Store B', '2023-01-01 00:00:00', 'special_event', '2023-07-31 23:59:59'),
+(103, 10, 'Free shipping on orders over $50', '2023-01-01 00:00:00', 'shipping', '2023-07-31 23:59:59'),
+(104, 8, '15% off Store A', '2023-02-01 00:00:00', 'special_event', '2023-07-14 23:59:59'),
+(105, 9, '20% off Store B', '2023-03-01 00:00:00', 'seasonal', '2023-07-31 23:59:59');
 
 -- Insert sample data into special_event table
 INSERT INTO special_event (code, percentage) VALUES
@@ -231,16 +233,16 @@ INSERT INTO contains (order_id, product_id, quantity, price_per_piece) VALUES
 (2005, 1008, 1, 4500);
 
 -- Insert sample data into manage table
-INSERT INTO manage (order_id, status, s_uid) VALUES
-(2001, 'shipped', 8),
-(2001, 'shipped', 9),
-(2002, 'shipped', 8),
-(2003, 'shipped', 9),
-(2003, 'shipped', 10),
-(2004, 'shipped', 10),
-(2005, 'shipped', 8),
-(2005, 'shipped', 9),
-(2005, 'shipped', 10);
+INSERT INTO manage (order_id, status, s_uid, total_price, shipping_cost) VALUES
+(2001, 'shipped', 8, 6000, 600),
+(2001, 'shipped', 9, 1500, 150),
+(2002, 'shipped', 8, 2000, 200),
+(2003, 'shipped', 9, 9000, 0),
+(2003, 'shipped', 10, 1000, 100),
+(2004, 'shipped', 10, 1200, 120),
+(2005, 'shipped', 8, 8000, 0),
+(2005, 'shipped', 9, 1000, 100),
+(2005, 'shipped', 10, 8500, 0);
 
 -- Insert sample data into seasonal_coupon table
 INSERT INTO seasonal_coupon (code, percentage) VALUES

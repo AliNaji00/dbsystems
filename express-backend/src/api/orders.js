@@ -3,9 +3,49 @@ import { Router } from "express";
 export default ({ pool }) => {
   const route = Router();
 
-  // get one order
-  route.get("/:order_id", (req, res, next) => {
+  // update order status
+  route.put("/:order_id", async (req, res, next) => {
+    const order_id = req.params.order_id;
+    const seller_id = req.body.seller_id;
+    const order_status = req.body.order_status;
     try {
+      const conn = await pool.getConnection();
+      try {
+        const rows = await conn.query(
+          "UPDATE manage SET status = ? WHERE order_id = ? AND s_uid = ?",
+          [order_status, order_id, seller_id]
+        );
+        if (!rows.affectedRows) {
+          throw Error();
+        }
+        res
+          .status(200)
+          .json({ msg: "success", data: { order_id: String(order_id) } });
+      } catch (err) {
+        res.status(400).json({ msg: "Error updating order status" });
+      } finally {
+        conn.close();
+      }
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  // get multiple orders, all, by user id or by seller id
+  route.get("/", async (req, res, next) => {
+    const user_id = req.query.user_id;
+    const seller_id = req.query.seller_id;
+    try {
+      const conn = await pool.getConnection();
+      try {
+        if (user_id !== undefined) {
+        } else if (seller_id !== undefined) {
+        } else {
+        }
+      } catch (err) {
+      } finally {
+        conn.close();
+      }
     } catch (err) {
       next(err);
     }
@@ -35,6 +75,7 @@ export default ({ pool }) => {
     }
   });
 
+  // TODO: Empty basket
   route.post("/", async (req, res, next) => {
     const user_id = req.body.user_id;
     const coupon_ids =
@@ -61,7 +102,7 @@ export default ({ pool }) => {
             const seller_id = seller_items.seller_id;
             console.log(seller_items);
             for (const item of seller_items.items) {
-              if (item.toomany) {
+              if (item.toomany || !item.available) {
                 throw new Error();
               }
               await conn.query("INSERT INTO contains VALUES (?, ?, ?, ?)", [
@@ -75,10 +116,12 @@ export default ({ pool }) => {
                 [item.quantity, item.product_id]
               );
             }
-            await conn.query("INSERT INTO manage VALUES (?, ?, ?)", [
+            await conn.query("INSERT INTO manage VALUES (?, ?, ?, ?, ?)", [
               order_id,
-              "open",
+              "pending",
               seller_id,
+              seller_items.preshipping_price,
+              seller_items.shipping_cost,
             ]);
           }
           await conn.commit();
@@ -108,9 +151,9 @@ export default ({ pool }) => {
     // After this, we calculate the total price of the order for each seller using a seasonal coupon (if existing)
     // intermediate_price[seller] = (price_per_piece * quantity) * 100/(100 - seasonal_coupon_percentage)
     // If we have a shipping coupon for this seller, we check if our calculated price is above the threshold
-    // If it is above the treshold, we don't add shipping costs, else we add the shipping costs (to be determined what they are)
+    // If it is above the treshold, we don't add shipping costs, else we add the shipping costs (10% per seller)
     const basket_items = await conn.query(
-      "SELECT sib.product_id, sib.quantity, p.stock_quantity, p.price AS original_price, CASE WHEN CURDATE() BETWEEN c.start_time AND c.end_time THEN CAST((100 - se.percentage)/ 100 * p.price AS INT) ELSE NULL END AS ReducedPrice, p.s_uid FROM store_in_basket sib JOIN product p ON sib.product_id = p.product_id LEFT JOIN special_event se ON p.code = se.code LEFT JOIN coupon c ON se.code = c.code WHERE c_uid = ? ORDER BY p.s_uid",
+      "SELECT sib.product_id, sib.quantity, p.stock_quantity, p.price AS original_price, p.available, CASE WHEN CURDATE() BETWEEN c.start_time AND c.end_time THEN CAST((100 - se.percentage)/ 100 * p.price AS INT) ELSE NULL END AS ReducedPrice, p.s_uid FROM store_in_basket sib JOIN product p ON sib.product_id = p.product_id LEFT JOIN special_event se ON p.code = se.code LEFT JOIN coupon c ON se.code = c.code WHERE c_uid = ? ORDER BY p.s_uid",
       user_id
     );
     const placeholders = coupon_ids.map(() => "?").join(",");
@@ -128,7 +171,7 @@ export default ({ pool }) => {
             `SELECT c.code, c.s_uid, sc.threshold FROM coupon c JOIN shipping_coupon sc ON c.code = sc.code WHERE (CURDATE() BETWEEN c.start_time AND c.end_time) AND c.code IN (${placeholders})`,
             coupon_ids
           );
-    const seller_ids = basket_items.map((item) => item.s_uid);
+    const seller_ids = [...new Set(basket_items.map((item) => item.s_uid))];
     const items_by_seller = seller_ids.map((id) => {
       const items = basket_items
         .filter((item) => item.s_uid == id)
@@ -144,15 +187,19 @@ export default ({ pool }) => {
             return {
               ...rest,
               price_per_piece: Number(ReducedPrice),
-              total_price: Number(ReducedPrice) * Number(rest.quantity),
+              total_price: Math.round(
+                Number(ReducedPrice) * Number(rest.quantity)
+              ),
               original_price: Number(original_price),
               toomany: Number(stock_quantity) - Number(rest.quantity) < 0,
             };
           } else {
             return {
               ...rest,
-              price_per_piece: original_price,
-              total_price: Number(original_price * rest.quantity),
+              price_per_piece: Number(original_price),
+              total_price: Math.round(
+                Number(original_price) * Number(rest.quantity)
+              ),
               toomany: Number(stock_quantity) - Number(rest.quantity) < 0,
             };
           }
@@ -162,58 +209,50 @@ export default ({ pool }) => {
         items: items,
       };
     });
-    const checkout = items_by_seller.map((seller) => {
-      const seller_id = seller.seller_id;
-      const seasonal_coupon = seasonal_coupons.find(
-        (x) => x.s_uid === seller_id
-      );
-      const shipping_coupon = shipping_coupons.find(
-        (x) => x.s_uid === seller_id
-      );
-      const percentage =
-        seasonal_coupon === undefined ? 0 : seasonal_coupon.percentage;
-      const treshold =
-        shipping_coupon === undefined ? 0 : shipping_coupon.treshold;
-      const intermediate_price = seller.items.reduce(
-        (price, item) => price + item.total_price,
-        0
-      );
-      const seasonal_discount_price =
-        intermediate_price * ((100 - percentage) / 100);
-      const total_price =
-        seasonal_discount_price > treshold
-          ? seasonal_discount_price * 1.1 // Add 10% shipping cost here
-          : seasonal_discount_price;
-      return {
-        ...seller,
-        total_price: total_price,
-      };
-    });
+    const checkout = await Promise.all(
+      items_by_seller.map(async (seller) => {
+        const seller_id = seller.seller_id;
+        const rows = await conn.query(
+          "SELECT store_name FROM seller WHERE user_id = ?",
+          seller_id
+        );
+        const store_name = rows[0].store_name;
+        const seasonal_coupon = seasonal_coupons.find(
+          (x) => x.s_uid === seller_id
+        );
+        const shipping_coupon = shipping_coupons.find(
+          (x) => x.s_uid === seller_id
+        );
+        const percentage =
+          seasonal_coupon === undefined ? 0 : seasonal_coupon.percentage;
+        const treshold =
+          shipping_coupon === undefined ? 0 : shipping_coupon.treshold;
+        const intermediate_price = seller.items.reduce(
+          (price, item) => price + item.total_price,
+          0
+        );
+        const seasonal_discount_price =
+          intermediate_price * ((100 - percentage) / 100);
+        const shipping_cost =
+          seasonal_discount_price > treshold
+            ? Math.round(seasonal_discount_price * 0.1)
+            : 0;
+        const total_price = Math.round(seasonal_discount_price + shipping_cost);
+        return {
+          ...seller,
+          store_name: store_name,
+          preshipping_price: seasonal_discount_price,
+          shipping_cost: shipping_cost,
+          total_price: total_price,
+        };
+      })
+    );
     const summed_price = checkout.reduce(
       (price, seller) => price + seller.total_price,
       0
     );
     return { summed_price: summed_price, items_by_seller: checkout };
   };
-
-  // modify existing order
-  route.put("/:order_id", (req, res, next) => {
-    try {
-    } catch (err) {
-      next(err);
-    }
-  });
-
-  // get multiple orders, all, by user id or by seller id
-  route.get("/", (req, res, next) => {
-    const user_id = req.query.user_id;
-    const seller_id = req.query.seller_id;
-    // etc
-    try {
-    } catch (err) {
-      next(err);
-    }
-  });
 
   return route;
 };
