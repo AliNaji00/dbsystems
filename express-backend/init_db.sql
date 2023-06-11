@@ -177,9 +177,9 @@ INSERT INTO customer (user_id) VALUES (1), (2), (3), (4), (5), (6), (7), (8), (9
 
 -- Insert sample data into seller table
 INSERT INTO seller (user_id, store_name, store_address, phone_no, store_email) VALUES
-(8, 'Store A', '100 Market St', '555-1111', 'storea@example.com'),
-(9, 'Store B', '200 Market St', '555-2222', 'storeb@example.com'),
-(10, 'Store C', '300 Market St', '555-3333', 'storec@example.com');
+(8, 'Balenciaga', '100 Market St', '555-1111', 'balenciaga@example.com'),
+(9, 'Giant', '200 Market St', '555-2222', 'giant@example.com'),
+(10, 'Hersheys', '300 Market St', '555-3333', 'hersheys@example.com');
 
 -- Insert sample data into coupon table
 INSERT INTO coupon (code, s_uid, description, start_time, coupon_type, end_time) VALUES
