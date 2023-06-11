@@ -1,8 +1,13 @@
-import * as React from "react";
-import { SearchField } from "../components/ui/SearchField";
+import dayjs from "dayjs";
 import { action, makeAutoObservable } from "mobx";
 import { makePersistable } from "mobx-persist-store";
-import { IProduct, UserRole } from "../components/network/APITypes";
+import * as React from "react";
+import {
+  IPostCouponRequest,
+  IProduct,
+  UserRole,
+} from "../components/network/APITypes";
+import { SearchField } from "../components/ui/SearchField";
 
 export const SEARCH_DEBOUNCE_MS = 500;
 export const imgageHost = "http://localhost:8080";
@@ -31,6 +36,16 @@ export class GeneralStore {
   basketLoaded = false;
 
   usersChangeFlag = false;
+
+  createCouponDefaultValues: IPostCouponRequest = {
+    code: "",
+    description: "",
+    type: "seasonal",
+    start_time: dayjs(Date.now()),
+    end_time: dayjs(Date.now()),
+    seller_id: this.userId,
+    product_ids: [],
+  };
 
   constructor() {
     makeAutoObservable(this);

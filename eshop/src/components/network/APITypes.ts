@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+
 export type UserRole = "admin" | "customer" | "seller";
 
 export interface ILoginResponse {
@@ -277,6 +279,18 @@ export interface ICheckOrderItem {
 
 export interface IPostOrderResponse {
   msg: string;
+}
+
+export interface IPostCouponRequest {
+  code: string;
+  description: string;
+  start_time: dayjs.Dayjs;
+  end_time: dayjs.Dayjs;
+  type: "special_event" | "seasonal" | "shipping";
+  percentage?: number;
+  threshold?: number;
+  seller_id: string;
+  product_ids: Array<number>;
 }
 
 export const getSalesStatisticMockData: IGetSalesStatisticsResponse = {

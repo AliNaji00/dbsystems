@@ -14,6 +14,9 @@ import {
 } from "@mui/material";
 import { useGeneralStore } from "../../../stores/GeneralStore";
 import { useCoupons } from "../../../stores/useCoupons";
+import { SellerRouteNames, sellerPrefix } from "../router/SellerRouteNames";
+import { Link } from "react-router-dom";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
 export const SellerCouponsSite = () => {
   const generalStore = useGeneralStore();
@@ -27,6 +30,14 @@ export const SellerCouponsSite = () => {
       </Helmet>
       <BackgroundContainer style={{ minHeight: 200 }}>
         <CenteredContent>
+          <div style={{ display: "flex", width: "100%" }}>
+            <Link to={sellerPrefix(SellerRouteNames.CREATE_COUPON)}>
+              <AddCircleOutlineIcon
+                color="primary"
+                sx={{ width: 48, height: 48, marginBottom: 2 }}
+              />
+            </Link>
+          </div>
           <TableContainer component={Paper}>
             <Table>
               <TableHead>
@@ -49,10 +60,10 @@ export const SellerCouponsSite = () => {
                     <TableCell>{coupon.description}</TableCell>
                     <TableCell>{coupon.type}</TableCell>
                     <TableCell>
-                      {coupon.percentage ? coupon.percentage : "-"}
+                      {coupon.percentage ? `${coupon.percentage}%` : "-"}
                     </TableCell>
                     <TableCell>
-                      {coupon.threshold ? coupon.threshold : "-"}
+                      {coupon.threshold ? `$ ${coupon.threshold}` : "-"}
                     </TableCell>
                   </TableRow>
                 ))}

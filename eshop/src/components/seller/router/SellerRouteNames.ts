@@ -6,6 +6,7 @@ export const SellerRouteNames = {
   COUPONS: "coupons",
   PRODUCT: "product/:product_id",
   CREATE_PROCUCT: "create-product",
+  CREATE_COUPON: "create-coupon",
 };
 
 export const sellerPrefix = (url: string) => "/seller/" + url;

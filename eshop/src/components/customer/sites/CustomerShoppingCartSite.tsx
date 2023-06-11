@@ -22,13 +22,6 @@ export const CustomerShoppingCartSite = observer(() => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  React.useEffect(() => {
-    try {
-      API.checkOrder(generalStore.userId, []);
-    } finally {
-    }
-  }, []);
-
   return (
     <>
       <Helmet>
