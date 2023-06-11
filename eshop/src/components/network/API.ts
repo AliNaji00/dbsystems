@@ -18,6 +18,7 @@ import {
   IPostUserRequest,
   IPostUserResponse,
   IGetUsersResponse,
+  ICheckOrderResponse,
 } from "./APITypes";
 
 export const STATUS_CODE_UNAUTHORIZED = 401;
@@ -257,12 +258,15 @@ export const API = {
   async checkOrder(
     user_id: string,
     coupon_codes: string[]
-  ): Promise<AxiosResponse<any>> {
+  ): Promise<AxiosResponse<ICheckOrderResponse>> {
     try {
-      const response = await axios.post<any>(prefix(`/orders/check`), {
-        user_id: user_id,
-        coupon_ids: coupon_codes,
-      });
+      const response = await axios.post<ICheckOrderResponse>(
+        prefix(`/orders/check`),
+        {
+          user_id: user_id,
+          coupon_ids: coupon_codes,
+        }
+      );
       return response;
     } catch (err) {
       throw err;

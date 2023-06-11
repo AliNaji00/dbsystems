@@ -9,7 +9,7 @@ export const useBasket = (user_id: string) => {
   const generalStore = useGeneralStore();
 
   React.useEffect(() => {
-    const loadProducts = async () => {
+    const loadBasket = async () => {
       try {
         generalStore.isLoading = true;
 
@@ -33,7 +33,7 @@ export const useBasket = (user_id: string) => {
       }
     };
 
-    loadProducts();
+    loadBasket();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [generalStore.basketChangeFlag, user_id]);
 
