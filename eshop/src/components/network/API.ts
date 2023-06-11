@@ -70,6 +70,10 @@ export const API = {
           password: data.password,
           address: data.address,
           user_type: data.user_type,
+          store_name: data.store_name,
+          store_address: data.store_address,
+          phone_no: data.phone_no,
+          store_email: data.store_email,
         }
       );
       return response;

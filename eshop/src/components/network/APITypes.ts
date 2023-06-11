@@ -164,11 +164,15 @@ export interface IUser {
 
 export interface IPutUserRequest {
   user_id: string;
-  name: string;
-  email: string;
-  address: string;
-  password: string;
+  name?: string;
+  email?: string;
+  address?: string;
+  password?: string;
   user_type?: string;
+  store_name?: string;
+  store_address?: string;
+  phone_no?: string;
+  store_email?: string;
 }
 
 export interface IPutUserResponse {

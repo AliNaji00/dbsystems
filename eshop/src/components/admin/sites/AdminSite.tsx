@@ -17,11 +17,14 @@ import * as React from "react";
 import { Helmet } from "react-helmet";
 import { useUsers } from "../../../stores/useUsers";
 import { title } from "../../app/router/RouteNames";
-import { IUser, UserRole } from "../../network/APITypes";
+import { IPutUserRequest, IUser, UserRole } from "../../network/APITypes";
 import { CenteredContent } from "../../ui/CenteredContent";
 import { BackgroundContainer } from "../../ui/Components";
 import { AdminNavBar } from "../AdminNavBar";
 import { useForm } from "react-hook-form";
+import { API } from "../../network/API";
+import { useGeneralStore } from "../../../stores/GeneralStore";
+import { observer } from "mobx-react";
 
 type MakeSellerParams = {
   store_name: string;
@@ -30,11 +33,13 @@ type MakeSellerParams = {
   store_email: string;
 };
 
-export const AdminSite = () => {
+export const AdminSite = observer(() => {
   const users = useUsers();
   const [open, setOpen] = React.useState(false);
   const [selectedUser, setSelectedUser] = React.useState<IUser | null>(null);
   const [selectedRole, setSelectedRole] = React.useState<UserRole | null>(null);
+
+  const generalStore = useGeneralStore();
 
   const {
     register,
@@ -42,16 +47,32 @@ export const AdminSite = () => {
     formState: { errors },
   } = useForm<MakeSellerParams>();
 
-  const handleRoleChange = (
+  const handleRoleChange = async (
     user_id: string,
     role: UserRole,
     sellerInfo?: MakeSellerParams
   ) => {
-    console.log(`Role: ${role} changed for user: ${user_id}`);
-    // TODO: Handle role change logic here
-    if (sellerInfo) {
-      // TODO: Handle seller store information here
-      console.log(sellerInfo);
+    try {
+      if (!!sellerInfo) {
+        const data: IPutUserRequest = {
+          user_id: user_id,
+          user_type: role,
+          ...sellerInfo,
+        };
+
+        await API.putUser(data);
+        generalStore.toggleUsersChangeFlag();
+      } else {
+        const data: IPutUserRequest = {
+          user_id: user_id,
+          user_type: role,
+        };
+
+        await API.putUser(data);
+        generalStore.toggleUsersChangeFlag();
+      }
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -178,26 +199,30 @@ export const AdminSite = () => {
                 fullWidth
               />
               {errors.store_email && <span>This field is required</span>}
+              <div
+                style={{
+                  padding: "0 0 20px",
+                  width: "100%",
+                  gap: 16,
+                  justifyContent: "flex-end",
+                  display: "flex",
+                }}
+              >
+                <Button
+                  onClick={() => handleClose(false)}
+                  color="primary"
+                  variant="outlined"
+                >
+                  Cancel
+                </Button>
+                <Button color="primary" variant="contained" type="submit">
+                  Confirm
+                </Button>
+              </div>
             </form>
           )}
         </DialogContent>
-        <DialogActions style={{ padding: "0 24px 20px" }}>
-          <Button
-            onClick={() => handleClose(false)}
-            color="primary"
-            variant="outlined"
-          >
-            Cancel
-          </Button>
-          <Button
-            onClick={() => handleClose(true)}
-            color="primary"
-            variant="contained"
-          >
-            Confirm
-          </Button>
-        </DialogActions>
       </Dialog>
     </>
   );
-};
+});
