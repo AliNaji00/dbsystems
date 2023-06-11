@@ -1,4 +1,3 @@
-import _ from "lodash";
 import * as React from "react";
 import { API } from "../components/network/API";
 import { ICheckOrderResponse } from "../components/network/APITypes";

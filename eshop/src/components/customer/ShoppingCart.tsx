@@ -31,7 +31,7 @@ export const ShoppingCart = observer(
           <img
             src={undraw_empty_cart_co35}
             alt="Page not found"
-            style={{ maxWidth: 350, marginBottom: 100 }}
+            style={{ maxWidth: 350, marginBottom: 32 }}
           />
           <Link to={customerPrefix(CustomerRouteNames.HOME)}>
             <Button variant="contained">Go shopping!</Button>

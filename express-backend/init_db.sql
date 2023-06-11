@@ -234,15 +234,15 @@ INSERT INTO contains (order_id, product_id, quantity, price_per_piece) VALUES
 
 -- Insert sample data into manage table
 INSERT INTO manage (order_id, status, s_uid, total_price, shipping_cost) VALUES
-(2001, 'shipped', 8, 6000, 600),
-(2001, 'shipped', 9, 1500, 150),
-(2002, 'shipped', 8, 2000, 200),
-(2003, 'shipped', 9, 9000, 0),
-(2003, 'shipped', 10, 1000, 100),
-(2004, 'shipped', 10, 1200, 120),
-(2005, 'shipped', 8, 8000, 0),
-(2005, 'shipped', 9, 1000, 100),
-(2005, 'shipped', 10, 8500, 0);
+(2001, 'received', 8, 6000, 600),
+(2001, 'processing', 9, 1500, 150),
+(2002, 'shipping', 8, 2000, 200),
+(2003, 'closed', 9, 9000, 0),
+(2003, 'closed', 10, 1000, 100),
+(2004, 'processing', 10, 1200, 120),
+(2005, 'shipping', 8, 8000, 0),
+(2005, 'processing', 9, 1000, 100),
+(2005, 'received', 10, 8500, 0);
 
 -- Insert sample data into seasonal_coupon table
 INSERT INTO seasonal_coupon (code, percentage) VALUES

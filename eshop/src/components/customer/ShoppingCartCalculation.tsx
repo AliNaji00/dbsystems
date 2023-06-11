@@ -61,6 +61,7 @@ export const ShoppingCartCalculation = (props: {
                 height: "fit-content",
                 width: "100%",
               }}
+              key={itemsBySeller.seller_id}
             >
               <h2
                 style={{

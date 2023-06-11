@@ -10,7 +10,7 @@ import { BackgroundContainer } from "../../ui/Components";
 export const SellerOrdersSite = () => {
   const generalStore = useGeneralStore();
 
-  const orders = useOrders(generalStore.userId);
+  const { sellerOrders } = useOrders(undefined, generalStore.userId);
 
   return (
     <>
@@ -19,7 +19,7 @@ export const SellerOrdersSite = () => {
       </Helmet>
       <BackgroundContainer style={{ minHeight: 200 }}>
         <CenteredContent>
-          <CollapsibleTable orders={orders} type="seller" />
+          <CollapsibleTable sellerOrders={sellerOrders} />
         </CenteredContent>
       </BackgroundContainer>
     </>

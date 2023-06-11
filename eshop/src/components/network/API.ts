@@ -20,6 +20,9 @@ import {
   IGetUsersResponse,
   ICheckOrderResponse,
   IPostOrderResponse,
+  IGetUserOrdersResponse,
+  IGetOrdersRequest,
+  IGetSellerOrdersResponse,
 } from "./APITypes";
 
 export const STATUS_CODE_UNAUTHORIZED = 401;
@@ -283,6 +286,50 @@ export const API = {
         user_id: user_id,
         coupon_ids: coupon_codes,
       });
+      return response;
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  async getUserOrders(
+    user_id: string
+  ): Promise<AxiosResponse<IGetUserOrdersResponse>> {
+    try {
+      const params: IGetOrdersRequest = {};
+
+      if (user_id) {
+        params["user_id"] = user_id;
+      }
+
+      const response = await axios.get<IGetUserOrdersResponse>(
+        prefix(`/orders`),
+        {
+          params: params,
+        }
+      );
+      return response;
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  async getSellerOrders(
+    seller_id: string
+  ): Promise<AxiosResponse<IGetSellerOrdersResponse>> {
+    try {
+      const params: IGetOrdersRequest = {};
+
+      if (seller_id) {
+        params["seller_id"] = seller_id;
+      }
+
+      const response = await axios.get<IGetSellerOrdersResponse>(
+        prefix(`/orders`),
+        {
+          params: params,
+        }
+      );
       return response;
     } catch (err) {
       throw err;

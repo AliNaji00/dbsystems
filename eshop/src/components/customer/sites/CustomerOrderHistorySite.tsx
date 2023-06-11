@@ -11,7 +11,7 @@ import { CollapsibleTable } from "../OrderTable";
 export const CustomerOrderHistorySite = () => {
   const generalStore = useGeneralStore();
 
-  const orders = useOrders(generalStore.userId);
+  const { userOrders } = useOrders(generalStore.userId);
 
   return (
     <>
@@ -21,7 +21,7 @@ export const CustomerOrderHistorySite = () => {
       <CustomerNavBar siteType="Other" title="Order History" />
       <BackgroundContainer style={{ minHeight: 200 }}>
         <CenteredContent>
-          <CollapsibleTable orders={orders} type="customer" />
+          <CollapsibleTable userOrders={userOrders} />
         </CenteredContent>
       </BackgroundContainer>
     </>

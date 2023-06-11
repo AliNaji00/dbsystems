@@ -91,39 +91,56 @@ export interface IPutShoppingCartResponse {
   msg: string;
 }
 
-export interface IGetOrdersResponse {
-  msg: string;
-  data: Array<IOrder>;
-}
-
 export interface IGetOrdersRequest {
-  user_id: string;
+  user_id?: string;
   seller_id?: string;
 }
 
-export interface IOrder {
-  order_id: number;
-  order_date: string;
-  order_status: string;
-  order_total: number;
-  order_items: Array<IOrderItem>;
+export interface IGetUserOrdersResponse {
+  msg: string;
+  data: Array<IUserOrder>;
 }
 
-// shipping gleich pro product
-// in order gespeichert werden die preise der produkte nach applyen aller discounts
-// order total ist summe der produkte + shipping
-// ab einem gewissen threshold des gesamtpreises für einen gewissen händler wird shipping für jedes Item dieses händlers gratis (wenn coupon im FE validiert wird)
-// status wird für jedes Item von einem Händler derselbe angezeigt
-// order_status ist entweder "pending", "processing" oder "delivered",
-// pending wenn noch keine produkte shipped wurden, processing wenn mindestens ein produkt shipped wurde, delivered wenn alle produkte shipped wurden
+export interface IUserOrder {
+  order_id: number;
+  time: string;
+  order_total: number;
+  order_items: Array<IUserOrderItem>;
+}
 
-export interface IOrderItem {
-  product_id: number;
-  name: string;
-  price: number;
-  quantity: number;
-  status: string;
+export interface IUserOrderItem {
+  preshipping_price: number;
+  products: Array<{
+    product_id: number;
+    name: string;
+    price_per_piece: number;
+    quantity: number;
+  }>;
+  seller_id: string;
+  seller_name: string;
   shipping_cost: number;
+  status: string;
+  total_price: number;
+}
+
+export interface IGetSellerOrdersResponse {
+  msg: string;
+  data: Array<ISellerOrder>;
+}
+
+export interface ISellerOrder {
+  order_id: number;
+  time: string;
+  total_price: number;
+  preshipping_price: number;
+  shipping_cost: number;
+  status: string;
+  products: Array<{
+    product_id: number;
+    name: string;
+    price_per_piece: number;
+    quantity: number;
+  }>;
 }
 
 export interface IGetUserResponse {
@@ -270,7 +287,7 @@ export interface ICheckOrderItemsBySeller {
 }
 
 export interface ICheckOrderItem {
-  price_per_piece: 1000;
+  price_per_piece: number;
   product_id: number;
   quantity: number;
   toomany: boolean;
@@ -353,84 +370,6 @@ export const getSalesStatisticMockData: IGetSalesStatisticsResponse = {
       name: "Product 5",
       sales_volume: 20,
       ImageURL: "/api/img/user_placeholder.png",
-    },
-  ],
-};
-
-export const getOrdersResponseMockData: IGetOrdersResponse = {
-  msg: "Success",
-  data: [
-    {
-      order_id: 1,
-      order_date: "2021-05-01",
-      order_status: "pending",
-      order_total: 100,
-      order_items: [
-        {
-          product_id: 1,
-          name: "Product 1",
-          price: 10,
-          quantity: 1,
-          status: "pending",
-          shipping_cost: 10,
-        },
-        {
-          product_id: 2,
-          name: "Product 2",
-          price: 20,
-          quantity: 2,
-          status: "pending",
-          shipping_cost: 10,
-        },
-      ],
-    },
-    {
-      order_id: 2,
-      order_date: "2021-05-01",
-      order_status: "processing",
-      order_total: 100,
-      order_items: [
-        {
-          product_id: 3,
-          name: "Product 3",
-          price: 30,
-          quantity: 3,
-          status: "processing",
-          shipping_cost: 10,
-        },
-        {
-          product_id: 4,
-          name: "Product 4",
-          price: 40,
-          quantity: 4,
-          status: "processing",
-          shipping_cost: 10,
-        },
-      ],
-    },
-    {
-      order_id: 3,
-      order_date: "2021-05-01",
-      order_status: "delivered",
-      order_total: 100,
-      order_items: [
-        {
-          product_id: 5,
-          name: "Product 5",
-          price: 50,
-          quantity: 5,
-          status: "delivered",
-          shipping_cost: 10,
-        },
-        {
-          product_id: 6,
-          name: "Product 6",
-          price: 60,
-          quantity: 6,
-          status: "delivered",
-          shipping_cost: 10,
-        },
-      ],
     },
   ],
 };

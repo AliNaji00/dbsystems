@@ -8,7 +8,6 @@ import { CenteredContent } from "../../ui/CenteredContent";
 import { BackgroundContainer } from "../../ui/Components";
 import { CustomerNavBar } from "../CustomerNavBar";
 import { ShoppingCart } from "../ShoppingCart";
-import { API } from "../../network/API";
 
 export const CustomerShoppingCartSite = observer(() => {
   const generalStore = useGeneralStore();

@@ -178,7 +178,7 @@ export default ({ pool }) => {
             }
             await conn.query("INSERT INTO manage VALUES (?, ?, ?, ?, ?)", [
               order_id,
-              "pending",
+              "received",
               seller_id,
               seller_items.preshipping_price,
               seller_items.shipping_cost,
