@@ -44,10 +44,8 @@ export const SellerCreateProductSite = () => {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
   } = useForm<IPostProductRequest>();
 
-  // TODO make sure picture posting works
   const onSubmit = async (data: IPostProductRequest) => {
     try {
       data.available = true;

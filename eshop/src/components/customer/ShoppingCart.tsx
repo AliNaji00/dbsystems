@@ -1,15 +1,15 @@
-import { Button, Card, TextField } from "@mui/material";
+import { Button } from "@mui/material";
+import { observer } from "mobx-react";
 import * as React from "react";
-import { IShoppingCartItem } from "../network/APITypes";
-import { customColors } from "../util/Theme";
-import { ShoppingCartItem } from "./ShoppingCartItem";
-import { undraw_empty_cart_co35 } from "../util/Images";
 import { Link } from "react-router-dom";
+import { IShoppingCartItem } from "../network/APITypes";
+import { undraw_empty_cart_co35 } from "../util/Images";
+import { ShoppingCartItem } from "./ShoppingCartItem";
 import {
   CustomerRouteNames,
   customerPrefix,
 } from "./router/CustomerRouteNames";
-import { observer } from "mobx-react";
+import { ShoppingCartCalculation } from "./ShoppingCartCalculation";
 
 export const ShoppingCart = observer(
   (props: { items: IShoppingCartItem[] }) => {
@@ -31,7 +31,7 @@ export const ShoppingCart = observer(
           <img
             src={undraw_empty_cart_co35}
             alt="Page not found"
-            style={{ maxWidth: 350, marginBottom: 100 }}
+            style={{ maxWidth: 350, marginBottom: 32 }}
           />
           <Link to={customerPrefix(CustomerRouteNames.HOME)}>
             <Button variant="contained">Go shopping!</Button>
@@ -43,7 +43,7 @@ export const ShoppingCart = observer(
         <div style={{ display: "flex", width: "100%" }}>
           <div
             style={{
-              flex: 3,
+              flex: 4,
               display: "flex",
               flexDirection: "column",
               gap: 32,
@@ -54,79 +54,7 @@ export const ShoppingCart = observer(
               <ShoppingCartItem item={item} key={item.product_id} />
             ))}
           </div>
-          <div
-            style={{
-              flex: 1,
-              display: "flex",
-              flexDirection: "column",
-              marginLeft: "32px",
-              gap: 32,
-            }}
-          >
-            <Card
-              sx={{
-                backgroundColor: customColors.backgroundColor,
-                height: "fit-content",
-                width: "100%",
-              }}
-            >
-              <div
-                style={{
-                  borderBottom: `2px solid ${customColors.body1}`,
-                  padding: "32px 32px 8px",
-                }}
-              >
-                {props.items.map((item) => (
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      marginBottom: 8,
-                    }}
-                    key={item.product_id}
-                  >
-                    <h4>
-                      {item.quantity}x {item.name}
-                    </h4>
-                    <h4>$ {item.quantity * item.price}</h4>
-                  </div>
-                ))}
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  marginBottom: 8,
-                  padding: "32px 32px 16px",
-                }}
-              >
-                <h4>TOTAL:</h4>
-                <h4>
-                  ${" "}
-                  {props.items.reduce(
-                    (total, item) => total + item.quantity * item.price,
-                    0
-                  )}
-                </h4>
-              </div>
-            </Card>
-            <div>
-              <h4>Enter coupon codes:</h4>
-              <TextField
-                label="Coupon"
-                variant="outlined"
-                fullWidth
-                color="primary"
-              />
-            </div>
-            <div
-              style={{ display: "flex", justifyContent: "end", width: "100%" }}
-            >
-              <Button type="submit" variant="contained" color="primary">
-                Proceed to checkout
-              </Button>
-            </div>
-          </div>
+          <ShoppingCartCalculation items={props.items} />
         </div>
       );
     }

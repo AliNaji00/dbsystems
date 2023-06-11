@@ -1,8 +1,13 @@
-import * as React from "react";
-import { SearchField } from "../components/ui/SearchField";
+import dayjs from "dayjs";
 import { action, makeAutoObservable } from "mobx";
 import { makePersistable } from "mobx-persist-store";
-import { IProduct, UserRole } from "../components/network/APITypes";
+import * as React from "react";
+import {
+  IPostCouponRequest,
+  IProduct,
+  UserRole,
+} from "../components/network/APITypes";
+import { SearchField } from "../components/ui/SearchField";
 
 export const SEARCH_DEBOUNCE_MS = 500;
 export const imgageHost = "http://localhost:8080";
@@ -29,6 +34,18 @@ export class GeneralStore {
   basketItems: null | number = null;
   basketChangeFlag = false;
   basketLoaded = false;
+
+  usersChangeFlag = false;
+  ordersChangeFlag = false;
+
+  createCouponDefaultValues: IPostCouponRequest = {
+    description: "",
+    coupon_type: "seasonal",
+    start_time: dayjs(Date.now()),
+    end_time: dayjs(Date.now()),
+    seller_id: this.userId,
+    product_ids: [],
+  };
 
   constructor() {
     makeAutoObservable(this);
@@ -72,6 +89,14 @@ export class GeneralStore {
 
   toggleUserChangeFlag = () => {
     this.userChangeFlag = !this.userChangeFlag;
+  };
+
+  toggleUsersChangeFlag = () => {
+    this.usersChangeFlag = !this.usersChangeFlag;
+  };
+
+  toggleOrdersChangeFlag = () => {
+    this.ordersChangeFlag = !this.ordersChangeFlag;
   };
 
   handleSearchChange = (search: string) => {

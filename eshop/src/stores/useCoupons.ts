@@ -1,24 +1,21 @@
 import * as React from "react";
 import { API } from "../components/network/API";
+import { ICoupon } from "../components/network/APITypes";
 import { useGeneralStore } from "./GeneralStore";
 
-export const useProducts = (
-  keyword: string,
-  user_id: string,
-  seller_id?: string
-) => {
+export const useCoupons = (seller_id: string) => {
+  const [coupons, setCoupons] = React.useState<ICoupon[]>([]);
   const generalStore = useGeneralStore();
 
   React.useEffect(() => {
-    const loadProducts = async () => {
+    const loadCoupons = async () => {
       try {
         generalStore.isLoading = true;
 
-        const response = await API.getProducts(keyword, user_id, seller_id);
+        const response = await API.getCoupons(seller_id);
 
         if (response && response.data) {
-          generalStore.setProducts(response.data.data);
-          generalStore.toggleBasketChangeFlag();
+          setCoupons(response.data.data);
         }
       } catch (err) {
         console.log(err);
@@ -27,13 +24,9 @@ export const useProducts = (
       }
     };
 
-    loadProducts();
+    loadCoupons();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    keyword,
-    generalStore.productsChangeFlag,
-    user_id,
-    seller_id,
-    generalStore.userId,
-  ]);
+  }, []);
+
+  return coupons;
 };

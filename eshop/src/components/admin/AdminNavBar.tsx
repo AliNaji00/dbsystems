@@ -3,21 +3,21 @@ import { observer } from "mobx-react";
 import * as React from "react";
 import { useNavigate } from "react-router-dom";
 import { useGeneralStore } from "../../stores/GeneralStore";
+import { RouteNames } from "../app/router/RouteNames";
 import {
   CustomerRouteNames,
   customerPrefix,
 } from "../customer/router/CustomerRouteNames";
-import { NavBarContainer } from "../ui/NavBarContainer";
-import { getImagePath } from "../util/Helpers";
-import { logo_transparent } from "../util/Images";
-import { customColors } from "../util/Theme";
 import {
   SellerRouteNames,
   sellerPrefix,
 } from "../seller/router/SellerRouteNames";
-import { AdminRouteNames, adminPrefix } from "../admin/router/AdminRouteNames";
+import { NavBarContainer } from "../ui/NavBarContainer";
+import { getImagePath } from "../util/Helpers";
+import { logo_transparent } from "../util/Images";
+import { customColors } from "../util/Theme";
 
-export const ProfileNavBar = observer(
+export const AdminNavBar = observer(
   (props: { style?: React.CSSProperties }) => {
     const generalStore = useGeneralStore();
     const navigate = useNavigate();
@@ -43,6 +43,7 @@ export const ProfileNavBar = observer(
             borderRadius: 5,
           }}
         />
+        <h1>Admin Page</h1>
         <Avatar
           key={generalStore.userImageChangeCounter}
           src={getImagePath(generalStore.userImage)}
@@ -58,6 +59,14 @@ export const ProfileNavBar = observer(
             "aria-labelledby": "basic-button",
           }}
         >
+          <MenuItem
+            onClick={() => {
+              navigate(RouteNames.PROFILE);
+              handleClose();
+            }}
+          >
+            Profile
+          </MenuItem>
           {generalStore.userRoles.includes("customer") && (
             <MenuItem
               onClick={() => {
@@ -75,17 +84,7 @@ export const ProfileNavBar = observer(
                 navigate(sellerPrefix(SellerRouteNames.DASHBOARD));
               }}
             >
-              Seller Dashboard
-            </MenuItem>
-          )}
-          {generalStore.userRoles.includes("admin") && (
-            <MenuItem
-              onClick={() => {
-                handleClose();
-                navigate(adminPrefix(AdminRouteNames.HOME));
-              }}
-            >
-              Admin Dashbaord
+              Seller Dashbaord
             </MenuItem>
           )}
           <MenuItem

@@ -14,6 +14,7 @@ export const NavBarContainer = observer(
             backgroundColor: customColors.backgroundColor,
             position: "fixed",
             top: 0,
+            zIndex: 1000,
           }}
         />
         <div
@@ -22,6 +23,7 @@ export const NavBarContainer = observer(
             backgroundColor: customColors.backgroundColor,
             left: 32,
             top: 32,
+            zIndex: 1000,
           }}
         >
           <div
@@ -33,6 +35,7 @@ export const NavBarContainer = observer(
               borderRadius: `${BACKGROUND_BORDER_RADIUS}px ${BACKGROUND_BORDER_RADIUS}px 0 0`,
               justifyContent: "space-between",
               backgroundColor: customColors.white,
+              zIndex: 1000,
               ...props.style,
             }}
           >

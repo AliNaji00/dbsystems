@@ -14,7 +14,6 @@ import { SellerRouteNames, sellerPrefix } from "../router/SellerRouteNames";
 export const SellerProductsSite = observer(() => {
   const generalStore = useGeneralStore();
 
-  // TODO: adapt below custom hook to get seller products
   useProducts("", "", generalStore.userId);
 
   return (
@@ -39,13 +38,15 @@ export const SellerProductsSite = observer(() => {
               gap: 20,
             }}
           >
-            {generalStore.products.map((product) => (
-              <ProductCard
-                product={product}
-                key={product.product_id}
-                type="seller"
-              />
-            ))}
+            {generalStore.products
+              .filter((product) => product.available)
+              .map((product) => (
+                <ProductCard
+                  product={product}
+                  key={product.product_id}
+                  type="seller"
+                />
+              ))}
           </div>
         </CenteredContent>
       </BackgroundContainer>

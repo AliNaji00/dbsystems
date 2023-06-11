@@ -26,6 +26,10 @@ import { AnimatedGradient } from "../../ui/Components";
 import { emailRegex } from "../../util/Helpers";
 import { logo } from "../../util/Images";
 import { RouteNames, title } from "../router/RouteNames";
+import {
+  AdminRouteNames,
+  adminPrefix,
+} from "../../admin/router/AdminRouteNames";
 
 export const RegisterSite = observer(() => {
   const {
@@ -68,7 +72,7 @@ export const RegisterSite = observer(() => {
   React.useEffect(() => {
     if (generalStore.loggedIn) {
       if (generalStore.userRoles.includes("admin")) {
-        // TODO navigate to admin site
+        navigate(adminPrefix(AdminRouteNames.HOME));
       } else if (generalStore.userRoles.includes("seller")) {
         navigate(sellerPrefix(SellerRouteNames.DASHBOARD));
       } else if (generalStore.userRoles.includes("customer")) {

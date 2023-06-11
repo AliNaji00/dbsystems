@@ -1,24 +1,23 @@
 import * as React from "react";
 import { API } from "../components/network/API";
+import { ISalesStatistics } from "../components/network/APITypes";
 import { useGeneralStore } from "./GeneralStore";
 
-export const useProducts = (
-  keyword: string,
-  user_id: string,
-  seller_id?: string
-) => {
+export const useSalesStatistics = (seller_id: string) => {
+  const [salesStatistics, setSalesStatistics] = React.useState<
+    ISalesStatistics | undefined
+  >(undefined);
   const generalStore = useGeneralStore();
 
   React.useEffect(() => {
-    const loadProducts = async () => {
+    const loadSalesStatistics = async () => {
       try {
         generalStore.isLoading = true;
 
-        const response = await API.getProducts(keyword, user_id, seller_id);
+        const response = await API.getSalesStatistics(seller_id);
 
         if (response && response.data) {
-          generalStore.setProducts(response.data.data);
-          generalStore.toggleBasketChangeFlag();
+          setSalesStatistics(response.data.data);
         }
       } catch (err) {
         console.log(err);
@@ -27,13 +26,9 @@ export const useProducts = (
       }
     };
 
-    loadProducts();
+    loadSalesStatistics();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    keyword,
-    generalStore.productsChangeFlag,
-    user_id,
-    seller_id,
-    generalStore.userId,
-  ]);
+  }, [seller_id]);
+
+  return salesStatistics;
 };

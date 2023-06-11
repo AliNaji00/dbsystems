@@ -6,6 +6,7 @@ import { RouteNames } from "./RouteNames";
 import { LoginSite } from "../sites/LoginSite";
 import { CustomerRouter } from "../../customer/router/CustomerRouter";
 import {
+  ProtectedAdminRoute,
   ProtectedCustomerRoute,
   ProtectedRoute,
   ProtectedSellerRoute,
@@ -13,6 +14,7 @@ import {
 import { ProfileSite } from "../sites/ProfileSite";
 import { SellerRouter } from "../../seller/router/SellerRouter";
 import { RegisterSite } from "../sites/RegisterSite";
+import { AdminSite } from "../../admin/sites/AdminSite";
 
 export const AppRouter = observer(() => (
   <BrowserRouter>
@@ -41,6 +43,14 @@ export const AppRouter = observer(() => (
           <ProtectedSellerRoute>
             <SellerRouter />
           </ProtectedSellerRoute>
+        }
+      />
+      <Route
+        path={RouteNames.ADMIN}
+        element={
+          <ProtectedAdminRoute>
+            <AdminSite />
+          </ProtectedAdminRoute>
         }
       />
       <Route path="*" element={<NotFoundSite />} />

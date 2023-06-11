@@ -19,10 +19,9 @@ import {
   SellerRouteNames,
   sellerPrefix,
 } from "../seller/router/SellerRouteNames";
+import { AdminRouteNames, adminPrefix } from "../admin/router/AdminRouteNames";
 
 type SiteType = "Search" | "Other";
-
-// TODO add routing for all the menu items
 
 export const CustomerNavBar = observer(
   (props: {
@@ -162,7 +161,14 @@ export const CustomerNavBar = observer(
               </MenuItem>
             )}
             {generalStore.userRoles.includes("admin") && (
-              <MenuItem onClick={handleClose}>Admin Dashbaord</MenuItem>
+              <MenuItem
+                onClick={() => {
+                  handleClose();
+                  navigate(adminPrefix(AdminRouteNames.HOME));
+                }}
+              >
+                Admin Dashbaord
+              </MenuItem>
             )}
             <MenuItem
               onClick={() => {

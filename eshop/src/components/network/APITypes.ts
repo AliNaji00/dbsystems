@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+
 export type UserRole = "admin" | "customer" | "seller";
 
 export interface ILoginResponse {
@@ -38,6 +40,7 @@ export interface IProduct {
   name: string;
   price: number; // actual price, possibly reduced price
   original_price?: number;
+  available: boolean;
 }
 
 export interface IGetSingleProductResponse {
@@ -63,7 +66,7 @@ export interface ISingleProduct {
   store_name: string;
   store_address: string;
   store_email: string;
-  phone_no: string;
+  store_phone: string;
   coupon_code: string | undefined;
   coupon_description: string | undefined;
 }
@@ -88,38 +91,56 @@ export interface IPutShoppingCartResponse {
   msg: string;
 }
 
-export interface IGetOrdersResponse {
-  msg: string;
-  data: Array<IOrder>;
-}
-
 export interface IGetOrdersRequest {
-  user_id: string;
+  user_id?: string;
+  seller_id?: string;
 }
 
-export interface IOrder {
+export interface IGetUserOrdersResponse {
+  msg: string;
+  data: Array<IUserOrder>;
+}
+
+export interface IUserOrder {
   order_id: number;
-  order_date: string;
-  order_status: string;
+  time: string;
   order_total: number;
-  order_items: Array<IOrderItem>;
+  order_items: Array<IUserOrderItem>;
 }
 
-// shipping gleich pro product
-// in order gespeichert werden die preise der produkte nach applyen aller discounts
-// order total ist summe der produkte + shipping
-// ab einem gewissen threshold des gesamtpreises für einen gewissen händler wird shipping für jedes Item dieses händlers gratis (wenn coupon im FE validiert wird)
-// status wird für jedes Item von einem Händler derselbe angezeigt
-// order_status ist entweder "pending", "processing" oder "delivered",
-// pending wenn noch keine produkte shipped wurden, processing wenn mindestens ein produkt shipped wurde, delivered wenn alle produkte shipped wurden
-
-export interface IOrderItem {
-  product_id: number;
-  name: string;
-  price: number;
-  quantity: number;
-  status: string;
+export interface IUserOrderItem {
+  preshipping_price: number;
+  products: Array<{
+    product_id: number;
+    name: string;
+    price_per_piece: number;
+    quantity: number;
+  }>;
+  seller_id: string;
+  store_name: string;
   shipping_cost: number;
+  status: string;
+  total_price: number;
+}
+
+export interface IGetSellerOrdersResponse {
+  msg: string;
+  data: Array<ISellerOrder>;
+}
+
+export interface ISellerOrder {
+  order_id: number;
+  time: string;
+  total_price: number;
+  preshipping_price: number;
+  shipping_cost: number;
+  status: string;
+  products: Array<{
+    product_id: number;
+    name: string;
+    price_per_piece: number;
+    quantity: number;
+  }>;
 }
 
 export interface IGetUserResponse {
@@ -143,11 +164,15 @@ export interface IUser {
 
 export interface IPutUserRequest {
   user_id: string;
-  name: string;
-  email: string;
-  address: string;
-  password: string;
+  name?: string;
+  email?: string;
+  address?: string;
+  password?: string;
   user_type?: string;
+  store_name?: string;
+  store_address?: string;
+  phone_no?: string;
+  store_email?: string;
 }
 
 export interface IPutUserResponse {
@@ -170,14 +195,18 @@ export interface IPostUserResponse {
 }
 
 export interface IGetSalesStatisticsRequest {
-  user_id: string;
+  seller_id: string;
 }
 
 export interface IGetSalesStatisticsResponse {
   msg: string;
+  data: ISalesStatistics;
+}
+
+export interface ISalesStatistics {
   profit: number; // total amount money earned (just sum of sold products)
   total_sales: number; // total number of sales
-  sales_data: Array<ISalesStatistics>;
+  sales_data: Array<ITimeSalesStatistics>;
   top_products: Array<ITopSalesProduct>;
 }
 
@@ -185,10 +214,10 @@ export interface ITopSalesProduct {
   product_id: number;
   name: string;
   sales_volume: number; // number of times the product was sold
-  ImageURL: string;
+  ImageUrl: string;
 }
 
-export interface ISalesStatistics {
+export interface ITimeSalesStatistics {
   salesProfit: number; // total money of products sold
   startDate: string;
   endDate: string;
@@ -224,144 +253,73 @@ export interface IPostProductResponse {
   };
 }
 
-export const getSalesStatisticMockData: IGetSalesStatisticsResponse = {
-  msg: "Success",
-  profit: 17328.53,
-  total_sales: 194,
-  sales_data: [
-    {
-      salesProfit: 2000,
-      startDate: "1.5",
-      endDate: "7.5.2021",
-      name: "Week 1",
-    },
-    {
-      salesProfit: 3200,
-      startDate: "8.5",
-      endDate: "14.5.2021",
-      name: "Week 2",
-    },
-    {
-      salesProfit: 2800,
-      startDate: "15.5",
-      endDate: "21.5.2021",
-      name: "Week 3",
-    },
-    {
-      salesProfit: 4000,
-      startDate: "22.5",
-      endDate: "28.5.2021",
-      name: "Week 4",
-    },
-  ],
-  top_products: [
-    {
-      product_id: 1,
-      name: "Product 1",
-      sales_volume: 100,
-      ImageURL: "/api/img/user_placeholder.png",
-    },
-    {
-      product_id: 2,
-      name: "Product 2",
-      sales_volume: 80,
-      ImageURL: "/api/img/user_placeholder.png",
-    },
-    {
-      product_id: 3,
-      name: "Product 3",
-      sales_volume: 60,
-      ImageURL: "/api/img/user_placeholder.png",
-    },
-    {
-      product_id: 4,
-      name: "Product 4",
-      sales_volume: 40,
-      ImageURL: "/api/img/user_placeholder.png",
-    },
-    {
-      product_id: 5,
-      name: "Product 5",
-      sales_volume: 20,
-      ImageURL: "/api/img/user_placeholder.png",
-    },
-  ],
-};
+export interface IGetUsersResponse {
+  msg: string;
+  data: Array<IUser>;
+}
 
-export const getOrdersResponseMockData: IGetOrdersResponse = {
-  msg: "Success",
-  data: [
-    {
-      order_id: 1,
-      order_date: "2021-05-01",
-      order_status: "pending",
-      order_total: 100,
-      order_items: [
-        {
-          product_id: 1,
-          name: "Product 1",
-          price: 10,
-          quantity: 1,
-          status: "pending",
-          shipping_cost: 10,
-        },
-        {
-          product_id: 2,
-          name: "Product 2",
-          price: 20,
-          quantity: 2,
-          status: "pending",
-          shipping_cost: 10,
-        },
-      ],
-    },
-    {
-      order_id: 2,
-      order_date: "2021-05-01",
-      order_status: "processing",
-      order_total: 100,
-      order_items: [
-        {
-          product_id: 3,
-          name: "Product 3",
-          price: 30,
-          quantity: 3,
-          status: "processing",
-          shipping_cost: 10,
-        },
-        {
-          product_id: 4,
-          name: "Product 4",
-          price: 40,
-          quantity: 4,
-          status: "processing",
-          shipping_cost: 10,
-        },
-      ],
-    },
-    {
-      order_id: 3,
-      order_date: "2021-05-01",
-      order_status: "delivered",
-      order_total: 100,
-      order_items: [
-        {
-          product_id: 5,
-          name: "Product 5",
-          price: 50,
-          quantity: 5,
-          status: "delivered",
-          shipping_cost: 10,
-        },
-        {
-          product_id: 6,
-          name: "Product 6",
-          price: 60,
-          quantity: 6,
-          status: "delivered",
-          shipping_cost: 10,
-        },
-      ],
-    },
-  ],
-};
+export interface IGetCouponsRequest {
+  seller_id: string;
+}
+
+export interface IGetCouponsResponse {
+  msg: string;
+  data: Array<ICoupon>;
+}
+
+export interface ICoupon {
+  code: string;
+  description: string;
+  start_time: string;
+  end_time: string;
+  coupon_type: "special_event" | "seasonal" | "shipping";
+  percentage?: number;
+  treshold?: number;
+}
+
+export interface ICheckOrderResponse {
+  msg: string;
+  data: {
+    items_by_seller: Array<ICheckOrderItemsBySeller>;
+    summed_price: number;
+  };
+}
+
+export interface ICheckOrderItemsBySeller {
+  preshipped_price: number;
+  seller_id: number;
+  items: Array<ICheckOrderItem>;
+  shipping_cost: number;
+  store_name: string;
+  total_price: number;
+}
+
+export interface ICheckOrderItem {
+  price_per_piece: number;
+  product_id: number;
+  quantity: number;
+  toomany: boolean;
+  total_price: number;
+}
+
+export interface IPostOrderResponse {
+  msg: string;
+}
+
+export interface IPostCouponRequest {
+  description: string;
+  start_time: dayjs.Dayjs;
+  end_time: dayjs.Dayjs;
+  coupon_type: "special_event" | "seasonal" | "shipping";
+  percentage?: number;
+  threshold?: number;
+  seller_id: string;
+  product_ids: Array<number>;
+}
+
+export interface IPutOrderResponse {
+  msg: string;
+  data: {
+    order_id: number;
+  };
+}

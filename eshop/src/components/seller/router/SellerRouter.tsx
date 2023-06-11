@@ -11,6 +11,7 @@ import { SellerNavBar } from "../SellerNavBar";
 import _ from "lodash";
 import { SellerSingleProductSite } from "../sites/SellerSingleProductSite";
 import { SellerCreateProductSite } from "../sites/SellerCreateProductSite";
+import { SellerCreateCouponSite } from "../sites/SellerCreateCouponSite";
 
 export const SellerRouter = observer(() => {
   const location = useLocation();
@@ -18,7 +19,7 @@ export const SellerRouter = observer(() => {
   return (
     <>
       {
-        // TODO the below handling of when the navbar is displayed is very hacky and not ideal
+        // NOTE the below handling of when the navbar is displayed is very hacky and not ideal
       }
       {_.values(SellerRouteNames)
         .map((route) => sellerPrefix(route))
@@ -50,6 +51,11 @@ export const SellerRouter = observer(() => {
         <Route
           path={SellerRouteNames.CREATE_PROCUCT}
           element={<SellerCreateProductSite />}
+        />
+
+        <Route
+          path={SellerRouteNames.CREATE_COUPON}
+          element={<SellerCreateCouponSite />}
         />
 
         <Route path="*" element={<NotFoundSite />} />

@@ -1,22 +1,33 @@
 import axios, { AxiosResponse } from "axios";
 import {
+  ICheckOrderResponse,
+  IGetBasketResponse,
+  IGetCouponsRequest,
+  IGetCouponsResponse,
+  IGetOrdersRequest,
+  IGetProductsRequest,
   IGetProductsResponse,
+  IGetSalesStatisticsResponse,
+  IGetSellerOrdersResponse,
+  IGetSingleProductRequest,
+  IGetSingleProductResponse,
+  IGetUserOrdersResponse,
+  IGetUserResponse,
+  IGetUsersResponse,
   ILoginFormInputs,
   ILoginResponse,
-  IPutShoppingCartResponse,
-  IGetBasketResponse,
-  IGetProductsRequest,
-  IGetSingleProductResponse,
-  IGetSingleProductRequest,
-  IGetUserResponse,
-  IPutUserRequest,
-  IPutUserResponse,
-  IPutProductRequest,
-  IPutProductResponse,
+  IPostCouponRequest,
+  IPostOrderResponse,
   IPostProductRequest,
   IPostProductResponse,
   IPostUserRequest,
   IPostUserResponse,
+  IPutOrderResponse,
+  IPutProductRequest,
+  IPutProductResponse,
+  IPutShoppingCartResponse,
+  IPutUserRequest,
+  IPutUserResponse,
 } from "./APITypes";
 
 export const STATUS_CODE_UNAUTHORIZED = 401;
@@ -63,6 +74,10 @@ export const API = {
           password: data.password,
           address: data.address,
           user_type: data.user_type,
+          store_name: data.store_name,
+          store_address: data.store_address,
+          phone_no: data.phone_no,
+          store_email: data.store_email,
         }
       );
       return response;
@@ -80,6 +95,15 @@ export const API = {
         address: data.address,
         user_type: data.user_type,
       });
+      return response;
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  async getUsers(): Promise<AxiosResponse<IGetUsersResponse>> {
+    try {
+      const response = await axios.get<IGetUsersResponse>(prefix(`/users`));
       return response;
     } catch (err) {
       throw err;
@@ -238,6 +262,151 @@ export const API = {
           quantity: quantity,
         }
       );
+      return response;
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  async checkOrder(
+    user_id: string,
+    coupon_codes: string[]
+  ): Promise<AxiosResponse<ICheckOrderResponse>> {
+    try {
+      const response = await axios.post<ICheckOrderResponse>(
+        prefix(`/orders/check`),
+        {
+          user_id: user_id,
+          coupon_ids: coupon_codes,
+        }
+      );
+      return response;
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  async postOrder(
+    user_id: string,
+    coupon_codes: string[]
+  ): Promise<AxiosResponse<IPostOrderResponse>> {
+    try {
+      const response = await axios.post<IPostOrderResponse>(prefix(`/orders`), {
+        user_id: user_id,
+        coupon_ids: coupon_codes,
+      });
+      return response;
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  async getUserOrders(
+    user_id: string
+  ): Promise<AxiosResponse<IGetUserOrdersResponse>> {
+    try {
+      const params: IGetOrdersRequest = {};
+
+      if (user_id) {
+        params["user_id"] = user_id;
+      }
+
+      const response = await axios.get<IGetUserOrdersResponse>(
+        prefix(`/orders`),
+        {
+          params: params,
+        }
+      );
+      return response;
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  async getSellerOrders(
+    seller_id: string
+  ): Promise<AxiosResponse<IGetSellerOrdersResponse>> {
+    try {
+      const params: IGetOrdersRequest = {};
+
+      if (seller_id) {
+        params["seller_id"] = seller_id;
+      }
+
+      const response = await axios.get<IGetSellerOrdersResponse>(
+        prefix(`/orders`),
+        {
+          params: params,
+        }
+      );
+      return response;
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  async putOrder(
+    status: string,
+    seller_id: string,
+    order_id: number
+  ): Promise<AxiosResponse<IPutOrderResponse>> {
+    try {
+      const response = await axios.put<IPutOrderResponse>(
+        prefix(`/orders/${order_id}`),
+        {
+          order_status: status,
+          seller_id: seller_id,
+        }
+      );
+      return response;
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  async getCoupons(
+    seller_id: string
+  ): Promise<AxiosResponse<IGetCouponsResponse>> {
+    try {
+      const params: IGetCouponsRequest = {
+        seller_id: seller_id,
+      };
+
+      const response = await axios.get<IGetCouponsResponse>(
+        prefix(`/coupons`),
+        {
+          params: params,
+        }
+      );
+      return response;
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  async postCoupon(couponData: IPostCouponRequest) {
+    try {
+      const data = {
+        ...couponData,
+        start_time: couponData.start_time.format("YYYY-MM-DD"),
+        end_time: couponData.end_time.format("YYYY-MM-DD"),
+      };
+
+      const response = await axios.post<any>(prefix(`/coupons`), data);
+      return response;
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  async getSalesStatistics(
+    seller_id: string
+  ): Promise<AxiosResponse<IGetSalesStatisticsResponse>> {
+    try {
+      const response = await axios.get<IGetSalesStatisticsResponse>(
+        prefix(`/statistics/${seller_id}`)
+      );
+
       return response;
     } catch (err) {
       throw err;
