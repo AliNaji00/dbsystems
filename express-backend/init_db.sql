@@ -177,11 +177,11 @@ INSERT INTO seller (user_id, store_name, store_address, phone_no, store_email) V
 
 -- Insert sample data into coupon table
 INSERT INTO coupon (code, s_uid, description, start_time, coupon_type, end_time) VALUES
-(101, 8, '10% off Store A', '2023-01-01 00:00:00', 'seasonal', '2023-02-28 23:59:59'),
-(102, 9, '5% off Store B', '2023-01-01 00:00:00', 'special_event', '2023-01-31 23:59:59'),
-(103, 10, 'Free shipping on orders over $50', '2023-01-01 00:00:00', 'shipping', '2023-03-31 23:59:59'),
-(104, 8, '15% off Store A', '2023-02-01 00:00:00', 'special_event', '2023-02-14 23:59:59'),
-(105, 9, '20% off Store B', '2023-03-01 00:00:00', 'seasonal', '2023-03-31 23:59:59');
+(101, 8, '10% off Store A', '2023-01-01 00:00:00', 'seasonal', '2023-07-28 23:59:59'),
+(102, 9, '5% off Store B', '2023-01-01 00:00:00', 'special_event', '2023-07-31 23:59:59'),
+(103, 10, 'Free shipping on orders over $50', '2023-01-01 00:00:00', 'shipping', '2023-07-31 23:59:59'),
+(104, 8, '15% off Store A', '2023-02-01 00:00:00', 'special_event', '2023-07-14 23:59:59'),
+(105, 9, '20% off Store B', '2023-03-01 00:00:00', 'seasonal', '2023-07-31 23:59:59');
 
 -- Insert sample data into special_event table
 INSERT INTO special_event (code, percentage) VALUES
