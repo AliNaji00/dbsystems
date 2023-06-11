@@ -100,7 +100,6 @@ export default ({ pool }) => {
           const order_id = rows.insertId;
           for (const seller_items of order_items) {
             const seller_id = seller_items.seller_id;
-            console.log(seller_items);
             for (const item of seller_items.items) {
               if (item.toomany || !item.available) {
                 throw new Error();
