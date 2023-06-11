@@ -295,11 +295,19 @@ export default ({ pool }) => {
           )
           .then((rows) => {
             if (rows.affectedRows > 0) {
-              res.status(200).send();
+              if (!Number(available)) {
+                conn
+                  .query(
+                    "DELETE FROM store_in_basket WHERE product_id = ?",
+                    product_id
+                  )
+                  .then(() => {
+                    console.log("Removed from basket");
+                  });
+              }
             } else {
               throw new Error("No product with id " + product_id);
             }
-            console.log(rows);
             res.status(200).send();
           })
           .catch((err) => {
