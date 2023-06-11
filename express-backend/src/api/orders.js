@@ -39,10 +39,72 @@ export default ({ pool }) => {
       const conn = await pool.getConnection();
       try {
         if (user_id !== undefined) {
+          const orders = await conn.query(
+            "SELECT * FROM orders WHERE c_uid = ?",
+            user_id
+          );
+          const orders_by_id = await Promise.all(
+            orders.map(async (order) => {
+              const manage = await conn.query(
+                "SELECT status, s_uid as seller_id, total_price AS preshipping_price, shipping_cost FROM manage WHERE order_id = ?",
+                order.order_id
+              );
+              const orders_by_manage = await Promise.all(
+                manage.map(async (m) => {
+                  const products = await conn.query(
+                    "SELECT p.name, c.quantity, c.price_per_piece, p.product_id FROM contains c JOIN product p ON c.product_id = p.product_id WHERE p.s_uid = ? AND c.order_id = ?",
+                    [m.seller_id, order.order_id]
+                  );
+                  return {
+                    ...m,
+                    total_price: m.preshipping_price + m.shipping_cost,
+                    products: products,
+                  };
+                })
+              );
+              const order_total = orders_by_manage.reduce(
+                (price, m) => price + m.total_price,
+                0
+              );
+              return {
+                order_id: order.order_id,
+                time: order.time,
+                order_total: order_total,
+                order_items: orders_by_manage,
+              };
+            })
+          );
+          res.json({ msg: "success", data: orders_by_id });
         } else if (seller_id !== undefined) {
+          const orders = await conn.query(
+            "SELECT order_id, status, total_price AS preshipping_price, shipping_cost FROM manage WHERE s_uid = ?",
+            seller_id
+          );
+          const manage = await Promise.all(
+            orders.map(async (order) => {
+              const order_time = await conn.query(
+                "SELECT time FROM orders WHERE order_id = ?",
+                order.order_id
+              );
+              const products = await conn.query(
+                "SELECT p.name, p.product_id, c.price_per_piece, c.quantity FROM orders o JOIN contains c ON o.order_id = c.order_id JOIN product p ON c.product_id = p.product_id WHERE o.order_id = ? AND p.s_uid = ?",
+                [order.order_id, seller_id]
+              );
+              return {
+                ...order,
+                total_price: order.shipping_cost + order.preshipping_price,
+                time: order_time[0].time,
+                products: products,
+              };
+            })
+          );
+          res.json({ msg: "success", data: manage });
         } else {
+          res.status(400).json({ msg: "seller_id or user_id not provided" });
         }
       } catch (err) {
+        console.log(err);
+        res.status(400).json({ msg: "Error getting orders" });
       } finally {
         conn.close();
       }
@@ -75,7 +137,6 @@ export default ({ pool }) => {
     }
   });
 
-  // TODO: Empty basket
   route.post("/", async (req, res, next) => {
     const user_id = req.body.user_id;
     const coupon_ids =
@@ -123,6 +184,10 @@ export default ({ pool }) => {
               seller_items.shipping_cost,
             ]);
           }
+          await conn.query(
+            "DELETE FROM store_in_basket WHERE c_uid = ?",
+            user_id
+          );
           await conn.commit();
           res
             .status(201)
@@ -153,7 +218,7 @@ export default ({ pool }) => {
     // If we have a shipping coupon for this seller, we check if our calculated price is above the threshold
     // If it is above the treshold, we don't add shipping costs, else we add the shipping costs (10% per seller)
     const basket_items = await conn.query(
-      "SELECT sib.product_id, sib.quantity, p.stock_quantity, p.price AS original_price, CASE WHEN CURDATE() BETWEEN c.start_time AND c.end_time THEN CAST((100 - se.percentage)/ 100 * p.price AS INT) ELSE NULL END AS ReducedPrice, p.s_uid FROM store_in_basket sib JOIN product p ON sib.product_id = p.product_id LEFT JOIN special_event se ON p.code = se.code LEFT JOIN coupon c ON se.code = c.code WHERE c_uid = ? AND p.available = 1 ORDER BY p.s_uid",
+      "SELECT sib.product_id, sib.quantity, p.stock_quantity, p.price AS original_price, p.available, CASE WHEN CURDATE() BETWEEN c.start_time AND c.end_time THEN CAST((100 - se.percentage)/ 100 * p.price AS INT) ELSE NULL END AS ReducedPrice, p.s_uid FROM store_in_basket sib JOIN product p ON sib.product_id = p.product_id LEFT JOIN special_event se ON p.code = se.code LEFT JOIN coupon c ON se.code = c.code WHERE c_uid = ? AND p.available = 1 ORDER BY p.s_uid",
       user_id
     );
     const placeholders = coupon_ids.map(() => "?").join(",");
