@@ -250,6 +250,31 @@ export interface ICoupon {
   threshold?: number;
 }
 
+export interface ICheckOrderResponse {
+  msg: string;
+  data: {
+    items_by_seller: Array<ICheckOrderItemsBySeller>;
+    summed_price: number;
+  };
+}
+
+export interface ICheckOrderItemsBySeller {
+  preshipped_price: number;
+  seller_id: number;
+  items: Array<ICheckOrderItem>;
+  shipping_cost: number;
+  store_name: string;
+  total_price: number;
+}
+
+export interface ICheckOrderItem {
+  price_per_piece: 1000;
+  product_id: number;
+  quantity: number;
+  toomany: boolean;
+  total_price: number;
+}
+
 export const getSalesStatisticMockData: IGetSalesStatisticsResponse = {
   msg: "Success",
   profit: 17328.53,
@@ -388,48 +413,6 @@ export const getOrdersResponseMockData: IGetOrdersResponse = {
           shipping_cost: 10,
         },
       ],
-    },
-  ],
-};
-
-export const getUsersResponseMockData: IGetUsersResponse = {
-  msg: "Success",
-  data: [
-    {
-      user_id: "1",
-      name: "User 1",
-      email: "yourmum@example.com",
-      address: "1, Your Mum's House, Your Mum's Street, Your Mum's City",
-      ImageURL: "/api/img/user_placeholder.png",
-      password: "password",
-      userroles: ["admin"],
-    },
-    {
-      user_id: "2",
-      name: "User 2",
-      email: "idgaf@example.com",
-      address: "2, IDGAF Street, IDGAF City",
-      ImageURL: "/api/img/user_placeholder.png",
-      password: "password",
-      userroles: ["customer", "seller"],
-    },
-    {
-      user_id: "3",
-      name: "User 3",
-      email: "hard@bass.com",
-      address: "3, Hard Bass Street, Hard Bass City",
-      ImageURL: "/api/img/user_placeholder.png",
-      password: "password",
-      userroles: ["customer"],
-    },
-    {
-      user_id: "4",
-      name: "User 4",
-      email: "pokemon@go.everyday",
-      address: "4, Pokemon Street, Pokemon City",
-      ImageURL: "/api/img/user_placeholder.png",
-      password: "password",
-      userroles: ["customer"],
     },
   ],
 };
