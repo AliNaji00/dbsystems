@@ -15,6 +15,10 @@ export const CustomNumberField = observer(
   ({ initialAmount, changeValue, maxAmount }: Props) => {
     const [amount, setAmount] = React.useState(initialAmount);
 
+    React.useEffect(() => {
+      setAmount(initialAmount);
+    }, [initialAmount]);
+
     const increaseAmount = () => {
       if (amount === maxAmount) {
         return;

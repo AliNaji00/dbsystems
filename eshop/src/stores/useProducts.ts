@@ -29,5 +29,11 @@ export const useProducts = (
 
     loadProducts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [keyword, generalStore.productsChangeFlag, user_id, seller_id]);
+  }, [
+    keyword,
+    generalStore.productsChangeFlag,
+    user_id,
+    seller_id,
+    generalStore.userId,
+  ]);
 };
