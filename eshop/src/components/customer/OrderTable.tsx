@@ -19,6 +19,8 @@ import * as React from "react";
 import { ISellerOrder, IUserOrder } from "../network/APITypes";
 import { CustomTableCell } from "../ui/Components";
 import { customColors } from "../util/Theme";
+import { API } from "../network/API";
+import { useGeneralStore } from "../../stores/GeneralStore";
 
 const UserRow = ({ order }: { order: IUserOrder }) => {
   const [open, setOpen] = React.useState(false);
@@ -204,6 +206,7 @@ const UserRow = ({ order }: { order: IUserOrder }) => {
 const SellerRow = ({ order }: { order: ISellerOrder }) => {
   const [open, setOpen] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const generalStore = useGeneralStore();
 
   const handleOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -213,10 +216,14 @@ const SellerRow = ({ order }: { order: ISellerOrder }) => {
     setAnchorEl(null);
   };
 
-  const handleChangeOrderStatus = (status: string) => {
-    console.log("Status changed to: " + status);
-    // TODO: Replace with actual functionality for changing status
-    handleCloseMenu();
+  const handleChangeOrderStatus = async (status: string) => {
+    try {
+      await API.putOrder(status, generalStore.userId, order.order_id);
+      generalStore.toggleOrdersChangeFlag();
+      handleCloseMenu();
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (

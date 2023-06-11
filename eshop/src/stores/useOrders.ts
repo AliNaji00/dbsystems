@@ -43,7 +43,7 @@ export const useOrders = (user_id?: string, seller_id?: string) => {
 
     loadOrders();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user_id, seller_id]);
+  }, [user_id, seller_id, generalStore.ordersChangeFlag]);
 
   return { userOrders, sellerOrders };
 };

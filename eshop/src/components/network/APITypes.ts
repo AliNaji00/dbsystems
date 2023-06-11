@@ -310,6 +310,13 @@ export interface IPostCouponRequest {
   product_ids: Array<number>;
 }
 
+export interface IPutOrderResponse {
+  msg: string;
+  data: {
+    order_id: number;
+  };
+}
+
 export const getSalesStatisticMockData: IGetSalesStatisticsResponse = {
   msg: "Success",
   profit: 17328.53,

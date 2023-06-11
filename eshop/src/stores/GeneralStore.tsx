@@ -36,6 +36,7 @@ export class GeneralStore {
   basketLoaded = false;
 
   usersChangeFlag = false;
+  ordersChangeFlag = false;
 
   createCouponDefaultValues: IPostCouponRequest = {
     code: "",
@@ -93,6 +94,10 @@ export class GeneralStore {
 
   toggleUsersChangeFlag = () => {
     this.usersChangeFlag = !this.usersChangeFlag;
+  };
+
+  toggleOrdersChangeFlag = () => {
+    this.ordersChangeFlag = !this.ordersChangeFlag;
   };
 
   handleSearchChange = (search: string) => {

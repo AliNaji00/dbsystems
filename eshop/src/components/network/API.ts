@@ -23,6 +23,7 @@ import {
   IGetUserOrdersResponse,
   IGetOrdersRequest,
   IGetSellerOrdersResponse,
+  IPutOrderResponse,
 } from "./APITypes";
 
 export const STATUS_CODE_UNAUTHORIZED = 401;
@@ -328,6 +329,25 @@ export const API = {
         prefix(`/orders`),
         {
           params: params,
+        }
+      );
+      return response;
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  async putOrder(
+    status: string,
+    seller_id: string,
+    order_id: number
+  ): Promise<AxiosResponse<IPutOrderResponse>> {
+    try {
+      const response = await axios.put<IPutOrderResponse>(
+        prefix(`/orders/${order_id}`),
+        {
+          order_status: status,
+          seller_id: seller_id,
         }
       );
       return response;
