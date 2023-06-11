@@ -29,11 +29,15 @@ profile_picture MEDIUMBLOB
 );
 
 create table admin (
-user_id int primary key
+user_id int primary key,
+Constraint FK_user_id_admin FOREIGN KEY (user_id) REFERENCES users(user_id)
+								ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 create table customer (
-user_id int primary key
+user_id int primary key,
+Constraint FK_user_id_customer FOREIGN KEY (user_id) REFERENCES users(user_id)
+								ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 create table seller (
@@ -41,7 +45,9 @@ user_id int primary key,
 store_name varchar(30) not null,
 store_address varchar(30) not null,
 phone_no varchar(30) not null,
-store_email varchar(30) not null
+store_email varchar(30) not null,
+Constraint FK_user_id_seller FOREIGN KEY (user_id) REFERENCES users(user_id)
+								ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 

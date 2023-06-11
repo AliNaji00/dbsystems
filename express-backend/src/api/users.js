@@ -121,23 +121,38 @@ export default ({ pool }) => {
       const conn = await pool.getConnection();
       try {
         const rows = await conn.query(
-          "SELECT u.user_id, u.name, u.email, u.address, u.password FROM users u WHERE u.user_id = ?",
+          "SELECT u.user_id, u.name, u.email, u.address, u.password, NOT ISNULL(s.user_id) AS isSeller FROM users u LEFT JOIN seller s ON u.user_id = s.user_id WHERE u.user_id = ?",
           user_id
         );
         if (!(rows.length > 0)) {
           res.status(404).json({ msg: "No user found with id " + user_id });
           return;
         }
-        const user = rows[0];
-        res.json({
-          msg: "success",
-          data: {
-            ...user,
-            ImageURL: "/api/users/" + user_id + "/avatar",
-          },
-        });
+        const { isSeller, ...user } = rows[0];
+        if (isSeller) {
+          const seller_details = await conn.query(
+            "SELECT store_name, store_address, phone_no, store_email FROM seller WHERE user_id = ?",
+            user_id
+          );
+          res.json({
+            msg: "success",
+            data: {
+              ...user,
+              ImageURL: "/api/users/" + user_id + "/avatar",
+              seller_details: seller_details[0],
+            },
+          });
+        } else {
+          res.json({
+            msg: "success",
+            data: {
+              ...user,
+              ImageURL: "/api/users/" + user_id + "/avatar",
+            },
+          });
+        }
       } catch (err) {
-        console.log(err);
+        res.status(400).json({ msg: "Error getting user details" });
       } finally {
         conn.close();
       }
@@ -186,9 +201,8 @@ export default ({ pool }) => {
     }
   });
 
-  // post user, this creates an new user with no roles
+  // post user, this creates an new user with customer role
   route.post("/", async (req, res, next) => {
-    const user_type = req.body.user_type;
     const name = req.body.name;
     const email = req.body.email;
     const password = req.body.password;
@@ -197,27 +211,12 @@ export default ({ pool }) => {
       const conn = await pool.getConnection();
       try {
         await conn.beginTransaction();
-
         const rows = await conn.query(
           "INSERT INTO users VALUES (DEFAULT, ?, ?, ?, ?, NULL)",
           [name, email, password, address]
         );
         const user_id = rows.insertId;
-        if (user_type === "seller") {
-          const store_name = req.body.store_name;
-          const store_address = req.body.store_address;
-          const phone_no = req.body.phone_no;
-          const store_email = req.body.store_email;
-          await conn.query("INSERT INTO seller VALUES (?, ?, ?, ?, ?)", [
-            user_id,
-            store_name,
-            store_address,
-            phone_no,
-            store_email,
-          ]);
-        } else {
-          await conn.query("INSERT INTO customer VALUES (?)", user_id);
-        }
+        await conn.query("INSERT INTO customer VALUES (?)", user_id);
         await conn.commit();
         res
           .status(201)
@@ -225,7 +224,6 @@ export default ({ pool }) => {
           .json({ msg: "success", data: { user_id: String(user_id) } });
       } catch (err) {
         conn.rollback();
-        console.log(err);
         res.status(400).json({ msg: "Error creating user" });
       } finally {
         conn.close();
@@ -235,42 +233,54 @@ export default ({ pool }) => {
     }
   });
 
-  // put user
+  // put user, if user_type is not set the default user details are updated
+  // if user_type is "admin", the user is added to the admin group, the other user details are not needed
+  // if user_type is "seller", the user is added to the seller group, you have to include the seller details, the other user details are not needed
   route.put("/:user_id", async (req, res, next) => {
     const user_id = req.params.user_id;
-    console.log(user_id);
-    // if user_type is not "seller", we can still update the "users" entry of a seller
     const user_type = req.body.user_type;
-    const name = req.body.name;
-    const email = req.body.email;
-    const password = req.body.password;
-    const address = req.body.address;
     try {
       const conn = await pool.getConnection();
-      await conn.beginTransaction();
       try {
-        await conn.query(
-          "UPDATE users SET name = ?, email = ?, password = ?, address = ? WHERE user_id = ?",
-          [name, email, password, address, user_id]
-        );
         if (user_type === "seller") {
           const store_name = req.body.store_name;
           const store_address = req.body.store_address;
           const phone_no = req.body.phone_no;
           const store_email = req.body.store_email;
           await conn.query(
-            "UPDATE seller SET store_name = ?, store_address = ?, phone_no = ?, store_email = ? WHERE user_id = ?",
-            [store_name, store_address, phone_no, store_email, user_id]
+            "INSERT INTO seller (user_id, store_name, store_address, phone_no, store_email) VALUES (?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE store_name = ?, store_address = ?, phone_no = ?, store_email = ?",
+            [
+              user_id,
+              store_name,
+              store_address,
+              phone_no,
+              store_email,
+              store_name,
+              store_address,
+              phone_no,
+              store_email,
+            ]
+          );
+        } else if (user_type === "admin") {
+          await conn.query(
+            "INSERT INTO admin (user_id) VALUES (?) ON DUPLICATE KEY UPDATE user_id=user_id",
+            user_id
+          );
+        } else {
+          const name = req.body.name;
+          const email = req.body.email;
+          const password = req.body.password;
+          const address = req.body.address;
+          await conn.query(
+            "UPDATE users SET name = ?, email = ?, password = ?, address = ? WHERE user_id = ?",
+            [name, email, password, address, user_id]
           );
         }
-        await conn.commit();
-        res.status(200).send();
+        res.json({ msg: "success" });
       } catch (err) {
         conn.rollback();
         console.log(err);
-        res
-          .status(400)
-          .json({ msg: "Error updating user: " + err.text.split("\n")[0] });
+        res.status(400).json({ msg: "Error updating user" });
       } finally {
         conn.close();
       }

@@ -46,7 +46,7 @@ export default ({ pool }) => {
           const orders_by_id = await Promise.all(
             orders.map(async (order) => {
               const manage = await conn.query(
-                "SELECT status, s_uid as seller_id, total_price AS preshipping_price, shipping_cost FROM manage WHERE order_id = ?",
+                "SELECT s.store_name, status, s_uid as seller_id, total_price AS preshipping_price, shipping_cost FROM manage JOIN seller s ON s_uid = s.user_id WHERE order_id = ?",
                 order.order_id
               );
               const orders_by_manage = await Promise.all(
