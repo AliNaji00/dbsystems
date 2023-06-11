@@ -191,32 +191,34 @@ export const SellerCreateCouponSite = () => {
                   <div>
                     {couponType === "special_event" && (
                       <div style={{ maxHeight: "200px", overflowY: "auto" }}>
-                        {generalStore.products.map((product) => (
-                          <FormControlLabel
-                            control={
-                              <Checkbox
-                                onChange={(e) => {
-                                  if (e.target.checked) {
-                                    setValue("product_ids", [
-                                      ...watch("product_ids"),
-                                      product.product_id,
-                                    ]);
-                                  } else {
-                                    setValue(
-                                      "product_ids",
-                                      watch("product_ids").filter(
-                                        (id: number) =>
-                                          id !== product.product_id
-                                      )
-                                    );
-                                  }
-                                }}
-                              />
-                            }
-                            label={product.name}
-                            key={product.product_id}
-                          />
-                        ))}
+                        {generalStore.products
+                          .filter((product) => product.available)
+                          .map((product) => (
+                            <FormControlLabel
+                              control={
+                                <Checkbox
+                                  onChange={(e) => {
+                                    if (e.target.checked) {
+                                      setValue("product_ids", [
+                                        ...watch("product_ids"),
+                                        product.product_id,
+                                      ]);
+                                    } else {
+                                      setValue(
+                                        "product_ids",
+                                        watch("product_ids").filter(
+                                          (id: number) =>
+                                            id !== product.product_id
+                                        )
+                                      );
+                                    }
+                                  }}
+                                />
+                              }
+                              label={product.name}
+                              key={product.product_id}
+                            />
+                          ))}
                       </div>
                     )}
                   </div>

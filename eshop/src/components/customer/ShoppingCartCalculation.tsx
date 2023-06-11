@@ -95,7 +95,9 @@ export const ShoppingCartCalculation = (props: {
                       <h4>
                         {item.quantity}x {itemName}
                       </h4>
-                      <h4>$ {item.total_price}</h4>
+                      <h4 style={{ minWidth: 64, textAlign: "end" }}>
+                        $ {item.total_price}
+                      </h4>
                     </div>
                   );
                 })}

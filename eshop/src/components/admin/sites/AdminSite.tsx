@@ -242,6 +242,32 @@ export const AdminSite = observer(() => {
             </form>
           )}
         </DialogContent>
+        {selectedRole !== "seller" && (
+          <div
+            style={{
+              padding: "0 24px 20px",
+              width: "100%",
+              gap: 16,
+              justifyContent: "flex-end",
+              display: "flex",
+            }}
+          >
+            <Button
+              onClick={() => handleClose(false)}
+              color="primary"
+              variant="outlined"
+            >
+              Cancel
+            </Button>
+            <Button
+              color="primary"
+              variant="contained"
+              onClick={() => handleClose(true)}
+            >
+              Confirm
+            </Button>
+          </div>
+        )}
       </Dialog>
     </>
   );
