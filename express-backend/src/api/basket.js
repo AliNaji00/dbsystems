@@ -10,17 +10,26 @@ export default ({ pool }) => {
       .then((conn) => {
         conn
           .query(
-            "SELECT p.stock_quantity, p.description, p.product_id, sib.quantity, p.name, p.price FROM product p JOIN store_in_basket sib ON p.product_id = sib.product_id WHERE sib.c_uid = ?",
+            "SELECT p.stock_quantity, p.description, p.product_id, sib.quantity,p.name, p.price, CASE WHEN CURDATE() BETWEEN c.start_time AND c.end_time THEN CAST((100 - se.percentage)/ 100 * p.price AS INT) ELSE NULL END AS ReducedPrice FROM product p JOIN store_in_basket sib ON p.product_id = sib.product_id JOIN special_event se ON p.code = se.code LEFT JOIN coupon c ON se.code = c.code WHERE sib.c_uid = ? AND p.available = 1",
             user_id
           )
           .then((rows) => {
-            
             if (rows.length > 0) {
               const res_rows = rows.map((row) => {
-                return {
-                  ...row,
-                  ImageURL: "/api/products/" + row.product_id + "/picture",
-                };
+                const { ReducedPrice, ...rest } = row
+                if (ReducedPrice !== null) {
+                  return {
+                    ...rest,
+                    ImageURL: "/api/products/" + row.product_id + "/picture",
+                    price: Number(ReducedPrice),
+                    original_price: row.price,
+                  };
+                } else {
+                  return {
+                    ...rest,
+                    ImageURL: "/api/products/" + row.product_id + "/picture",
+                  };
+                }
               });
               res.json({ msg: "success", data: res_rows });
             } else {
