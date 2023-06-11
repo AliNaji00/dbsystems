@@ -270,7 +270,7 @@ export interface ICoupon {
   end_time: string;
   coupon_type: "special_event" | "seasonal" | "shipping";
   percentage?: number;
-  threshold?: number;
+  treshold?: number;
 }
 
 export interface ICheckOrderResponse {
@@ -303,11 +303,10 @@ export interface IPostOrderResponse {
 }
 
 export interface IPostCouponRequest {
-  code: string;
   description: string;
   start_time: dayjs.Dayjs;
   end_time: dayjs.Dayjs;
-  type: "special_event" | "seasonal" | "shipping";
+  coupon_type: "special_event" | "seasonal" | "shipping";
   percentage?: number;
   threshold?: number;
   seller_id: string;
@@ -381,36 +380,6 @@ export const getSalesStatisticMockData: IGetSalesStatisticsResponse = {
       name: "Product 5",
       sales_volume: 20,
       ImageURL: "/api/img/user_placeholder.png",
-    },
-  ],
-};
-
-export const getCouponsResponseMockData: IGetCouponsResponse = {
-  msg: "Success",
-  data: [
-    {
-      code: "10OFF",
-      description: "Mother's Day",
-      start_time: "2021-05-01",
-      end_time: "2021-05-09",
-      coupon_type: "special_event",
-      percentage: 10,
-    },
-    {
-      code: "20OFF",
-      description: "Summer Sale",
-      start_time: "2021-06-01",
-      end_time: "2021-06-09",
-      coupon_type: "seasonal",
-      percentage: 20,
-    },
-    {
-      code: "30OFF",
-      description: "Pride Month",
-      start_time: "2021-12-01",
-      end_time: "2021-12-09",
-      coupon_type: "shipping",
-      threshold: 100,
     },
   ],
 };

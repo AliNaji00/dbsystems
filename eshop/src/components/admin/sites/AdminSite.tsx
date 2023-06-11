@@ -87,6 +87,7 @@ export const AdminSite = observer(() => {
     if (confirmed && selectedUser && selectedRole) {
       handleRoleChange(selectedUser.user_id, selectedRole, data);
     }
+    // clear form
   };
 
   const onSubmit = (data?: MakeSellerParams) => {

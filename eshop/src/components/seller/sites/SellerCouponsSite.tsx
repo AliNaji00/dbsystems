@@ -75,7 +75,7 @@ export const SellerCouponsSite = () => {
                       {coupon.percentage ? `${coupon.percentage}%` : "-"}
                     </TableCell>
                     <TableCell>
-                      {coupon.threshold ? `$ ${coupon.threshold}` : "-"}
+                      {coupon.treshold ? `$ ${coupon.treshold}` : "-"}
                     </TableCell>
                   </TableRow>
                 ))}

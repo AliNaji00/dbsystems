@@ -19,7 +19,7 @@ export const SellerRouter = observer(() => {
   return (
     <>
       {
-        // TODO the below handling of when the navbar is displayed is very hacky and not ideal
+        // NOTE the below handling of when the navbar is displayed is very hacky and not ideal
       }
       {_.values(SellerRouteNames)
         .map((route) => sellerPrefix(route))

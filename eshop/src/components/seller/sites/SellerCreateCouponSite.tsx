@@ -40,20 +40,19 @@ export const SellerCreateCouponSite = () => {
     defaultValues: generalStore.createCouponDefaultValues,
   });
 
-  const couponType = watch("type");
+  const couponType = watch("coupon_type");
 
   const onSubmit = async (data: IPostCouponRequest) => {
     try {
       data.seller_id = generalStore.userId;
       console.log(data);
-      // TODO: API Call
-      // const response = await API.postCoupon(data);
+      await API.postCoupon(data);
       setFormError("");
     } catch (e: any) {
       setFormError(e.response.data.msg || "An error occurred");
       console.log(e);
     } finally {
-      // navigate(sellerPrefix(SellerRouteNames.COUPONS));
+      navigate(sellerPrefix(SellerRouteNames.COUPONS));
     }
   };
 
@@ -86,7 +85,7 @@ export const SellerCreateCouponSite = () => {
               }}
             >
               <Controller
-                name="type"
+                name="coupon_type"
                 control={control}
                 defaultValue="special_event"
                 rules={{ required: true }}
@@ -109,14 +108,6 @@ export const SellerCreateCouponSite = () => {
                     />
                   </RadioGroup>
                 )}
-              />
-
-              <TextField
-                {...register("code", { required: "Code is required" })}
-                label="Code"
-                variant="outlined"
-                error={!!errors.code}
-                helperText={errors.code?.message}
               />
 
               <TextField
@@ -160,10 +151,6 @@ export const SellerCreateCouponSite = () => {
                     min: {
                       value: 0,
                       message: "Threshold cannot be less than 0",
-                    },
-                    max: {
-                      value: 100,
-                      message: "Threshold cannot be more than 100",
                     },
                   })}
                   label="Threshold"

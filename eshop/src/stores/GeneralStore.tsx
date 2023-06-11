@@ -39,9 +39,8 @@ export class GeneralStore {
   ordersChangeFlag = false;
 
   createCouponDefaultValues: IPostCouponRequest = {
-    code: "",
     description: "",
-    type: "seasonal",
+    coupon_type: "seasonal",
     start_time: dayjs(Date.now()),
     end_time: dayjs(Date.now()),
     seller_id: this.userId,

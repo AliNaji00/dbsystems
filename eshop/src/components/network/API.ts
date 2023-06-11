@@ -26,6 +26,7 @@ import {
   IPutOrderResponse,
   IGetCouponsRequest,
   IGetCouponsResponse,
+  IPostCouponRequest,
 } from "./APITypes";
 
 export const STATUS_CODE_UNAUTHORIZED = 401;
@@ -376,6 +377,21 @@ export const API = {
           params: params,
         }
       );
+      return response;
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  async postCoupon(couponData: IPostCouponRequest) {
+    try {
+      const data = {
+        ...couponData,
+        start_time: couponData.start_time.format("YYYY-MM-DD"),
+        end_time: couponData.end_time.format("YYYY-MM-DD"),
+      };
+
+      const response = await axios.post<any>(prefix(`/coupons`), data);
       return response;
     } catch (err) {
       throw err;
