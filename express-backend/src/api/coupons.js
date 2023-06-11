@@ -79,7 +79,7 @@ export default ({ pool }) => {
               return {
                 ...rest,
                 coupon_type: coupon_type,
-                percentage: Number(se_percentage),
+                percentage: Number(sc_percentage),
               };
             } else if (coupon_type === "special_event") {
               return {
