@@ -7,6 +7,7 @@ import {
 import { customColors } from "../util/Theme";
 import { useGeneralStore } from "../../stores/GeneralStore";
 import { useCheckOrder } from "../../stores/useCheckOrder";
+import { API } from "../network/API";
 
 export const ShoppingCartCalculation = (props: {
   items: IShoppingCartItem[];
@@ -26,6 +27,15 @@ export const ShoppingCartCalculation = (props: {
       setCoupons([...coupons, currentCoupon]);
       setCurrentCoupon("");
       setCouponError(null);
+    }
+  };
+
+  const handleSubmitOrder = async () => {
+    try {
+      await API.postOrder(generalStore.userId, coupons);
+      generalStore.toggleBasketChangeFlag();
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -165,7 +175,7 @@ export const ShoppingCartCalculation = (props: {
         ))}
       </div>
       <div style={{ display: "flex", justifyContent: "end", width: "100%" }}>
-        <Button type="submit" variant="contained" color="primary">
+        <Button variant="contained" color="primary" onClick={handleSubmitOrder}>
           Proceed to checkout
         </Button>
       </div>

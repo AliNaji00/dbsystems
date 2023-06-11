@@ -100,7 +100,6 @@ export default ({ pool }) => {
           const order_id = rows.insertId;
           for (const seller_items of order_items) {
             const seller_id = seller_items.seller_id;
-            console.log(seller_items);
             for (const item of seller_items.items) {
               if (item.toomany || !item.available) {
                 throw new Error();
@@ -130,6 +129,7 @@ export default ({ pool }) => {
             .location("/api/orders/" + order_id)
             .json({ msg: "success", data: { order_id: String(order_id) } });
         } catch (err) {
+          console.log(err);
           conn.rollback();
           res.status(400).json({ msg: "Error processing order" });
         } finally {

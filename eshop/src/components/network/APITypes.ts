@@ -275,6 +275,10 @@ export interface ICheckOrderItem {
   total_price: number;
 }
 
+export interface IPostOrderResponse {
+  msg: string;
+}
+
 export const getSalesStatisticMockData: IGetSalesStatisticsResponse = {
   msg: "Success",
   profit: 17328.53,
