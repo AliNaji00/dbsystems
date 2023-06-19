@@ -1,4 +1,8 @@
 # dbsystems
 
-Link to API Endpoint requests:
-https://docs.google.com/document/d/1qeMlCyFwqSYTq72WrRKD0BdXoy6xAhXrYFn6POJI8Xg/edit?usp=sharing
+Frontend done by Florian Chen
+Backend done by Elias Schlenzka
+
+For installation guidelines please check our final report or the README files in the frontend and backend directories
+
+If there are any questions during the installation proess please email at chen.florian@gmail.com.
